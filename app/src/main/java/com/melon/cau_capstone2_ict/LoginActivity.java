@@ -10,8 +10,11 @@ import android.widget.EditText;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,29 +37,37 @@ public class LoginActivity extends AppCompatActivity {
     public void onClickLogin(View v){
         //  ID/password check , Login
 
-        String id = "test1234";
-        String pass = "123456";
+        String id = login_id.getText().toString();
+        String pass = login_pass.getText().toString();
+
+        id = "test1234";
+        pass = "123456";
 
         Response.Listener<String> responseListener = new Response.Listener<String> () {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.d("Tag", "response" + response);
+                    JSONObject jsonResponse = new JSONObject(response);
+                    String memberID = jsonResponse.getString("id");
+                    String memberPW = jsonResponse.getString("password");
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    dialog = builder.setMessage(response).setNegativeButton("ok", null).create();
-                    dialog.show();
+                    Log.d("Tag", "id : " + memberID + "/ pass : " + memberPW);
 
-                    if (false) {
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("Member_Name","test");
-                        intent.putExtra("Member_ID","000000");
-                        startActivity(intent);
-                        finish();
-                    }
-                    else {
-                        Log.d("Tag", "clicked2");
-                    }
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("Member_Name","test");
+                    intent.putExtra("Member_ID","000000");
+                    startActivity(intent);
+                    finish();
+
+//                    if (false) {
+//
+//                    }
+//                    else {
+//                        Log.d("Tag", "clicked2");
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+//                        dialog = builder.setMessage("fail").setNegativeButton("ok", null).create();
+//                        dialog.show();
+//                    }
                 }
                 catch (Exception e) {
 
@@ -80,11 +91,16 @@ public class LoginActivity extends AppCompatActivity {
         // SNS 연동
     }
     class LoginRequest extends StringRequest {
-        final static private String URL = "https://capston2webapp.azurewebsites.net/api/Register";
-        private Map<String, String> parameters;
+                        final static private String URL = "https://capston2webapp.azurewebsites.net/api/Login";
+                        private Map<String, String> parameters;
 
-        public LoginRequest(String id, String pw, Response.Listener<String> listener) {
-            super(Method.POST, URL, listener, null); // 해당 정보를 POST 방식으로 URL에 전송
+                        public LoginRequest(String id, String pw, Response.Listener<String> listener) {
+                            super(Method.POST, URL, listener, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.d("Tag", "error " + error);
+                }
+            }); // 해당 정보를 POST 방식으로 URL에 전송
             Log.d("Tag", "LoginRequest");
             parameters = new HashMap<>();
             parameters.put("id", id);
