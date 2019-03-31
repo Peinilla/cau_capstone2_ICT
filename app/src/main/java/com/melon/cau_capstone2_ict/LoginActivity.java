@@ -1,17 +1,20 @@
 package com.melon.cau_capstone2_ict;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.melon.cau_capstone2_ict.Manager.HttpConectManager;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,22 +33,42 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onClickLogin(View v){
         //  ID/password check , Login
-        // 회원가입으로 테스트중
-        String url = "https://capston2webapp.azurewebsites.net/api/Register";
-        ContentValues cv = new ContentValues();
-        cv.put("id","qwer123456");
-        cv.put("password","1234");
 
+        String id = "test1234";
+        String pass = "123456";
 
+        Response.Listener<String> responseListener = new Response.Listener<String> () {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.d("Tag", "response" + response);
 
-        loginTask task = new loginTask(url,cv);
-        task.execute();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    dialog = builder.setMessage(response).setNegativeButton("ok", null).create();
+                    dialog.show();
 
-        // 임시
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra("Member_Name","TEST");
-        intent.putExtra("Member_ID","000000");
-        //startActivity(intent);
+                    if (false) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("Member_Name","test");
+                        intent.putExtra("Member_ID","000000");
+                        startActivity(intent);
+                        finish();
+                    }
+                    else {
+                        Log.d("Tag", "clicked2");
+                    }
+                }
+                catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        LoginRequest loginRequest = new LoginRequest(id, pass, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+        queue.add(loginRequest);
+
     }
 
     public void onClickSignUp(View v){
@@ -56,38 +79,24 @@ public class LoginActivity extends AppCompatActivity {
     public void onClickSNS(View v){
         // SNS 연동
     }
+    class LoginRequest extends StringRequest {
+        final static private String URL = "https://capston2webapp.azurewebsites.net/api/Register";
+        private Map<String, String> parameters;
 
-    public class loginTask extends AsyncTask<Void, Void, String> {
-
-        private String url;
-        private ContentValues values;
-
-        public loginTask(String url, ContentValues values) {
-
-            this.url = url;
-            this.values = values;
+        public LoginRequest(String id, String pw, Response.Listener<String> listener) {
+            super(Method.POST, URL, listener, null); // 해당 정보를 POST 방식으로 URL에 전송
+            Log.d("Tag", "LoginRequest");
+            parameters = new HashMap<>();
+            parameters.put("id", id);
+            parameters.put("password", pw);
         }
 
         @Override
-        protected String doInBackground(Void... params) {
-
-            String result; // 요청 결과를 저장할 변수.
-            HttpConectManager requestHttpURLConnection = new HttpConectManager();
-            result = requestHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-
-            dialog = builder.setMessage(s).setPositiveButton("OK", null).create();
-            dialog.show();
-
-            //doInBackground()로 부터 리턴된 값이 onPostExecute()의 매개변수로 넘어오므로 s를 출력한다.
+        public Map<String, String> getParams() {
+            return parameters;
         }
     }
 }
+
+
+
