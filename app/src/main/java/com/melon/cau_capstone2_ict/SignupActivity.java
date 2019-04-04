@@ -1,19 +1,33 @@
 package com.melon.cau_capstone2_ict;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
 
     private EditText signup_id, signup_pass, signup_passConf,signup_email;
     private Button signup_validate;
     private AlertDialog dialog;
-    boolean validate = false;
+    boolean isValidate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +42,20 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void onClickValidate(View v) {
-        // ID 중복 체크
-        validate = true;
+        String memberID = signup_id.getText().toString();
+
+        if (isValidate) {
+            return;
+        }
+
+        if (memberID.length() < 5) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
+            dialog = builder.setMessage("아이디는 5자 이상이어야 합니다.").setNegativeButton("Retry", null).create();
+            dialog.show();
+        }
+        else{
+            validationCheck(memberID);
+        }
     }
 
     public void onClickNext(View v) {
@@ -39,7 +65,7 @@ public class SignupActivity extends AppCompatActivity {
         String email = signup_email.getText().toString();
         AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
 
-        if (!validate) {
+        if (!isValidate) {
             dialog = builder.setMessage("아이디 중복 체크를 해주세요.").setPositiveButton("OK", null).create();
             dialog.show();
             return;
@@ -74,5 +100,57 @@ public class SignupActivity extends AppCompatActivity {
 
     public void onClickBack(View v){
         finish();
+    }
+
+    public void validationCheck(String memberID){
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    Log.d("Tag", "response : " + response);
+
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("return");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
+                    if (success) {
+                        Toast.makeText(getApplicationContext(), "사용할 수 있는 아이디입니다.", Toast.LENGTH_SHORT).show();
+                        isValidate = true;
+                        signup_validate.setBackgroundColor(Color.GRAY);
+                    } else {
+                        dialog = builder.setMessage("이미 사용 중인 아이디입니다.").setNegativeButton("Retry", null).create();
+                        dialog.show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        ValidateRequest validateRequest = new ValidateRequest(memberID, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(SignupActivity.this);
+        queue.add(validateRequest);
+    }
+
+    class ValidateRequest extends StringRequest {
+        final static private String URL = "https://capston2webapp.azurewebsites.net/api/Verify";
+        private Map<String, String> parameters;
+
+        public ValidateRequest(String id, Response.Listener<String> listener) {
+            super(Method.POST, URL, listener, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("Tag", "error " + error);
+                }
+            });
+            parameters = new HashMap<>();
+            parameters.put("valueName", "id");
+            parameters.put("value", id);
+        }
+
+        @Override
+        public Map<String, String> getParams() {
+            return parameters;
+        }
     }
 }
