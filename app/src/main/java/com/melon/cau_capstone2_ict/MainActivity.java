@@ -3,11 +3,15 @@ package com.melon.cau_capstone2_ict;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
 
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.melon.cau_capstone2_ict.Manager.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,11 +19,13 @@ public class MainActivity extends AppCompatActivity {
     private String ID;
     private String name;
     private ViewPager mViewPager;
+    private FloatingActionsMenu fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("Tag", "main_1");
 
         Intent intent;
         intent = getIntent();
@@ -30,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        fab = (FloatingActionsMenu)findViewById(R.id.floatingButton);
         mViewPager = (ViewPager) findViewById(R.id.container);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -45,23 +52,44 @@ public class MainActivity extends AppCompatActivity {
         final MyPagerAdapter adapter = new MyPagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        Log.d("Tag", "main_1");
 
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        Log.d("Tag", "main_1");
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+            }
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
             }
-
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
 
             }
-
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
         });
+        Log.d("Tag", "main_end");
     }
+
+    public void onClickProfile(View v){
+        Intent intent = new Intent(this,ProfileActvity.class);
+        startActivity(intent);
+    }
+
 }
