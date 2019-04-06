@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">cau_capstone2_ICT</string>
-    <string name="kakao_app_key">f1dbaa118cbb8c3dc9dc4da6ed5d1b9e</string>
-    <string name="kakao_client_secret_value">SYV2Cpi9cuTIh1NAd6Ff5FYSxi3Co2Ij</string>
-    <string name="facebook_app_id">610254956053755</string>
-    <string name="fb_login_protocol_scheme">fb425145618261992</string>
-</resources>
