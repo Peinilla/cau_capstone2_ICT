@@ -66,6 +66,7 @@
             android:id="@+id/action_enable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onClickProfile"
             app:fab_colorNormal="@color/white"
             app:fab_colorPressed="@color/white_pressed"
             app:fab_title="Set bottom menu enabled/disabled" />

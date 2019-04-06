@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -41,8 +43,6 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
-
-import com.melon.cau_capstone2_ict.Manager.GlobalApplication;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String AUTH_TYPE = "rerequest";
@@ -96,9 +96,6 @@ public class LoginActivity extends AppCompatActivity {
         String id = login_id.getText().toString();
         String pass = login_pass.getText().toString();
 
-        id = "test1234";
-        pass = "123456";
-
         Response.Listener<String> responseListener = new Response.Listener<String> () {
             @Override
             public void onResponse(String response) {
@@ -145,7 +142,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onClickSNS_kakao(View v){
         Session.getCurrentSession().open(AuthType.KAKAO_TALK, LoginActivity.this);
-
     }
 
     public void onClickSNS_facebook(View v){
@@ -215,8 +211,8 @@ public class LoginActivity extends AppCompatActivity {
 //                    startActivity(intent);
 //                    finish();
                     Log.d("Tag", "kakao ID : " + String.valueOf(result.getId()));
-                    //Todo
-                    //ID 비교해서 회원이면 로그인, 비회원이면 정보입력으로
+                    //Todo ID 비교해서 회원이면 로그인, 비회원이면 정보입력으로
+                    //validationCheck(String.valueOf(result.getId()));
 
                 }
 
@@ -282,6 +278,58 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
+    }
+    public void validationCheck(String memberID){
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.d("Tag", "response : " + response);
+
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean isValidate = jsonResponse.getBoolean("return");
+                    if (isValidate) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        //Todo sns 로그인시 넘길 정보
+                        intent.putExtra("Member_Name","SNS TEST");
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(LoginActivity.this, Signup2Activity.class);
+                        intent.putExtra("Member_ID","SNS ID");
+                        startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        LoginActivity.ValidateRequest validateRequest = new LoginActivity.ValidateRequest(memberID, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+        queue.add(validateRequest);
+    }
+    class ValidateRequest extends StringRequest {
+        //TODO sns 아이디 확인 주소
+        final static private String URL = "";
+        private Map<String, String> parameters;
+
+        public ValidateRequest(String id, Response.Listener<String> listener) {
+            super(Method.POST, URL, listener, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("Tag", "error " + error);
+                }
+            });
+            parameters = new HashMap<>();
+            parameters.put("valueName", "id");
+            parameters.put("value", id);
+        }
+
+        @Override
+        public Map<String, String> getParams() {
+            return parameters;
+        }
     }
 }
 
