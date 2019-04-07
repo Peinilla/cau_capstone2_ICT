@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
+    <color name="black">#000000</color>
     <color name="text_Select">#000000</color>
     <color name="text_Unselect">#606060</color>
     <color name="black_semi_transparent">#B2000000</color>
