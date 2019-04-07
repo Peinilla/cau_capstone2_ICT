@@ -3,6 +3,7 @@ package com.melon.cau_capstone2_ict.Manager;
 import android.graphics.drawable.Drawable;
 
 public class MyBoard {
+    private Drawable icon;
     private String title;
     private String writer;
     private String date;

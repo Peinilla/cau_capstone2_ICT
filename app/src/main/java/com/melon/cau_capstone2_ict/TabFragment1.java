@@ -1,21 +1,16 @@
 package com.melon.cau_capstone2_ict;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.R.id.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -92,9 +87,7 @@ public class TabFragment1 extends Fragment {
         spinner_field.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(spinner_field.getSelectedItemPosition() > 0){
-                    Log.v("알림",spinner_field.getSelectedItem().toString()+ "is selected");
-                }
+                //Todo 제목/글쓴이 검색 선택 구현해야됨
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {

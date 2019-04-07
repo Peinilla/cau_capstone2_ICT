@@ -27,7 +27,7 @@
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/writer"
+        android:id="@+id/chat_writer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
@@ -47,7 +47,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/writer"
+        android:layout_toRightOf="@+id/chat_writer"
         android:layout_weight="1"
         android:gravity="left|center"
         android:text="(댓글수)"

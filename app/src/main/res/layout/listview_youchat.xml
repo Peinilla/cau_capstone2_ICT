@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:orientation="horizontal">
+
+    <View
+        android:id="@+id/youchat_space"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:id="@+id/chat_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/account" />
+
+    <TextView
+        android:id="@+id/chat_writer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/chat_icon"
+        android:layout_weight="1"
+        android:gravity="left|center"
+        android:text="글쓴이123" />
+
+    <TextView
+        android:id="@+id/chat_youtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_writer"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_toLeftOf="@+id/youchat_space"
+        android:layout_toRightOf="@+id/chat_icon"
+        android:layout_weight="1"
+        android:gravity="left|center"
+        android:text="간다라마다12 ㅁㄴㄹ3ㄻㄴㅇㄻㄴㅇㄹㄷㄻㅈㄷㄴㄹㄴㅁㅇㄹㄴㅇㅁㄹㄷㄹㄴㅇㄹ"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/chat_youdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/chat_youtext"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@+id/chat_youtext"
+        android:layout_weight="0"
+        android:gravity="left|center"
+        android:text="19.04.07"
+        android:textSize="12sp" />
+
+</RelativeLayout>
