@@ -24,7 +24,7 @@
         />
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/pager_calendar"
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/tab_layout"
@@ -40,13 +40,14 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         app:fab_addButtonColorNormal="@color/white"
         app:fab_addButtonColorPressed="@color/white_pressed"
         app:fab_addButtonPlusIconColor="@color/half_black"
         app:fab_addButtonSize="mini"
-        app:fab_expandDirection="down"
-        app:layout_anchor="@+id/pager_calendar"
-        app:layout_anchorGravity="left|center">
+        app:fab_expandDirection="up"
+        app:layout_anchor="@+id/pager"
+        app:layout_anchorGravity="right|bottom">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_remove"
