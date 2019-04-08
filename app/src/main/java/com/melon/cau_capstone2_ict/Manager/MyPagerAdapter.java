@@ -1,10 +1,11 @@
 package com.melon.cau_capstone2_ict.Manager;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.melon.cau_capstone2_ict.TabFragment1;
+import com.melon.cau_capstone2_ict.MyBoardFragment;
 import com.melon.cau_capstone2_ict.TabFragment2;
 import com.melon.cau_capstone2_ict.TabFragment3;
 import com.melon.cau_capstone2_ict.TabFragment_calendar;
@@ -22,7 +23,11 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                TabFragment1 tab1 = new TabFragment1();
+                MyBoardFragment tab1 = new MyBoardFragment();
+                //게시판 ID 보내기
+                Bundle bundle = new Bundle(1);
+                bundle.putString("boardID", "test12345");
+                tab1.setArguments(bundle);
                 return tab1;
             case 1:
                 TabFragment2 tab2 = new TabFragment2();

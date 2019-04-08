@@ -62,9 +62,10 @@ public class MyBoardAdapter extends BaseAdapter {
     }
 
     //Todo 아이템 추가
-    public void addItem() {
+    public void addItem(String t, String w) {
         MyBoard m = new MyBoard();
-
+        m.setTitle(t);
+        m.setWriter(w);
         listViewItemList.add(m);
     }
 }

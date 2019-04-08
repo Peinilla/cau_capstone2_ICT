@@ -3,13 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/board_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="중문거주 게시판"
+        android:textSize="30sp" />
+
+    <ImageButton
+        android:id="@+id/gpsboard_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/listview1"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/arrow_left_40x40" />
 
     <ListView
         android:id="@+id/listview1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/SearchBar" />
+        android:layout_above="@+id/SearchBar"
+        android:layout_below="@+id/board_title" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/floatingButton"
@@ -58,8 +80,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/half_black"
-        android:visibility="visible">
+        android:background="@color/blue_semi_transparent"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -79,6 +101,8 @@
                 android:id="@+id/textView_search"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"
                 android:layout_toRightOf="@+id/image_search"
                 android:hint="검색"
                 android:singleLine="true"

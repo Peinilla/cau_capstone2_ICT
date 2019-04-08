@@ -14,8 +14,8 @@ public class MyBoard {
         title = "Test Title";
         writer = "test12345";
         date = "19.04.07";
-        numComment = 3;
-        numRecommend = 5;
+        numComment = 1;
+        numRecommend = 0;
     }
 
 

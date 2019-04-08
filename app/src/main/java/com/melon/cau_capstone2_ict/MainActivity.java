@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -52,10 +53,8 @@ public class MainActivity extends AppCompatActivity {
         final MyPagerAdapter adapter = new MyPagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
-        Log.d("Tag", "main_1");
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        Log.d("Tag", "main_1");
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -84,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        Log.d("Tag", "main_end");
     }
 
     public void onClickProfile(View v){
@@ -92,4 +90,23 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void replaceFragment(int fragmentId){
+        //화면에 보여지는 fragment를 추가하거나 바꿀 수 있는 객체를 만든다.
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        MyBoardFragment f = new MyBoardFragment();
+        Bundle bundle = new Bundle(1);
+        bundle.putString("boardID", "프래그먼트 변경");
+        f.setArguments(bundle);
+
+        if( fragmentId == 1 ) {
+            transaction.replace(R.id.container, f);
+        }
+        //Back 버튼 클릭 시 이전 프래그먼트로 이동시키도록 한다.
+
+        transaction.addToBackStack(null);
+        //fragment의 변경사항을 반영시킨다.
+
+        transaction.commit();
+    }
 }

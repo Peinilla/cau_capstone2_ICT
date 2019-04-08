@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.melon.cau_capstone2_ict.R;
@@ -75,15 +74,11 @@ public class MyChatAdapter extends BaseAdapter {
                     break;
                 case VIEW_YOUCHAT_RE:
                     convertView = LayoutInflater.from(context).
-                            inflate(R.layout.listview_youchat, parent, false);
-                    ImageView youIcon = (ImageView) convertView.findViewById(R.id.chat_icon);
+                            inflate(R.layout.listview_youchatre, parent, false);
                     TextView youTextViewRe = (TextView) convertView.findViewById(R.id.chat_youtext) ;
-                    TextView writerViewRe = (TextView) convertView.findViewById(R.id.chat_writer) ;
                     TextView youDateViewRe = (TextView) convertView.findViewById(R.id.chat_youdate) ;
 
-                    youIcon.setVisibility(View.INVISIBLE);
                     youTextViewRe.setText(myChat_item.getText());
-                    writerViewRe.setText("");
                     youDateViewRe.setText(myChat_item.getDate());
                     break;
             }
@@ -114,8 +109,10 @@ public class MyChatAdapter extends BaseAdapter {
     }
 
     //Todo 아이템 추가
-    public void addItem(int t) {
+    public void addItem(int t,String text, String w) {
         MyChat m = new MyChat(t);
+        m.setWriter(w);
+        m.setText(text);
         int size = listViewItemList.size();
         if(size == 0){
             listViewItemList.add(m);
@@ -124,6 +121,9 @@ public class MyChatAdapter extends BaseAdapter {
         if(listViewItemList.get(size-1).getType()/2 == t/2){
             if(listViewItemList.get(size-1).getWriter().equals(m.getWriter())){
                m.setType(VIEW_YOUCHAT_RE);
+            }
+            if(listViewItemList.get(size-1).getDate().equals(m.getDate())){
+                listViewItemList.get(size-1).setDate("");
             }
         }
         listViewItemList.add(m);

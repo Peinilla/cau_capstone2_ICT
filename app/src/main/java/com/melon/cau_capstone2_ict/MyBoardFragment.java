@@ -12,11 +12,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.melon.cau_capstone2_ict.Manager.MyBoardAdapter;
 
-public class TabFragment1 extends Fragment {
+public class MyBoardFragment extends Fragment {
+
+    String boardID;
 
     MyBoardAdapter adapter;
     ListView listView;
@@ -24,46 +27,46 @@ public class TabFragment1 extends Fragment {
     FloatingActionButton searchButton;
     ImageButton searchImage;
     ImageButton closeImage;
+    TextView titleView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.tab_fragment_1, container, false);
+        boardID = getArguments().getString("boardID");
+        final View rootView = inflater.inflate(R.layout.myboard_fragment, container, false);
+        Log.d("Tag", "test1234");
 
+        titleView = (TextView)rootView.findViewById(R.id.board_title);
         bnv = (BottomNavigationView)rootView.findViewById(R.id.SearchBar) ;
         listView = (ListView) rootView.findViewById(R.id.listview1);
         searchButton = (FloatingActionButton) rootView.findViewById(R.id.button_search);
         searchImage = (ImageButton) rootView.findViewById(R.id.image_search);
         closeImage = (ImageButton) rootView.findViewById(R.id.image_close);
 
+        titleView.setText(boardID);
+        Log.d("Tag", "main_1");
+
         adapter = new MyBoardAdapter();
+        Log.d("Tag", "main_1");
 
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
-        adapter.addItem();
+        adapter.addItem("상도2 게시판입니다.","작성자1");
+        adapter.addItem("가나다라마바사아자차타","작성자1");
+        adapter.addItem("가나다라마바사아자차타","작성자1");
+        adapter.addItem("캡스톤프로젝트","김현빈");
+        adapter.addItem("abcdefasdgfsdfsdf","작성자3");
+        adapter.addItem("test 게시판 작성","작성자3");
 
+        Log.d("Tag", "main_1");
 
 
         listView.setAdapter(adapter);
+        Log.d("Tag", "main_1");
 
         searchButton.setOnClickListener(new FloatingActionButton.OnClickListener(){
             @Override
             public void onClick(View view) {
                 bnv.setVisibility(View.VISIBLE);    }
         });
+        Log.d("Tag", "main_1");
 
         closeImage.setOnClickListener(new ImageButton.OnClickListener(){
             @Override
@@ -73,6 +76,7 @@ public class TabFragment1 extends Fragment {
 
         final Spinner spinner_field = (Spinner) rootView.findViewById(R.id.spinner_search);
 
+        Log.d("Tag", "main_1");
 
         String[] str = getResources().getStringArray(R.array.search_item);
 
@@ -93,6 +97,7 @@ public class TabFragment1 extends Fragment {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+        Log.d("Tag", "end");
 
         return rootView;
     }

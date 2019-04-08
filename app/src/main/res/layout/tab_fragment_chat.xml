@@ -5,20 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
-
     <ListView
         android:id="@+id/chat_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/SearchBar"
-        android:layout_below="@+id/toolbar2" />
+        android:layout_above="@+id/ChatBar"
+        android:divider="@android:drawable/screen_background_light_transparent" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/ChatBar"

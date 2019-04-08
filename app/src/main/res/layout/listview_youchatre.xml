@@ -4,52 +4,36 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
-    android:layout_marginTop="5dp"
+    android:layout_marginTop="0dp"
     android:layout_marginRight="10dp"
-    android:layout_marginBottom="10dp"
+    android:layout_marginBottom="0dp"
     android:orientation="horizontal">
 
     <RelativeLayout
-        android:id="@+id/RL"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="10dp"
         android:layout_toLeftOf="@+id/youchat_space"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/chat_writer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="center_vertical"
-            android:layout_toRightOf="@+id/chat_icon"
-            android:layout_weight="1"
-            android:gravity="left|center"
-            android:text="글쓴이123" />
-
-        <ImageView
-            android:id="@+id/chat_icon"
+        <View
+            android:id="@+id/youchat_space2"
             android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/account" />
+            android:layout_height="30dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/chat_youtext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/chat_writer"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="0dp"
             android:layout_marginRight="0dp"
-            android:layout_toRightOf="@+id/chat_icon"
+            android:layout_toRightOf="@+id/youchat_space2"
             android:layout_weight="0"
             android:background="@drawable/youchat"
             android:gravity="center"
-            android:text="dfasdf"
+            android:text="가나다라마바사아자"
             android:textSize="18sp" />
 
         <TextView
@@ -59,6 +43,7 @@
             android:layout_below="@+id/chat_youtext"
             android:layout_alignRight="@+id/chat_youtext"
             android:layout_gravity="bottom|left"
+            android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:gravity="left|center"
             android:singleLine="true"

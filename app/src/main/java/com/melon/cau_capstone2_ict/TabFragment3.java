@@ -27,15 +27,17 @@ public class TabFragment3 extends Fragment {
         chatList = (ListView) rootView.findViewById(R.id.chat_list);
 
         adapter = new MyChatAdapter();
-        adapter.addItem(2);
-        adapter.addItem(2);
-        adapter.addItem(2);
-        adapter.addItem(2);
-        adapter.addItem(2);
-        adapter.addItem(0);
-        adapter.addItem(2);
-        adapter.addItem(0);
-        adapter.addItem(2);
+        adapter.addItem(2,"369 하자","물 마시는 토끼");
+        adapter.addItem(2,"너부터","물 마시는 토끼");
+        adapter.addItem(2,"시작","물 마시는 토끼");
+
+        adapter.addItem(0,"1","물 마시는 토끼");
+        adapter.addItem(2,"2","물 마시는 토끼");
+        adapter.addItem(0,"짝","물 마시는 토끼");
+        adapter.addItem(2,"4","물 마시는 토끼");
+        adapter.addItem(2,"중복 채팅 테스트","물 마시는 토끼");
+        adapter.addItem(2,"줄바꿈 테스트 가나다라마바사아자차타파하","물 마시는 토끼");
+        adapter.addItem(0,"test","물 마시는 토끼");
 
         chatList.setAdapter(adapter);
         add.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
