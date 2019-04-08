@@ -2,6 +2,8 @@ package com.melon.cau_capstone2_ict;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,36 +12,75 @@ import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.melon.cau_capstone2_ict.Manager.RecyclerAdapter;
+
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 public class TabFragment_calendar extends Fragment {
     private CalendarView calendarView;
-    private ListView listView_timeline, listView_my;
     private TextView textView_date;
-    private ArrayAdapter adapter_timeline, adapter_temp;
+
+    private RecyclerView myRecyclerView;
+    private RecyclerAdapter myRecyclerAdapter;
+    private ArrayList<CalendarBoardClass> myArray;
+    private LinearLayoutManager myLayoutManager;
+
+    private RecyclerView timelineRecyclerView;
+    private RecyclerAdapter timelineRecyclerAdapter;
+    private ArrayList<CalendarBoardClass> timelineArray;
+    private LinearLayoutManager timelineLayoutManager;
+
+    private Calendar calendar;
+    private int year, month, day;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_calendar, container, false);
+
         calendarView = rootView.findViewById(R.id.calendar);
         textView_date = rootView.findViewById(R.id.textview_date);
+        calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DATE);
+        String date = year + "/" + Integer.toString((int) month + 1) + "/" + day;
+        textView_date.setText(date);
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day){
-                String date = year + "/" + Integer.toString((int)month + 1) + "/" + day;
+            public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day) {
+                String date = year + "/" + Integer.toString((int) month + 1) + "/" + day;
                 textView_date.setText(date);
             }
         });
 
-        final String[] List_TimeLine = {"리스트01", "리스트02", "리스트03", "리스트04", "리스트05", "리스트06", "리스트07"
-                , "리스트08", "리스트09", "리스트10", "리스트11", "리스트12", "리스트13", "리스트14", "리스트15", "리스트16"
-                , "리스트17", "리스트18", "리스트19", "리스트20", "리스트21", "리스트22", "리스트23", "리스트24", "리스트25"};
-        final String[] List_Temp = {"운영체제", "자료구조", "알고리즘"};
-        adapter_timeline = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, List_TimeLine);
-        adapter_temp = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, List_Temp);
-        listView_timeline = rootView.findViewById(R.id.timeline);
-        listView_timeline.setAdapter(adapter_timeline);
-        listView_my = rootView.findViewById(R.id.listview_my);
-        listView_my.setAdapter(adapter_temp);
+        myArray = new ArrayList<>();
+        myArray.add(new CalendarBoardClass("운동", "2시 305관"));
+        myArray.add(new CalendarBoardClass("친구들", "7시 흑석역"));
+        myRecyclerView = rootView.findViewById(R.id.recycler_my);
+        myLayoutManager = new LinearLayoutManager(getActivity());
+        myRecyclerView.setLayoutManager(myLayoutManager);
+        myRecyclerAdapter = new RecyclerAdapter(getActivity(), myArray);
+        myRecyclerView.setAdapter(myRecyclerAdapter);
+
+        timelineArray = new ArrayList<>();
+        for (int i = 1; i <= 50; i++) {
+            String title = "리스트";
+            if (i < 10)
+                title += "0";
+            title += Integer.toString(i);
+            timelineArray.add(new CalendarBoardClass(title, "이름 시간 장소"));
+        }
+
+        timelineRecyclerView = rootView.findViewById(R.id.recycler_timeline);
+        timelineLayoutManager = new LinearLayoutManager(getActivity());
+        timelineRecyclerView.setLayoutManager(timelineLayoutManager);
+        timelineRecyclerAdapter = new RecyclerAdapter(getActivity(), timelineArray);
+        timelineRecyclerView.setAdapter(timelineRecyclerAdapter);
 
         return rootView;
 
