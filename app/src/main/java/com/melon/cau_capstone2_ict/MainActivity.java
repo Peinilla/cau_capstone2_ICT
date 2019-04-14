@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -22,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private FloatingActionsMenu fab;
 
+    private long pressedTime;
+    private OnBackPressedListener mBackListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,21 +35,16 @@ public class MainActivity extends AppCompatActivity {
         Intent intent;
         intent = getIntent();
 
-        ID = intent.getStringExtra("Member_ID");
-        name = intent.getStringExtra("Member_Name");
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         fab = (FloatingActionsMenu)findViewById(R.id.floatingButton);
         mViewPager = (ViewPager) findViewById(R.id.container);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setText("1"));
-        tabLayout.addTab(tabLayout.newTab().setText("2"));
-        tabLayout.addTab(tabLayout.newTab().setText("3"));
-        tabLayout.addTab(tabLayout.newTab().setText("4"));
+        tabLayout.addTab(tabLayout.newTab().setText("프로필"));
+        tabLayout.addTab(tabLayout.newTab().setText("거주지"));
+        tabLayout.addTab(tabLayout.newTab().setText("현재위치"));
+        tabLayout.addTab(tabLayout.newTab().setText("채팅방"));
+        tabLayout.addTab(tabLayout.newTab().setText("캘린더"));
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -108,5 +107,40 @@ public class MainActivity extends AppCompatActivity {
         //fragment의 변경사항을 반영시킨다.
 
         transaction.commit();
+    }
+
+    public interface OnBackPressedListener {
+        public void onBack();
+    }
+
+
+    public void setOnBackPressedListener(OnBackPressedListener listener) {
+        mBackListener = listener;
+    }
+    @Override
+    public void onBackPressed() {
+        // 다른 Fragment 에서 리스너를 설정했을 때 처리됩니다.
+        if(mBackListener != null) {
+            mBackListener.onBack();
+            // 리스너가 설정되지 않은 상태(예를들어 메인Fragment)라면
+            // 뒤로가기 버튼을 연속적으로 두번 눌렀을 때 앱이 종료됩니다.
+        } else {
+            Log.e("!!!", "Listener is null");
+            if ( pressedTime == 0 ) {
+                pressedTime = System.currentTimeMillis();
+            }
+            else {
+                int seconds = (int) (System.currentTimeMillis() - pressedTime);
+
+                if ( seconds > 2000 ) {
+                    pressedTime = 0 ;
+                }
+                else {
+                    super.onBackPressed();
+                    finish();
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                }
+            }
+        }
     }
 }

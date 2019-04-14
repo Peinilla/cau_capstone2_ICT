@@ -4,21 +4,20 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.melon.cau_capstone2_ict.Manager.CalendarBoardClass;
+import com.melon.cau_capstone2_ict.Manager.MyCalendarDate;
 import com.melon.cau_capstone2_ict.Manager.RecyclerAdapter;
 
-import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class TabFragment_calendar extends Fragment {
     private CalendarView calendarView;
@@ -35,7 +34,9 @@ public class TabFragment_calendar extends Fragment {
     private LinearLayoutManager timelineLayoutManager;
 
     private Calendar calendar;
-    private int year, month, day;
+    public static int mYear, mMonth, mDay;
+
+    FloatingActionButton add;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,24 +44,33 @@ public class TabFragment_calendar extends Fragment {
 
         calendarView = rootView.findViewById(R.id.calendar);
         textView_date = rootView.findViewById(R.id.textview_date);
+        add = (FloatingActionButton)rootView.findViewById(R.id.button_calendaradd);
         calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DATE);
-        String date = year + "/" + Integer.toString((int) month + 1) + "/" + day;
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MONTH);
+        mDay = calendar.get(Calendar.DATE);
+        String date = mYear + "/" + Integer.toString((int) mMonth + 1) + "/" + mDay;
         textView_date.setText(date);
+
+        myArray = new ArrayList<>();
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day) {
+                mYear = year;
+                mMonth = month;
+                mDay = day;
+                MyCalendarDate.getInstance().setDate(year,month,day);
+                myRecyclerAdapter.notifyDataSetChanged();
+
                 String date = year + "/" + Integer.toString((int) month + 1) + "/" + day;
                 textView_date.setText(date);
             }
         });
 
-        myArray = new ArrayList<>();
-        myArray.add(new CalendarBoardClass("운동", "2시 305관"));
-        myArray.add(new CalendarBoardClass("친구들", "7시 흑석역"));
+        CalendarBoardClass c = new CalendarBoardClass("할 일","test용",mYear,mMonth,mDay);
+        myArray.add(c);
+
         myRecyclerView = rootView.findViewById(R.id.recycler_my);
         myLayoutManager = new LinearLayoutManager(getActivity());
         myRecyclerView.setLayoutManager(myLayoutManager);
@@ -68,8 +78,8 @@ public class TabFragment_calendar extends Fragment {
         myRecyclerView.setAdapter(myRecyclerAdapter);
 
         timelineArray = new ArrayList<>();
-        for (int i = 1; i <= 50; i++) {
-            String title = "리스트";
+        for (int i = 1; i <= 3; i++) {
+            String title = "친구 타임라인";
             if (i < 10)
                 title += "0";
             title += Integer.toString(i);
@@ -81,6 +91,15 @@ public class TabFragment_calendar extends Fragment {
         timelineRecyclerView.setLayoutManager(timelineLayoutManager);
         timelineRecyclerAdapter = new RecyclerAdapter(getActivity(), timelineArray);
         timelineRecyclerView.setAdapter(timelineRecyclerAdapter);
+
+        add.setOnClickListener(new FloatingActionButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.d("Tag", "click d : " +mDay);
+                myRecyclerAdapter.additem(mYear,mMonth,mDay);
+                myRecyclerAdapter.notifyDataSetChanged();
+            }
+        });
 
         return rootView;
 

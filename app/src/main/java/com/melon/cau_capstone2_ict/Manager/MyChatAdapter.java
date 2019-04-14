@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -119,11 +120,13 @@ public class MyChatAdapter extends BaseAdapter {
             return;
         }
         if(listViewItemList.get(size-1).getType()/2 == t/2){
-            if(listViewItemList.get(size-1).getWriter().equals(m.getWriter())){
-               m.setType(VIEW_YOUCHAT_RE);
-            }
             if(listViewItemList.get(size-1).getDate().equals(m.getDate())){
                 listViewItemList.get(size-1).setDate("");
+            }
+            if(listViewItemList.get(size-1).getWriter().equals(m.getWriter())){
+                if(t!=0) {
+                    m.setType(VIEW_YOUCHAT_RE);
+                }
             }
         }
         listViewItemList.add(m);

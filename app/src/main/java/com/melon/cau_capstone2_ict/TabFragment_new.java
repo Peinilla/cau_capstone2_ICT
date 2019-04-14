@@ -3,7 +3,6 @@ package com.melon.cau_capstone2_ict;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class TabFragment2 extends Fragment {
+public class TabFragment_new extends Fragment {
 
     FrameLayout frameLayout;
 

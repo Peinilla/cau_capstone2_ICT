@@ -37,7 +37,8 @@
                     android:layout_marginRight="5dp"
                     android:ems="6"
                     android:hint="닉네임"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:text="가오리2" />
 
                 <Button
                     android:id="@+id/button_validateName"
@@ -60,9 +61,9 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
-                android:ems="10"
+                android:ems="8"
                 android:hint="거주지"
-                android:inputType="textPassword" />
+                android:text="서울" />
 
             <EditText
                 android:id="@+id/signup_dept"
@@ -76,7 +77,8 @@
                 android:layout_marginRight="10dp"
                 android:ems="10"
                 android:hint="학과"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:text="qq" />
 
             <EditText
                 android:id="@+id/signup_birth"
@@ -91,7 +93,8 @@
                 android:ems="10"
                 android:hint="생년월일 ex)19990101"
                 android:inputType="numberSigned"
-                android:maxLength="8" />
+                android:maxLength="8"
+                android:text="19940902" />
 
             <EditText
                 android:id="@+id/signup_hobby"
@@ -105,7 +108,8 @@
                 android:layout_marginRight="10dp"
                 android:ems="10"
                 android:hint="취미"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:text="qtwe" />
 
             <LinearLayout
                 android:layout_width="match_parent"

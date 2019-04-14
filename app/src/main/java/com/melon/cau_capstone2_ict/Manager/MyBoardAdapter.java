@@ -42,6 +42,10 @@ public class MyBoardAdapter extends BaseAdapter {
 
         MyBoard myBoard_item = listViewItemList.get(position);
 
+        if(pos%2 == 0){
+            convertView.setBackgroundResource(R.color.color_board_even);
+        }
+
         titleView.setText(myBoard_item.getTitle());
         writerView.setText(myBoard_item.getWriter());
         commentView.setText("("+myBoard_item.getNumComment()+")");
@@ -62,11 +66,12 @@ public class MyBoardAdapter extends BaseAdapter {
     }
 
     //Todo 아이템 추가
-    public void addItem(String t, String w) {
-        MyBoard m = new MyBoard();
-        m.setTitle(t);
-        m.setWriter(w);
+    public void addItem(MyBoard m) {
         listViewItemList.add(m);
+    }
+
+    public void clear(){
+        listViewItemList.clear();
     }
 }
 

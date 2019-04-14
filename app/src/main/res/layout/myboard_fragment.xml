@@ -10,17 +10,24 @@
         android:id="@+id/board_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/color_board_title"
         android:gravity="center"
         android:padding="5dp"
         android:text="중문거주 게시판"
         android:textSize="30sp" />
 
-    <ListView
-        android:id="@+id/listview1"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/board_swipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/SearchBar"
-        android:layout_below="@+id/board_title" />
+        android:layout_below="@+id/board_title">
+        <ListView
+            android:id="@+id/listview1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/floatingButton"
@@ -47,11 +54,12 @@
             app:fab_title="Click to remove" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_gone"
+            android:id="@+id/button_write"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_colorNormal="@color/white"
-            app:fab_colorPressed="@color/white_pressed" />
+            app:fab_colorPressed="@color/white_pressed"
+            app:fab_icon="@drawable/write_40x40" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_search"
@@ -60,7 +68,7 @@
             app:fab_colorNormal="@color/white"
             app:fab_colorPressed="@color/white_pressed"
             app:fab_icon="@drawable/search"
-            app:fab_title="Set bottom menu enabled/disabled" />
+            app:fab_title="Search" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
@@ -122,5 +130,13 @@
         </RelativeLayout>
 
     </android.support.design.widget.BottomNavigationView>
+
+    <FrameLayout
+        android:id="@+id/board_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+    </FrameLayout>
 
 </RelativeLayout>

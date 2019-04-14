@@ -2,11 +2,14 @@ package com.melon.cau_capstone2_ict.Manager;
 
 import android.graphics.drawable.Drawable;
 
-public class MyBoard {
+import java.io.Serializable;
+
+public class MyBoard implements Serializable {
     private Drawable icon;
     private String title;
     private String writer;
     private String date;
+    private String text;
     private int numComment;
     private int numRecommend;
 
@@ -14,10 +17,18 @@ public class MyBoard {
         title = "Test Title";
         writer = "test12345";
         date = "19.04.07";
-        numComment = 1;
+        text = "text";
+        numComment = 0;
         numRecommend = 0;
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public void setTitle(String title) {
         this.title = title;

@@ -40,4 +40,7 @@ dependencies {
     // 페북
     implementation 'com.facebook.android:facebook-login:4.41.0'
     implementation 'com.facebook.fresco:fresco:1.13.0'
+    implementation files('libs/signalr-client-sdk.jar')
+    implementation 'com.smartarmenia:dotnetcoresignalrclientjava:1.14'
+
 }
