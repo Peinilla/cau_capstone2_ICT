@@ -2,7 +2,6 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#FF4081</color>
     <color name="black">#000000</color>
     <color name="text_Select">#000000</color>
     <color name="text_Unselect">#606060</color>
@@ -16,10 +15,15 @@
     <color name="my_calendar">#FFD5FF</color>
     <color name="blue_semi_transparent">#805677FC</color>
     <color name="blue_semi_transparent_pressed">#80738FFE</color>
+    <color name="colorAccent">#db1644</color>
+    <color name="color_board_title">#A4B6E7</color>
+    <color name="color_board_odd">#D5DFFF</color>
+    <color name="color_board_even">#F8F8F8</color>
     <color name="selectedDay">#e1e1e1</color>
     <color name="green">#55cc55</color>
     <color name="today">#ff9955</color>
     <color name="todaySelected">#ff5599</color>
     <color name="select">#ffaaff</color>
     <color name="transparent">@android:color/transparent</color>
+
 </resources>

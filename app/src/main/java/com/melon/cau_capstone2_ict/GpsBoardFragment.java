@@ -1,15 +1,18 @@
 package com.melon.cau_capstone2_ict;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -18,7 +21,7 @@ import android.widget.TextView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.melon.cau_capstone2_ict.Manager.MyBoardAdapter;
 
-public class GpsBoardFragment extends Fragment {
+public class GpsBoardFragment extends Fragment implements MainActivity.OnBackPressedListener {
 
     String boardID;
 
@@ -30,11 +33,11 @@ public class GpsBoardFragment extends Fragment {
     ImageButton closeImage;
     ImageButton backImage;
     TextView titleView;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         boardID = getArguments().getString("boardID");
         final View rootView = inflater.inflate(R.layout.gpsboard_fragment, container, false);
+
 
         titleView = (TextView)rootView.findViewById(R.id.board_title);
         bnv = (BottomNavigationView)rootView.findViewById(R.id.SearchBar) ;
@@ -48,22 +51,17 @@ public class GpsBoardFragment extends Fragment {
 
         adapter = new MyBoardAdapter();
 
-        adapter.addItem("gps 게시판 입니다.","작성자1");
-        adapter.addItem("1","test");
-        adapter.addItem("가나다라마바사아자차타","test");
-
-        Log.d("Tag", "main_1");
 
 
         listView.setAdapter(adapter);
-        Log.d("Tag", "main_1");
+
 
         searchButton.setOnClickListener(new FloatingActionButton.OnClickListener(){
             @Override
             public void onClick(View view) {
                 bnv.setVisibility(View.VISIBLE);    }
         });
-        Log.d("Tag", "main_1");
+
 
         closeImage.setOnClickListener(new ImageButton.OnClickListener(){
             @Override
@@ -73,16 +71,12 @@ public class GpsBoardFragment extends Fragment {
         backImage.setOnClickListener(new ImageButton.OnClickListener(){
             @Override
             public void onClick(View view) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().remove(GpsBoardFragment.this).commit();
-                fragmentManager.popBackStack();
-            }
+                goBack();            }
         });
 
 
         final Spinner spinner_field = (Spinner) rootView.findViewById(R.id.spinner_search);
 
-        Log.d("Tag", "main_1");
 
         String[] str = getResources().getStringArray(R.array.search_item);
 
@@ -103,9 +97,32 @@ public class GpsBoardFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-        Log.d("Tag", "end");
+
 
         return rootView;
+    }
+    void goBack(){
+        FragmentManager fm = getFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.gps_board_container);
+        FragmentTransaction tr = fm.beginTransaction();
+        tr.remove(fragment);
+        tr.commit();
+    }
+    @Override
+    public void onBack() {
+        Log.e("Tag", "onBack()");
+        // 리스너를 설정하기 위해 Activity 를 받아옵니다.
+        MainActivity activity = (MainActivity)getActivity();
+        // 한번 뒤로가기 버튼을 눌렀다면 Listener 를 null 로 해제해줍니다.
+        activity.setOnBackPressedListener(null);
+        // MainFragment 로 교체
+        goBack();
+    }
+    @Override
+    //                     혹시 Context 로 안되시는분은 Activity 로 바꿔보시기 바랍니다.
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        ((MainActivity)context).setOnBackPressedListener(this);
     }
 
 }

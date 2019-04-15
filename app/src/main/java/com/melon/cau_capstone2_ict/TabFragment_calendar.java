@@ -2,8 +2,6 @@ package com.melon.cau_capstone2_ict;
 
 import android.animation.ValueAnimator;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,7 +30,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class TabFragment_calendar extends Fragment implements CalendarFragment.OnFragmentListener {
-//    private String boardID;
+    //    private String boardID;
     private String date;
     private Switch mSwitch;
 
@@ -49,7 +47,9 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     private static final int COUNT_PAGE = 12;
     private ViewPager pager;
     private TextView textDate;
+    private TextView textMonth;
     private FragmentAdapter adapter;
+    private ArrayList<String> arrayList;
 
     Set<String> dates;
 
@@ -61,24 +61,19 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         mSwitch = rootView.findViewById(R.id.calendar_switch);
         myRecyclerView = rootView.findViewById(R.id.recycler_my);
         timelineRecyclerView = rootView.findViewById(R.id.recycler_timeline);
-        pager = (ViewPager) rootView.findViewById(R.id.calendar_pager);
-        textDate = (TextView) rootView.findViewById(R.id.text_calendar_title);
+        pager = rootView.findViewById(R.id.calendar_pager);
+        textDate = rootView.findViewById(R.id.text_calendar_date);
+        textMonth = rootView.findViewById(R.id.text_calendar_title);
 
         initList();
-
-//        CalendarView calendarView = rootView.getRootView().findViewById(R.id.calendarview);
-//        dates = mMap.keySet();
-//        calendarView.setEventView(dates);
 
         textDate.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -90,7 +85,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                textDate.setText(adapter.getMonthDisplayed(position));
+                textMonth.setText(adapter.getMonthDisplayed(position));
 
                 if (position == 0) {
                     adapter.addPrev();
@@ -103,6 +98,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
@@ -125,19 +121,41 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
 
         return rootView;
     }
+        // TODO: addEvent 구현 -> 캘린더에 setEvent
+//    public void addEvent(){
+//        FragmentTransaction transaction = getActivity().getSupportFragmentManager();
+//    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void setEvent() {
+        String date = toString().valueOf(textDate.getText());
+        Log.d("getChild", Integer.toString(pager.getChildCount()));
+        if (!arrayList.isEmpty() && pager.getChildCount() != 0) {
+            for (int i = 0; i < pager.getChildCount(); i++) {
+                if (((CalendarView) pager.getChildAt(i)).getChildCount() != 0) {
+                    for (int j = 7; j < ((CalendarView) pager.getChildAt(i)).getChildCount(); j++) {
+                        if (arrayList.size() == 0)
+                            break;
+                        CalendarItemView child = ((CalendarItemView) ((CalendarView) pager.getChildAt(i)).getChildAt(j));
+                        String date1 = adapter.getDateDisplayed(child.getDate());
+                        if (arrayList.contains(date1)) {
+                            child.setIsEvent(true);
+                            child.invalidate();
+                        }
+                    }
+                }
+            }
+        }
+        textDate.setText(date);
     }
 
-    public void initList(){
+    public void initList() {
         adapter = new FragmentAdapter(getChildFragmentManager());
         adapter.setOnFragmentListener(this);
         adapter.setNumOfMonth(COUNT_PAGE);
         pager.setAdapter(adapter);
         pager.setCurrentItem(COUNT_PAGE);
         textDate.setText(adapter.getDateDisplayed(Calendar.getInstance().getTimeInMillis()));
+        textMonth.setText(adapter.getMonthDisplayed(pager.getCurrentItem()));
 
         //         My Calendar
         mMap = new HashMap<String, ArrayList<MyCalendar>>();
@@ -174,6 +192,13 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         mMap.put(date, new ArrayList<MyCalendar>());
         mMap.get(date).add(new MyCalendar("리스트8", "내용"));
 
+        arrayList = new ArrayList<String>();
+
+        for (String m : mMap.keySet()) {
+            if (!arrayList.contains(m))
+                arrayList.add(m);
+        }
+
         // Timeline
         timelineArray = new ArrayList<>();
         for (int i = 1; i <= 50; i++) {
@@ -193,9 +218,11 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         timelineRecyclerView.setLayoutManager(timelineLayoutManager);
         timelineTimeLineAdapter = new TimeLineAdapter(getActivity(), timelineArray);
         timelineRecyclerView.setAdapter(timelineTimeLineAdapter);
+
+        myRecyclerView.setVisibility(View.GONE);
     }
 
-    public void refreshFragment(){
+    public void refreshFragment() {
         date = toString().valueOf(textDate.getText());
         Log.d("date", date);
 
@@ -215,6 +242,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     @Override
     public void onFragmentListener(View view) {
         resizeHeight(view);
+        setEvent();
     }
 
     public void resizeHeight(View rootView) {
@@ -242,5 +270,13 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         });
         animator.setDuration(200);
         animator.start();
+    }
+
+    public void setDate(String date){
+        this.date = date;
+    }
+
+    public String getDate() {
+        return date;
     }
 }

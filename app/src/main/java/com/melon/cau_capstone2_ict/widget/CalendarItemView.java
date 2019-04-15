@@ -5,15 +5,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.drawable.shapes.OvalShape;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.melon.cau_capstone2_ict.Manager.RecyclerAdapter;
 import com.melon.cau_capstone2_ict.R;
 
 import java.text.SimpleDateFormat;
@@ -37,14 +34,6 @@ public class CalendarItemView extends View {
     private int dp1;
     private final float RADIUS = 50f;
     private boolean isEvent = false;
-
-    public void setIsEvent(boolean event){
-        isEvent = event;
-    }
-
-    public boolean getIsEvent(){
-        return isEvent;
-    }
 
     CalendarView calendarView;
     ViewPager parent;
@@ -86,7 +75,7 @@ public class CalendarItemView extends View {
                     if (!getIsStaticText()) {
                         ((CalendarView) getParent()).setSelectedView(view);
 
-                        TextView textView = getRootView().findViewById(R.id.text_calendar_title);
+                        TextView textView = getRootView().findViewById(R.id.text_calendar_date);
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
                         Date date = new Date();
                         date.setTime(todayMillis);
@@ -121,6 +110,8 @@ public class CalendarItemView extends View {
         super.onDraw(canvas);
         int xPos = (int) (canvas.getWidth() * 0.5);
         int yPos = (int) ((canvas.getHeight() / 2) - ((mPaintTextDate.descent() + mPaintTextDate.ascent()) * 0.5));
+        RectF rectF = new RectF(xPos - dp16, getHeight() / 2 - dp16, xPos + dp16, getHeight() / 2 + dp16);
+        RectF rectO = new RectF(xPos - (dp1 * 3), getHeight() / 2 - (dp1 * 10), xPos + dp1 * 3, getHeight() / 2 - (dp1 * 16));
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(todayMillis);
 
@@ -132,29 +123,25 @@ public class CalendarItemView extends View {
             canvas.drawText(CalendarView.DAY_OF_WEEK[dayOfWeek], xPos, yPos, mPaintTextDate);
         } else {
             if (getIsToday()) {
-                RectF rectF = new RectF(xPos - dp16, getHeight() / 2 - dp16, xPos + dp16, getHeight() / 2 + dp16);
                 canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos, mPaintTextToday);
 
-
-                RectF rectO = new RectF(xPos - (dp1 * 3), getHeight() / 2 - (dp1 * 10), xPos + dp1 * 3, getHeight() / 2 - (dp1 * 16));
-                canvas.drawRoundRect(rectO, RADIUS, RADIUS, mPaintBackgroundEvent);
-                if (tagView != null && tagView.getTag() != null) {
+                if (getIsSelected()) {
                     if (getIsSameDay(todayMillis, (long) tagView.getTag())) {
                         canvas.drawRoundRect(rectF, RADIUS, RADIUS, mPaintBackgroundToday);
                         canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos, mPaintTextDate);
-                        canvas.drawRoundRect(rectO, RADIUS, RADIUS, mPaintBackgroundEvent);
                     }
                 }
-//            } else if () {
-
+                if(getIsEvent())
+                    canvas.drawRoundRect(rectO, RADIUS, RADIUS, mPaintBackgroundEvent);
             } else {
-                if (tagView != null && tagView.getTag() != null) {
+                if (getIsSelected()) {
                     if (getIsSameDay(todayMillis, (long) tagView.getTag())) {
-                        RectF rectF = new RectF(xPos - dp16, getHeight() / 2 - dp16, xPos + dp16, getHeight() / 2 + dp16);
                         canvas.drawRoundRect(rectF, RADIUS, RADIUS, mPaintBackgroundSelected);
                     }
                 }
                 canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos, mPaintTextDate);
+                if(getIsEvent())
+                    canvas.drawRoundRect(rectO, RADIUS, RADIUS, mPaintBackgroundEvent);
             }
         }
     }
@@ -167,6 +154,22 @@ public class CalendarItemView extends View {
     public void setStaticText(int staticText) {
         dayOfWeek = staticText;
         isStaticText = true;
+    }
+
+    public void setIsEvent(boolean event) {
+        isEvent = event;
+    }
+
+    public boolean getIsEvent() {
+        return isEvent;
+    }
+
+    public boolean getIsSelected(){
+        return tagView != null && tagView.getTag() != null;
+    }
+
+    public long getDate() {
+        return todayMillis;
     }
 
     private boolean getIsToday() {
@@ -186,9 +189,5 @@ public class CalendarItemView extends View {
 
     public boolean getIsStaticText() {
         return isStaticText;
-    }
-
-    public long getTodayMillis() {
-        return todayMillis;
     }
 }

@@ -43,6 +43,7 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
+import com.melon.cau_capstone2_ict.Manager.MyUserData;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String AUTH_TYPE = "rerequest";
@@ -100,15 +101,15 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    String memberID = jsonResponse.getString("id");
-                    String memberPW = jsonResponse.getString("password");
+                    Log.d("Tag", "res start");
 
-                    Log.d("Tag", "id : " + memberID + "/ pass : " + memberPW);
+                    Log.d("Tag", "response : " + response);
+
+                    JSONObject jsonResponse = new JSONObject(response);
+                    MyUserData.getInstance().setData(jsonResponse.getString("id"),jsonResponse.getString("nickname"));
+                    MyUserData.getInstance().setResidence("서울");
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("Member_Name","test");
-                    intent.putExtra("Member_ID","000000");
                     startActivity(intent);
                     finish();
 
@@ -130,8 +131,14 @@ public class LoginActivity extends AppCompatActivity {
         };
 
         LoginRequest loginRequest = new LoginRequest(id, pass, responseListener);
+        Log.d("Tag", "3 end");
+
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+        Log.d("Tag", "2 end");
+
         queue.add(loginRequest);
+        Log.d("Tag", "1 end");
+
 
     }
 
@@ -163,6 +170,8 @@ public class LoginActivity extends AppCompatActivity {
             parameters = new HashMap<>();
             parameters.put("id", id);
             parameters.put("password", pw);
+            Log.d("Tag", "LoginRequest end");
+
         }
 
         @Override

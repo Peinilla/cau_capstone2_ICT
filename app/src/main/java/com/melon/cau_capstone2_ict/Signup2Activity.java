@@ -28,6 +28,7 @@ public class Signup2Activity extends AppCompatActivity {
     private String id;
     private String pass;
     private String email;
+    private String name,home,birth,hobby,dept;
     private EditText signup_name, signup_home, signup_birth,signup_dept, signup_hobby;
     private Button signup_validate;
     private AlertDialog dialog;
@@ -50,6 +51,7 @@ public class Signup2Activity extends AppCompatActivity {
         id = intent.getStringExtra("Member_ID");
         pass = intent.getStringExtra("Member_pass");
         email = intent.getStringExtra("Member_email");
+
     }
 
     public void onClickValidate(View v) {
@@ -70,11 +72,11 @@ public class Signup2Activity extends AppCompatActivity {
     }
 
     public void onClickNext(View v) {
-        String name = signup_name.getText().toString();
-        String home = signup_home.getText().toString();
-        String dept = signup_dept.getText().toString();
-        String birth = signup_birth.getText().toString();
-        String hobby = signup_hobby.getText().toString();
+        name = signup_name.getText().toString();
+        home = signup_home.getText().toString();
+        dept = signup_dept.getText().toString();
+        birth = signup_birth.getText().toString();
+        hobby = signup_hobby.getText().toString();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Signup2Activity.this);
 
@@ -88,13 +90,11 @@ public class Signup2Activity extends AppCompatActivity {
             dialog.show();
             return;
         }
-        /* todo 생년월일
-        else if(birth.length() != 10){
+        else if(birth.length() != 8){
             dialog = builder.setMessage("생년월일을 입력해주세요.").setNegativeButton("OK", null).create();
             dialog.show();
             return;
         }
-        */
         else{
 
             Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -164,7 +164,7 @@ public class Signup2Activity extends AppCompatActivity {
     }
 
     class RegisterRequest extends StringRequest {
-        final static private String URL = "https://capston2webapp.azurewebsites.net/api/Register";
+        final static private String URL = "https://capston2webapp.azurewebsites.net/api/AddProfile";
         private Map<String, String> parameters;
 
         public RegisterRequest(String id, String pw, Response.Listener<String> listener) {
@@ -178,12 +178,16 @@ public class Signup2Activity extends AppCompatActivity {
                 }
             });
             parameters = new HashMap<>();
+
+            parameters.put("email", email);
+            parameters.put("nickname", name);
+            parameters.put("dateofbirth", birth);
+            parameters.put("residence", home);
+            parameters.put("major", dept);
+            parameters.put("hobby", hobby);
             parameters.put("id", id);
             parameters.put("password", pw);
-            //TODO: 회원가입 파라메터
-//            parameters.put("name", name);
-//            parameters.put("birth", birth);
-//            parameters.put("email", email);
+
         }
         @Override
         public Map<String, String> getParams() {

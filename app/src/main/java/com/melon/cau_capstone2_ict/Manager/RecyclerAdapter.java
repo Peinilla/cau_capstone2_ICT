@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.melon.cau_capstone2_ict.R;
-import com.melon.cau_capstone2_ict.CalendarBoardClass;
 
 import java.util.List;
 

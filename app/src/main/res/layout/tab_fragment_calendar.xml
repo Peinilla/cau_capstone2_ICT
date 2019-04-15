@@ -39,6 +39,14 @@
                     android:layout_height="wrap_content"
                     android:background="#ffffff" />
 
+                <TextView
+                    android:id="@+id/text_calendar_date"
+                    android:text=""
+                    android:textSize="20sp"
+                    android:gravity="center_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
@@ -53,7 +61,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayout_calendar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -118,7 +126,7 @@
         app:fab_addButtonPlusIconColor="@color/half_black"
         app:fab_addButtonSize="mini"
         app:fab_expandDirection="up"
-        app:layout_anchor="@id/linearLayout"
+        app:layout_anchor="@id/linearLayout_calendar"
         app:layout_anchorGravity="right|bottom">
 
         <com.getbase.floatingactionbutton.FloatingActionButton

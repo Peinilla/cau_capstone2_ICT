@@ -6,38 +6,32 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/gps_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="현재위치 게시판"
-        android:textSize="30sp" />
-
-    <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:srcCompat="@drawable/arrow_40x40" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="프로필페이지"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <TextView
+        android:id="@+id/profile_ID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        app:srcCompat="@drawable/map" />
+        android:layout_below="@+id/textView"
+        android:layout_centerInParent="true"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/floatingButton"
+        android:id="@+id/chat_floatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp"
         android:layout_marginRight="0dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="0dp"
         app:fab_addButtonColorNormal="@color/white"
         app:fab_addButtonColorPressed="@color/white_pressed"
         app:fab_addButtonPlusIconColor="@color/half_black"
@@ -65,16 +59,23 @@
             android:layout_height="wrap_content"
             app:fab_colorNormal="@color/white"
             app:fab_colorPressed="@color/white_pressed"
-            app:fab_icon="@drawable/search"
             app:fab_title="Set bottom menu enabled/disabled" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
-    <FrameLayout
-        android:id="@+id/gps_board_container"
+    <ListView
+        android:id="@+id/chat_roomlist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:layout_below="@+id/profile_ID"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp" />
+
+    <FrameLayout
+        android:id="@+id/chat_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     </FrameLayout>
 

@@ -7,14 +7,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.melon.cau_capstone2_ict.Manager.MyCalendar;
 import com.melon.cau_capstone2_ict.R;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Set;
 
 public class CalendarView extends ViewGroup {
@@ -27,6 +24,8 @@ public class CalendarView extends ViewGroup {
     private Context context;
 
     Calendar calendar;
+
+    CalendarItemView child;
 
     public static String[] DAY_OF_WEEK;
 
@@ -101,7 +100,7 @@ public class CalendarView extends ViewGroup {
                     if (child != null && child.getIsSameDay((long) child.getTag(), (long) tag.getTag())) {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
                         Date date = new Date();
-                        date.setTime(child.getTodayMillis());
+                        date.setTime(child.getDate());
 
                         if (dates.contains(dateFormat.format(date))) {
                             child.setIsEvent(true);
@@ -112,7 +111,6 @@ public class CalendarView extends ViewGroup {
                 }
             }
         }
-
     }
 
     public void setSelectedView(View view) {
@@ -126,10 +124,11 @@ public class CalendarView extends ViewGroup {
 
             for (int i = 0; i < pager.getChildCount(); i++) {
                 for (int j = 7; j < getChildCount(); j++) {
-                    CalendarItemView child = (CalendarItemView) ((CalendarView) pager.getChildAt(i)).getChildAt(j);
+                    child = (CalendarItemView) ((CalendarView) pager.getChildAt(i)).getChildAt(j);
 
                     if (child != null && child.getIsSameDay((long) child.getTag(), (long) tag.getTag())) {
                         child.invalidate();
+                        child = null;
                         break;
                     }
                 }
