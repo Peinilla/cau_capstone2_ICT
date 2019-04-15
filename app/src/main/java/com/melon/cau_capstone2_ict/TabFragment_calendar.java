@@ -1,139 +1,246 @@
 package com.melon.cau_capstone2_ict;
 
+import android.animation.ValueAnimator;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
-import com.melon.cau_capstone2_ict.Manager.RecyclerAdapter;
+import com.melon.cau_capstone2_ict.Manager.FragmentAdapter;
+import com.melon.cau_capstone2_ict.Manager.MyCalendar;
+import com.melon.cau_capstone2_ict.Manager.MyCalendarAdapter;
+import com.melon.cau_capstone2_ict.Manager.TimeLine;
+import com.melon.cau_capstone2_ict.Manager.TimeLineAdapter;
+import com.melon.cau_capstone2_ict.widget.CalendarItemView;
+import com.melon.cau_capstone2_ict.widget.CalendarView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Set;
 
-public class TabFragment_calendar extends Fragment {
-    // calendar variable
-    private CalendarView calendarView;
-    private TextView textView_date;
-    private Calendar calendar;
-    private int year, month, day;
+public class TabFragment_calendar extends Fragment implements CalendarFragment.OnFragmentListener {
+//    private String boardID;
+    private String date;
+    private Switch mSwitch;
 
-    // my board
     private RecyclerView myRecyclerView;
-    private RecyclerAdapter myRecyclerAdapter;
+    private MyCalendarAdapter myCalendarAdapter;
     private LinearLayoutManager myLayoutManager;
-    private HashMap<String, ArrayList<CalendarBoardClass>> map;
-    AppBarLayout appBarLayout;
-    String date;
+    private HashMap<String, ArrayList<MyCalendar>> mMap;
 
-    // timeline
     private RecyclerView timelineRecyclerView;
-    private RecyclerAdapter timelineRecyclerAdapter;
-    private ArrayList<CalendarBoardClass> timelineArray;
+    private TimeLineAdapter timelineTimeLineAdapter;
+    private ArrayList<TimeLine> timelineArray;
     private LinearLayoutManager timelineLayoutManager;
+
+    private static final int COUNT_PAGE = 12;
+    private ViewPager pager;
+    private TextView textDate;
+    private FragmentAdapter adapter;
+
+    Set<String> dates;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        boardID = getArguments().getString("boardID");
         final View rootView = inflater.inflate(R.layout.tab_fragment_calendar, container, false);
 
-        map = new HashMap<String, ArrayList<CalendarBoardClass>>();
-
-        map.put("2019/4/1", new ArrayList<CalendarBoardClass>());
-        map.put("2019/4/8", new ArrayList<CalendarBoardClass>());
-        map.put("2019/4/9", new ArrayList<CalendarBoardClass>());
-        map.put("2019/4/17", new ArrayList<CalendarBoardClass>());
-        map.put("2019/4/20", new ArrayList<CalendarBoardClass>());
-        map.get("2019/4/1").add(new CalendarBoardClass("리스트1", "시간 장소"));
-        map.get("2019/4/1").add(new CalendarBoardClass("리스트2", "시간 장소"));
-        map.get("2019/4/9").add(new CalendarBoardClass("리스트3", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트4", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트5", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트6", "시간 장소"));
-        map.get("2019/4/17").add(new CalendarBoardClass("리스트7", "시간 장소"));
-        map.get("2019/4/20").add(new CalendarBoardClass("리스트8", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트9", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트10", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트11", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트12", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트4", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트5", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트6", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트4", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트5", "시간 장소"));
-        map.get("2019/4/8").add(new CalendarBoardClass("리스트6", "시간 장소"));
-
-        // calendar
-        calendarView = rootView.findViewById(R.id.calendar);
-        textView_date = rootView.findViewById(R.id.textview_date);
-        // today
-        calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DATE);
-        date = year + "/" + Integer.toString(month + 1) + "/" + day;
-        textView_date.setText(date);
-
-        // date click
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(CalendarView calendarView, int year, int month, int day) {
-                date = year + "/" + Integer.toString(month + 1) + "/" + day;
-                textView_date.setText(date);
-
-                if (!map.containsKey(date)) {
-                    Log.d("CreateArray: ", date);
-                    map.put(date, new ArrayList<CalendarBoardClass>());
-                }
-                myRecyclerAdapter.setRecyclerAdapter(map.get(date));
-                myRecyclerView.setAdapter(myRecyclerAdapter);
-                myRecyclerView.setVisibility(View.VISIBLE);
-            }
-        });
+        mSwitch = rootView.findViewById(R.id.calendar_switch);
         myRecyclerView = rootView.findViewById(R.id.recycler_my);
-        myLayoutManager = new LinearLayoutManager(getActivity());
-        myRecyclerView.setLayoutManager(myLayoutManager);
-        myRecyclerAdapter = new RecyclerAdapter(getActivity(), map.get(date));
-        myRecyclerView.setAdapter(myRecyclerAdapter);
+        timelineRecyclerView = rootView.findViewById(R.id.recycler_timeline);
+        pager = (ViewPager) rootView.findViewById(R.id.calendar_pager);
+        textDate = (TextView) rootView.findViewById(R.id.text_calendar_title);
 
-        appBarLayout = rootView.findViewById(R.id.appbar);
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        initList();
+
+//        CalendarView calendarView = rootView.getRootView().findViewById(R.id.calendarview);
+//        dates = mMap.keySet();
+//        calendarView.setEventView(dates);
+
+        textDate.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                float ratio = 1 - Math.abs((float) verticalOffset) / (float) appBarLayout.getTotalScrollRange();
-//                myRecyclerView.setAlpha(ratio);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                refreshFragment();
             }
         });
 
-        // timeline
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                textDate.setText(adapter.getMonthDisplayed(position));
+
+                if (position == 0) {
+                    adapter.addPrev();
+                    pager.setCurrentItem(COUNT_PAGE, false);
+                } else if (position == adapter.getCount() - 1) {
+                    adapter.addNext();
+                    pager.setCurrentItem(adapter.getCount() - (COUNT_PAGE + 1), false);
+                }
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    timelineRecyclerView.setVisibility(View.GONE);
+                    myRecyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    myRecyclerView.setVisibility(View.GONE);
+                    timelineRecyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void initList(){
+        adapter = new FragmentAdapter(getChildFragmentManager());
+        adapter.setOnFragmentListener(this);
+        adapter.setNumOfMonth(COUNT_PAGE);
+        pager.setAdapter(adapter);
+        pager.setCurrentItem(COUNT_PAGE);
+        textDate.setText(adapter.getDateDisplayed(Calendar.getInstance().getTimeInMillis()));
+
+        //         My Calendar
+        mMap = new HashMap<String, ArrayList<MyCalendar>>();
+        date = "2019.04.01";
+        mMap.put(date, new ArrayList<MyCalendar>());
+        mMap.get(date).add(new MyCalendar("리스트1", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트2", "내용"));
+
+        date = "2019.04.08";
+        mMap.put(date, new ArrayList<MyCalendar>());
+        mMap.get(date).add(new MyCalendar("리스트4", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트5", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트6", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트9", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트10", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트11", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트12", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트4", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트5", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트6", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트4", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트5", "내용"));
+        mMap.get(date).add(new MyCalendar("리스트6", "내용"));
+
+        date = "2019.04.09";
+        mMap.put(date, new ArrayList<MyCalendar>());
+        mMap.get(date).add(new MyCalendar("리스트3", "내용"));
+
+        date = "2019.04.17";
+        mMap.put(date, new ArrayList<MyCalendar>());
+        mMap.get(date).add(new MyCalendar("리스트7", "내용"));
+
+        date = "2019.04.20";
+        mMap.put(date, new ArrayList<MyCalendar>());
+        mMap.get(date).add(new MyCalendar("리스트8", "내용"));
+
+        // Timeline
         timelineArray = new ArrayList<>();
         for (int i = 1; i <= 50; i++) {
             String title = "리스트";
             if (i < 10)
                 title += "0";
             title += Integer.toString(i);
-            timelineArray.add(new CalendarBoardClass(title, "이름 시간 장소"));
+            timelineArray.add(new TimeLine(title, "이름 시간 장소"));
         }
-        timelineRecyclerView = rootView.findViewById(R.id.recycler_timeline);
+
+        myLayoutManager = new LinearLayoutManager(getActivity());
+        myRecyclerView.setLayoutManager(myLayoutManager);
+        myCalendarAdapter = new MyCalendarAdapter(getActivity(), mMap.get(date));
+        myRecyclerView.setAdapter(myCalendarAdapter);
+
         timelineLayoutManager = new LinearLayoutManager(getActivity());
         timelineRecyclerView.setLayoutManager(timelineLayoutManager);
-        timelineRecyclerAdapter = new RecyclerAdapter(getActivity(), timelineArray);
-        timelineRecyclerView.setAdapter(timelineRecyclerAdapter);
+        timelineTimeLineAdapter = new TimeLineAdapter(getActivity(), timelineArray);
+        timelineRecyclerView.setAdapter(timelineTimeLineAdapter);
+    }
 
-        return rootView;
+    public void refreshFragment(){
+        date = toString().valueOf(textDate.getText());
+        Log.d("date", date);
+
+        if (!mMap.containsKey(date)) {
+            Log.d("CreateArray: ", date);
+            mMap.put(date, new ArrayList<MyCalendar>());
+        }
+        myCalendarAdapter.setRecyclerAdapter(mMap.get(date));
+        myRecyclerView.setAdapter(myCalendarAdapter);
+        if (mSwitch.isChecked()) {
+            myRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            myRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        Log.d("onPause()", "Start");
+    public void onFragmentListener(View view) {
+        resizeHeight(view);
+    }
+
+    public void resizeHeight(View rootView) {
+        if (rootView.getHeight() < 1) {
+            return;
+        }
+
+        ViewGroup.LayoutParams layoutParams = pager.getLayoutParams();
+
+        if (layoutParams.height <= 0) {
+            layoutParams.height = rootView.getHeight();
+            pager.setLayoutParams(layoutParams);
+            return;
+        }
+
+        ValueAnimator animator = ValueAnimator.ofInt(pager.getLayoutParams().height, rootView.getHeight());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int value = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = pager.getLayoutParams();
+                layoutParams.height = value;
+                pager.setLayoutParams(layoutParams);
+            }
+        });
+        animator.setDuration(200);
+        animator.start();
     }
 }
-

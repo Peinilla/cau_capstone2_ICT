@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="0dp"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/youchat_space"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/youchat_space2"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/chat_youtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_toRightOf="@+id/youchat_space2"
+            android:layout_weight="0"
+            android:background="@drawable/youchat"
+            android:gravity="center"
+            android:text="가나다라마바사아자"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/chat_youdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/chat_youtext"
+            android:layout_alignRight="@+id/chat_youtext"
+            android:layout_gravity="bottom|left"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:gravity="left|center"
+            android:singleLine="true"
+            android:text="19.04.07"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/youchat_space"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_weight="1" />
+
+</RelativeLayout>

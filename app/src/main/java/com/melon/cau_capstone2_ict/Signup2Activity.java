@@ -88,7 +88,7 @@ public class Signup2Activity extends AppCompatActivity {
             dialog.show();
             return;
         }
-        /* todo
+        /* todo 생년월일
         else if(birth.length() != 10){
             dialog = builder.setMessage("생년월일을 입력해주세요.").setNegativeButton("OK", null).create();
             dialog.show();
@@ -180,7 +180,7 @@ public class Signup2Activity extends AppCompatActivity {
             parameters = new HashMap<>();
             parameters.put("id", id);
             parameters.put("password", pw);
-            //TODO: 2019-04-01
+            //TODO: 회원가입 파라메터
 //            parameters.put("name", name);
 //            parameters.put("birth", birth);
 //            parameters.put("email", email);
