@@ -111,7 +111,7 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
             parameters.put("residence", MyUserData.getInstance().getResidence());
             Log.d("Tag", "re " + title);
 
-
+            goBack();
         }
 
         @Override

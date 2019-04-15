@@ -130,19 +130,6 @@ public class MyBoardFragment extends Fragment {
         });
 
         final Spinner spinner_field = (Spinner) rootView.findViewById(R.id.spinner_search);
-
-
-
-        String[] str = getResources().getStringArray(R.array.search_item);
-
-
-        final ArrayAdapter<String> adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
-
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-
-        spinner_field.setAdapter(adapter);
-
-
         spinner_field.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -152,7 +139,10 @@ public class MyBoardFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-
+        String[] str = getResources().getStringArray(R.array.search_item);
+        final ArrayAdapter<String> s_adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
+        s_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner_field.setAdapter(s_adapter);
 
         return rootView;
     }
