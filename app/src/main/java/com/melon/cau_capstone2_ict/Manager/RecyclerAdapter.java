@@ -3,7 +3,6 @@ package com.melon.cau_capstone2_ict.Manager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,14 +32,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        int[] d = list.get(position).getDate();
-
-        if(MyCalendarDate.getInstance().isToday(d[0],d[1],d[2])) {
-            Log.d("Tag", "today check");
-
-            holder.title.setText(list.get(position).getTitle());
-            holder.score.setText(list.get(position).getScore());
-        }
+        holder.title.setText(list.get(position).getTitle());
+        holder.score.setText(list.get(position).getScore());
     }
 
     @Override
@@ -57,10 +50,5 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             title = (TextView) view.findViewById(R.id.title);
             score = (TextView) view.findViewById(R.id.content);
         }
-    }
-
-    public void additem(int y, int m , int d){
-        CalendarBoardClass c = new CalendarBoardClass("할 일","test용",y,m,d);
-        list.add(c);
     }
 }
