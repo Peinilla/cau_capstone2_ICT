@@ -6,13 +6,14 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.melon.cau_capstone2_ict.Manager.ChatHubManager;
@@ -28,7 +29,7 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
     FloatingActionsMenu fam;
     FloatingActionsMenu add;
     ListView chatList;
-
+    TextView chatTitle;
     EditText myMessage;
     ImageButton sendBtn;
 
@@ -44,12 +45,14 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
         final View rootView = inflater.inflate(R.layout.tab_fragment_chat, container, false);
 
         to = getArguments().getString("ToUser");
-
+        chatTitle = rootView.findViewById(R.id.chat_title);
         myMessage = rootView.findViewById(R.id.textView_chat);
         sendBtn = rootView.findViewById(R.id.image_upload);
         add = (FloatingActionsMenu)rootView.findViewById(R.id.chat_add);
         fam = (FloatingActionsMenu)rootView.findViewById(R.id.chat_floatingButton);
         chatList = (ListView) rootView.findViewById(R.id.chat_list);
+
+        chatTitle.setText(to);
 
         adapter = new MyChatAdapter();
 

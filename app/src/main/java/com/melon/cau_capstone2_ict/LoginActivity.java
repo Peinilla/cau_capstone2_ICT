@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     JSONObject jsonResponse = new JSONObject(response);
                     MyUserData.getInstance().setData(jsonResponse.getString("id"),jsonResponse.getString("nickname"));
-                    MyUserData.getInstance().setResidence("서울");
+                    MyUserData.getInstance().setResidence(jsonResponse.getString("residence"));
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);

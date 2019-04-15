@@ -56,6 +56,9 @@
         </activity>
         <activity android:name=".HomeSelectActivity" />
         <activity android:name=".ProfileActvity" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
 
 </manifest>

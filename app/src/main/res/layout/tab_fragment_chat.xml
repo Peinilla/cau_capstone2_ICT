@@ -7,11 +7,21 @@
     android:background="@color/white"
     android:clickable="true">
 
+    <TextView
+        android:id="@+id/chat_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textSize="30sp"
+        android:background="@color/color_board_title"/>
+
     <ListView
         android:id="@+id/chat_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/ChatBar"
+        android:layout_below="@+id/chat_title"
         android:divider="@android:drawable/screen_background_light_transparent" />
 
     <android.support.design.widget.BottomNavigationView

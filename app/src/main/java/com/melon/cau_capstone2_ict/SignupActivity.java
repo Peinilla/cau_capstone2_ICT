@@ -95,6 +95,7 @@ public class SignupActivity extends AppCompatActivity {
             intent.putExtra("Member_email",email);
 
             startActivity(intent);
+            finish();
         }
     }
 
@@ -117,6 +118,8 @@ public class SignupActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "사용할 수 있는 아이디입니다.", Toast.LENGTH_SHORT).show();
                         isValidate = true;
                         signup_validate.setBackgroundColor(Color.GRAY);
+                        signup_id.setFocusable(false);
+                        signup_id.setClickable(false);
                     } else {
                         dialog = builder.setMessage("이미 사용 중인 아이디입니다.").setNegativeButton("Retry", null).create();
                         dialog.show();

@@ -44,31 +44,12 @@ public class TabFragment_profile extends Fragment {
         chatListView = rootView.findViewById(R.id.chat_roomlist);
         chatContainer = rootView.findViewById(R.id.chat_container);
 
-        idView.setText(MyUserData.getInstance().getId());
+        idView.setText(MyUserData.getInstance().getNickname());
 
         chatArray = new ArrayList<>();
         adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,chatArray);
 
         ChatHubManager.getInstance().connect();
-
-        ChatHubManager.getInstance().getHubProxy().on("getUserList", new SubscriptionHandler1<String>() {
-            @Override
-            public void run(String s) {
-                try { // we added the list of connected users
-                    JSONArray jsonArray = new JSONArray(s);
-                    Log.d("Tag", "check " + s);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        String username = jsonObject.getString("username");
-                        chatArray.add(username);
-
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, String.class);
         ChatHubManager.getInstance().getHubProxy().on("getUserList", new SubscriptionHandler1<String>() {
             @Override
             public void run(String s) {
@@ -87,7 +68,8 @@ public class TabFragment_profile extends Fragment {
                             chatListView.setAdapter(adapter);
                         }
                     });
-                } catch (JSONException e) {
+                } catch (Exception e) {
+                    Log.e("Tag", "error " + e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -107,5 +89,10 @@ public class TabFragment_profile extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 }

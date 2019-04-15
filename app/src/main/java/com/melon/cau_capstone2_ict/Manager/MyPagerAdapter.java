@@ -9,6 +9,7 @@ import com.melon.cau_capstone2_ict.MyBoardFragment;
 import com.melon.cau_capstone2_ict.TabFragment2;
 import com.melon.cau_capstone2_ict.TabFragment_chat;
 import com.melon.cau_capstone2_ict.TabFragment_calendar;
+import com.melon.cau_capstone2_ict.TabFragment_new;
 import com.melon.cau_capstone2_ict.TabFragment_profile;
 
 public class MyPagerAdapter extends FragmentStatePagerAdapter {
@@ -33,7 +34,7 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
                 TabFragment2 tab2 = new TabFragment2();
                 return tab2;
             case 3:
-                TabFragment_chat tab3 = new TabFragment_chat();
+                TabFragment_new tab3 = new TabFragment_new();
                 return tab3;
             case 4:
                 TabFragment_calendar tab4 = new TabFragment_calendar();

@@ -8,8 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -29,7 +32,7 @@ public class Signup2Activity extends AppCompatActivity {
     private String pass;
     private String email;
     private String name,home,birth,hobby,dept;
-    private EditText signup_name, signup_home, signup_birth,signup_dept, signup_hobby;
+    private EditText signup_name, signup_birth,signup_dept, signup_hobby;
     private Button signup_validate;
     private AlertDialog dialog;
     boolean validateName = false;
@@ -40,10 +43,10 @@ public class Signup2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_signup2);
         signup_name = (EditText)findViewById(R.id.signup_name);
         signup_validate = (Button) findViewById(R.id.button_validateName);
-        signup_home = (EditText)findViewById(R.id.signup_home);
         signup_dept = (EditText)findViewById(R.id.signup_dept);
         signup_hobby = (EditText)findViewById(R.id.signup_hobby);
         signup_birth = (EditText)findViewById(R.id.signup_birth);
+        home = "";
 
         Intent intent;
         intent = getIntent();
@@ -52,6 +55,22 @@ public class Signup2Activity extends AppCompatActivity {
         pass = intent.getStringExtra("Member_pass");
         email = intent.getStringExtra("Member_email");
 
+        final Spinner spinner_field = (Spinner)findViewById(R.id.signup_home);
+        spinner_field.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i != 0) {
+                    home = (String)adapterView.getItemAtPosition(i);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        String[] str = getResources().getStringArray(R.array.select_home_item);
+        final ArrayAdapter<String> s_adapter= new ArrayAdapter<String>(this,R.layout.spinner_home,str);
+        s_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner_field.setAdapter(s_adapter);
     }
 
     public void onClickValidate(View v) {
@@ -73,7 +92,6 @@ public class Signup2Activity extends AppCompatActivity {
 
     public void onClickNext(View v) {
         name = signup_name.getText().toString();
-        home = signup_home.getText().toString();
         dept = signup_dept.getText().toString();
         birth = signup_birth.getText().toString();
         hobby = signup_hobby.getText().toString();
@@ -87,6 +105,11 @@ public class Signup2Activity extends AppCompatActivity {
         }
         else if (name.equals("")) {
             dialog = builder.setMessage("빈 칸 없이 입력해주세요.").setNegativeButton("OK", null).create();
+            dialog.show();
+            return;
+        }
+        else if(home.equals("")){
+            dialog = builder.setMessage("거주지를 입력해주세요.").setNegativeButton("OK", null).create();
             dialog.show();
             return;
         }
@@ -134,7 +157,7 @@ public class Signup2Activity extends AppCompatActivity {
         finish();
     }
 
-    public void validationCheck(String nickname){
+    public void validationCheck(final String nickname){
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -148,6 +171,8 @@ public class Signup2Activity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "사용할 수 있는 아이디입니다.", Toast.LENGTH_SHORT).show();
                         validateName = true;
                         signup_validate.setBackgroundColor(Color.GRAY);
+                        signup_name.setFocusable(false);
+                        signup_name.setClickable(false);
                     } else {
                         dialog = builder.setMessage("이미 사용 중인 아이디입니다.").setNegativeButton("Retry", null).create();
                         dialog.show();
@@ -178,6 +203,7 @@ public class Signup2Activity extends AppCompatActivity {
                 }
             });
             parameters = new HashMap<>();
+            Log.d("Tag", "Register error : " + email);
 
             parameters.put("email", email);
             parameters.put("nickname", name);

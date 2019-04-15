@@ -22,8 +22,7 @@
             android:layout_toLeftOf="@+id/login_signin"
             android:ems="10"
             android:hint="ID"
-            android:inputType="textPersonName"
-            android:text="test0415" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/login_password"
@@ -35,8 +34,7 @@
             android:layout_toLeftOf="@+id/login_signin"
             android:ems="10"
             android:hint="Password"
-            android:inputType="textPassword"
-            android:text="qqqq" />
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/login_signin"
