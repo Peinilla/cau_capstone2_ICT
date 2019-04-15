@@ -108,7 +108,7 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
             parameters.put("nickname", MyUserData.getInstance().getNickname());
             parameters.put("text", text);
             parameters.put("title", title);
-            parameters.put("residence", "서울");
+            parameters.put("residence", MyUserData.getInstance().getResidence());
             Log.d("Tag", "re " + title);
 
 

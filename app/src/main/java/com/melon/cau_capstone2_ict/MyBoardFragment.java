@@ -104,8 +104,6 @@ public class MyBoardFragment extends Fragment {
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.board_container, childFragment).commit();
                 frameLayout.setVisibility(View.VISIBLE);
-
-
             }
         });
 

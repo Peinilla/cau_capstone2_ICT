@@ -27,29 +27,22 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         final View rootView = inflater.inflate(R.layout.tab_fragment_boardview, container, false);
         final View test = inflater.inflate(R.layout.myboard_fragment, container, false);
 
-        Log.d("Tag", "check");
-
         Bundle bundle = getArguments();
         MyBoard m = (MyBoard) bundle.getSerializable("Board");
-        Log.d("Tag", "check");
+
 
         titleView = rootView.findViewById(R.id.board_title);
         textView = rootView.findViewById(R.id.board_text);
         dateView = rootView.findViewById(R.id.board_date);
-        Log.d("Tag", "check" + m.getTitle());
-        Log.d("Tag", "check" + m.getText());
-        Log.d("Tag", "check" + m.getDate());
 
         titleView.setText(m.getTitle());
         textView.setText(m.getText());
         dateView.setText(m.getDate());
-        Log.d("Tag", "check");
+
 
         ImageButton btn = (ImageButton)rootView.findViewById(R.id.board_back);
-
         frameLayout = (FrameLayout)rootView.findViewById(R.id.board_container);
 
-        Log.d("Tag", "check");
 
 
         btn.setOnClickListener(new Button.OnClickListener(){

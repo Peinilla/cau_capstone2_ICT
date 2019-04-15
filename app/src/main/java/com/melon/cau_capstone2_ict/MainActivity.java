@@ -30,10 +30,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("Tag", "main_1");
 
-        Intent intent;
-        intent = getIntent();
+        ChatHubManager.getInstance();
 
         fab = (FloatingActionsMenu)findViewById(R.id.floatingButton);
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -142,5 +140,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void onPause() {
+        ChatHubManager.getInstance().disconnect();
+        super.onPause();
+    }
+
+    @Override
+    public void finish() {
+        ChatHubManager.getInstance().disconnect();
+        super.finish();
+    }
+
+    @Override
+    protected void onResume() {
+        ChatHubManager.getInstance().connect();
+        super.onResume();
     }
 }

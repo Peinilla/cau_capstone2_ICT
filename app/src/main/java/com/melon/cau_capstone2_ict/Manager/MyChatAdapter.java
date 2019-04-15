@@ -109,7 +109,6 @@ public class MyChatAdapter extends BaseAdapter {
         return listViewItemList.get(position) ;
     }
 
-    //Todo 아이템 추가
     public void addItem(int t,String text, String w) {
         MyChat m = new MyChat(t);
         m.setWriter(w);

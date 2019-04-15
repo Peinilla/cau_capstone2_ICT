@@ -9,7 +9,8 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
         android:text="프로필페이지"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -61,5 +62,21 @@
             app:fab_title="Set bottom menu enabled/disabled" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    <ListView
+        android:id="@+id/chat_roomlist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/profile_ID"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp" />
+
+    <FrameLayout
+        android:id="@+id/chat_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 
 </RelativeLayout>
