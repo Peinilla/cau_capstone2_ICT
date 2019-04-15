@@ -12,6 +12,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.melon.cau_capstone2_ict.Manager.BuildingManager;
+import com.melon.cau_capstone2_ict.Manager.GpsManager;
+import com.melon.cau_capstone2_ict.Manager.MyUserData;
+
 public class TabFragment2 extends Fragment {
 
     FrameLayout frameLayout;
@@ -20,19 +24,26 @@ public class TabFragment2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_2, container, false);
 
+        GpsManager.getInstance().setmContext(getActivity());
+        GpsManager.getInstance().Update();
+        BuildingManager.getInstance().setData(getActivity());
+
         TextView titleView = (TextView)rootView.findViewById(R.id.gps_title);
         ImageButton btn = (ImageButton)rootView.findViewById(R.id.imageButton);
         frameLayout = rootView.findViewById(R.id.gps_board_container);
         btn.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Fragment childFragment = new GpsBoardFragment();
-                Bundle bundle = new Bundle(1);
-                bundle.putString("boardID", "GPS게시판_01");
-                childFragment.setArguments(bundle);
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.replace(R.id.gps_board_container, childFragment).commit();
-                frameLayout.setVisibility(View.VISIBLE);
+                String str = MyUserData.getInstance().getNearBuilding();
+                if(!str.equals("권외")) {
+                    Fragment childFragment = new GpsBoardFragment();
+                    Bundle bundle = new Bundle(1);
+                    bundle.putString("boardID", str);
+                    childFragment.setArguments(bundle);
+                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                    transaction.replace(R.id.gps_board_container, childFragment).commit();
+                    frameLayout.setVisibility(View.VISIBLE);
+                }
             }
             });
 

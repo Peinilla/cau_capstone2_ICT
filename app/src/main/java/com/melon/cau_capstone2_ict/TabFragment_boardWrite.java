@@ -35,9 +35,11 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
 
     EditText titleView;
     EditText textView;
+    String boardID;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_boardwrite, container, false);
+        boardID = getArguments().getString("boardID");
 
         titleView = rootView.findViewById(R.id.board_wtitle);
         textView = rootView.findViewById(R.id.board_wtext);
@@ -67,13 +69,6 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
 
     }
 
-    void goBack(){
-        FragmentManager fm = getFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.board_container);
-        FragmentTransaction tr = fm.beginTransaction();
-        tr.remove(fragment);
-        tr.commit();
-    }
 
     void writeRequest(){
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -108,7 +103,7 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
             parameters.put("nickname", MyUserData.getInstance().getNickname());
             parameters.put("text", text);
             parameters.put("title", title);
-            parameters.put("residence", MyUserData.getInstance().getResidence());
+            parameters.put("residence", boardID);
             Log.d("Tag", "re " + title);
 
             goBack();
@@ -120,6 +115,13 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
         }
     }
 
+    void goBack(){
+        FragmentManager fm = getFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.board_container);
+        FragmentTransaction tr = fm.beginTransaction();
+        tr.remove(fragment);
+        tr.commit();
+    }
     @Override
     public void onBack() {
         Log.e("Tag", "onBack()");

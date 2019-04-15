@@ -117,6 +117,9 @@ public class MyBoardFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment childFragment = new TabFragment_boardWrite();
+                Bundle bundle = new Bundle(1);
+                bundle.putString("boardID",boardID);
+                childFragment.setArguments(bundle);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.board_container, childFragment).commit();
                 frameLayout.setVisibility(View.VISIBLE);
