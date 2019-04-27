@@ -101,13 +101,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.d("Tag", "res start");
-
                     Log.d("Tag", "response : " + response);
 
                     JSONObject jsonResponse = new JSONObject(response);
                     MyUserData.getInstance().setData(jsonResponse.getString("id"),jsonResponse.getString("nickname"));
-                    MyUserData.getInstance().setResidence("서울");
+                    MyUserData.getInstance().setResidence(jsonResponse.getString("residence"));
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -131,14 +129,8 @@ public class LoginActivity extends AppCompatActivity {
         };
 
         LoginRequest loginRequest = new LoginRequest(id, pass, responseListener);
-        Log.d("Tag", "3 end");
-
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-        Log.d("Tag", "2 end");
-
         queue.add(loginRequest);
-        Log.d("Tag", "1 end");
-
 
     }
 
@@ -170,8 +162,6 @@ public class LoginActivity extends AppCompatActivity {
             parameters = new HashMap<>();
             parameters.put("id", id);
             parameters.put("password", pw);
-            Log.d("Tag", "LoginRequest end");
-
         }
 
         @Override

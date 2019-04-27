@@ -16,12 +16,13 @@ import android.widget.TextView;
 
 import com.melon.cau_capstone2_ict.Manager.MyBoard;
 
-public class TabFragment_boardView extends Fragment implements MainActivity.OnBackPressedListener{
+public class TabFragment_boardView extends Fragment implements MainActivity.OnBackPressedListener {
 
     FrameLayout frameLayout;
     TextView titleView;
     TextView textView;
     TextView dateView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_boardview, container, false);
@@ -40,27 +41,27 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         dateView.setText(m.getDate());
 
 
-        ImageButton btn = (ImageButton)rootView.findViewById(R.id.board_back);
-        frameLayout = (FrameLayout)rootView.findViewById(R.id.board_container);
+        ImageButton btn = (ImageButton) rootView.findViewById(R.id.board_back);
+        frameLayout = (FrameLayout) rootView.findViewById(R.id.board_container);
 
 
-
-        btn.setOnClickListener(new Button.OnClickListener(){
+        btn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
                 goBack();
             }
-            });
+        });
 
 
         return rootView;
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
     }
 
-    void goBack(){
+    void goBack() {
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.board_container);
         FragmentTransaction tr = fm.beginTransaction();
@@ -72,7 +73,7 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
     public void onBack() {
         Log.e("Tag", "onBack()");
         // 리스너를 설정하기 위해 Activity 를 받아옵니다.
-        MainActivity activity = (MainActivity)getActivity();
+        MainActivity activity = (MainActivity) getActivity();
         // 한번 뒤로가기 버튼을 눌렀다면 Listener 를 null 로 해제해줍니다.
         activity.setOnBackPressedListener(null);
         // MainFragment 로 교체
@@ -80,13 +81,13 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
 
 
     }
+
     @Override
     //                     혹시 Context 로 안되시는분은 Activity 로 바꿔보시기 바랍니다.
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((MainActivity)context).setOnBackPressedListener(this);
+        ((MainActivity) context).setOnBackPressedListener(this);
     }
-
 
 
 }

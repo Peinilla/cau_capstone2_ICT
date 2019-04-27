@@ -57,7 +57,7 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
 //        holder.reply.setText(list.get(position).getReply());
 //        holder.recommend.setText(list.get(position).getRecommend());
 //        holder.date.setText(list.get(position).getDate());
-//        holder.content.setText(list.get(position).getContent());
+        holder.content.setText(list.get(position).getContent());
 
         holder.changeVisibility(selectedItems.get(position));
 
@@ -106,15 +106,15 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
 
         public RecyclerViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
-            name = (TextView) view.findViewById(R.id.name);
+            title = (TextView) view.findViewById(R.id.calendar_title);
+            name = (TextView) view.findViewById(R.id.calendar_name);
             name.setText("");
-            reply = (TextView) view.findViewById(R.id.reply);
-            recommend = (TextView) view.findViewById(R.id.recommend);
-            date = (TextView) view.findViewById(R.id.date);
+            reply = (TextView) view.findViewById(R.id.calendar_reply);
+            recommend = (TextView) view.findViewById(R.id.calendar_recommend);
+            date = (TextView) view.findViewById(R.id.calendar_date);
             date.setText("");
-            content = (TextView) view.findViewById(R.id.content);
-            linear_spread = (LinearLayout) view.findViewById(R.id.linear_spread);
+            content = (TextView) view.findViewById(R.id.calendar_content);
+            linear_spread = (LinearLayout) view.findViewById(R.id.calendar_linear_spread);
         }
 
         private void changeVisibility(final boolean isExpanded) {

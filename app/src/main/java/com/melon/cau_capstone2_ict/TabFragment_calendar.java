@@ -2,7 +2,9 @@ package com.melon.cau_capstone2_ict;
 
 import android.animation.ValueAnimator;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.melon.cau_capstone2_ict.Manager.FragmentAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyCalendar;
 import com.melon.cau_capstone2_ict.Manager.MyCalendarAdapter;
@@ -51,7 +55,10 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     private FragmentAdapter adapter;
     private ArrayList<String> arrayList;
 
-    Set<String> dates;
+    // Test
+    private FloatingActionButton add;
+    private FrameLayout frameLayout;
+    private AppBarLayout appBarLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,7 +72,28 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         textDate = rootView.findViewById(R.id.text_calendar_date);
         textMonth = rootView.findViewById(R.id.text_calendar_title);
 
+        // test
+        add = rootView.findViewById(R.id.button_calendaradd);
+        frameLayout = rootView.findViewById(R.id.calendar_board_container);
+        appBarLayout = rootView.findViewById(R.id.calendar_appbar);
+
         initList();
+
+        add.setOnClickListener(new FloatingActionButton.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Test
+                Fragment childFragment = new TabFragment_calendarWrite();
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.replace(R.id.calendar_board_container, childFragment).commit();
+                appBarLayout.setVisibility(View.GONE);
+                frameLayout.setVisibility(View.VISIBLE);
+                //
+
+//                mMap.get(date).add(new MyCalendar("Test", "내용"));
+//                setEvent();
+            }
+        });
 
         textDate.addTextChangedListener(new TextWatcher() {
             @Override
@@ -121,12 +149,19 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
 
         return rootView;
     }
-        // TODO: addEvent 구현 -> 캘린더에 setEvent
+    // TODO: addEvent 구현 -> 캘린더에 setEvent
 //    public void addEvent(){
 //        FragmentTransaction transaction = getActivity().getSupportFragmentManager();
 //    }
 
     public void setEvent() {
+        arrayList = new ArrayList<String>();
+
+        for (String m : mMap.keySet()) {
+            if (!arrayList.contains(m) && mMap.get(m).size() != 0)
+                arrayList.add(m);
+        }
+
         String date = toString().valueOf(textDate.getText());
         Log.d("getChild", Integer.toString(pager.getChildCount()));
         if (!arrayList.isEmpty() && pager.getChildCount() != 0) {
@@ -140,6 +175,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                         if (arrayList.contains(date1)) {
                             child.setIsEvent(true);
                             child.invalidate();
+                            arrayList.remove(date1);
                         }
                     }
                 }
@@ -192,12 +228,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         mMap.put(date, new ArrayList<MyCalendar>());
         mMap.get(date).add(new MyCalendar("리스트8", "내용"));
 
-        arrayList = new ArrayList<String>();
-
-        for (String m : mMap.keySet()) {
-            if (!arrayList.contains(m))
-                arrayList.add(m);
-        }
 
         // Timeline
         timelineArray = new ArrayList<>();
@@ -272,11 +302,20 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         animator.start();
     }
 
-    public void setDate(String date){
+    public void setDate(String date) {
         this.date = date;
     }
 
     public String getDate() {
         return date;
+    }
+
+    public AppBarLayout getAppBar() {
+        return appBarLayout;
+    }
+
+    public void getBoard(String title, String text) {
+        mMap.get(date).add(new MyCalendar(title, text));
+        setEvent();
     }
 }

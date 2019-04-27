@@ -6,20 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import com.melon.cau_capstone2_ict.*;
 
 
 import java.util.ArrayList;
 
 public class MyBoardAdapter extends BaseAdapter {
-    private ArrayList<MyBoard> listViewItemList = new ArrayList<>() ;
+    private ArrayList<MyBoard> listViewItemList = new ArrayList<>();
 
     public MyBoardAdapter() {
     }
 
     @Override
     public int getCount() {
-        return listViewItemList.size() ;
+        return listViewItemList.size();
     }
 
     @Override
@@ -34,22 +35,22 @@ public class MyBoardAdapter extends BaseAdapter {
                     inflate(R.layout.listview_myboard, parent, false);
         }
 
-        TextView titleView = (TextView) convertView.findViewById(R.id.title) ;
-        TextView writerView = (TextView) convertView.findViewById(R.id.chat_writer) ;
-        TextView commentView = (TextView) convertView.findViewById(R.id.comment) ;
-        TextView recommendView = (TextView) convertView.findViewById(R.id.recommend) ;
-        TextView dateView = (TextView) convertView.findViewById(R.id.date) ;
+        TextView titleView = (TextView) convertView.findViewById(R.id.title);
+        TextView writerView = (TextView) convertView.findViewById(R.id.chat_writer);
+        TextView commentView = (TextView) convertView.findViewById(R.id.comment);
+        TextView recommendView = (TextView) convertView.findViewById(R.id.recommend);
+        TextView dateView = (TextView) convertView.findViewById(R.id.date);
 
         MyBoard myBoard_item = listViewItemList.get(position);
 
-        if(pos%2 == 0){
+        if (pos % 2 == 0) {
             convertView.setBackgroundResource(R.color.color_board_even);
         }
 
         titleView.setText(myBoard_item.getTitle());
         writerView.setText(myBoard_item.getWriter());
-        commentView.setText("("+myBoard_item.getNumComment()+")");
-        recommendView.setText("("+myBoard_item.getNumRecommend()+")");
+        commentView.setText("(" + myBoard_item.getNumComment() + ")");
+        recommendView.setText("(" + myBoard_item.getNumRecommend() + ")");
         dateView.setText(myBoard_item.getDate());
 
         return convertView;
@@ -57,12 +58,12 @@ public class MyBoardAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return position ;
+        return position;
     }
 
     @Override
     public Object getItem(int position) {
-        return listViewItemList.get(position) ;
+        return listViewItemList.get(position);
     }
 
     //Todo 아이템 추가
@@ -70,7 +71,7 @@ public class MyBoardAdapter extends BaseAdapter {
         listViewItemList.add(m);
     }
 
-    public void clear(){
+    public void clear() {
         listViewItemList.clear();
     }
 }

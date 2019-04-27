@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -22,7 +21,6 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.melon.cau_capstone2_ict.Manager.MyBoardAdapter;
 
 public class GpsBoardFragment extends Fragment implements MainActivity.OnBackPressedListener {
-
     String boardID;
 
     MyBoardAdapter adapter;
@@ -98,7 +96,6 @@ public class GpsBoardFragment extends Fragment implements MainActivity.OnBackPre
             }
         });
 
-
         return rootView;
     }
     void goBack(){
@@ -124,5 +121,4 @@ public class GpsBoardFragment extends Fragment implements MainActivity.OnBackPre
         super.onAttach(context);
         ((MainActivity)context).setOnBackPressedListener(this);
     }
-
 }

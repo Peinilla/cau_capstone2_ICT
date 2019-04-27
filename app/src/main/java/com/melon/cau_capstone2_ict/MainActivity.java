@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("프로필"));
         tabLayout.addTab(tabLayout.newTab().setText("거주지"));
         tabLayout.addTab(tabLayout.newTab().setText("현재위치"));
-        tabLayout.addTab(tabLayout.newTab().setText("채팅방"));
+        tabLayout.addTab(tabLayout.newTab().setText("지금나는"));
         tabLayout.addTab(tabLayout.newTab().setText("캘린더"));
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);

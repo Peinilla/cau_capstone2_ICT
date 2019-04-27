@@ -106,13 +106,13 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
 
         public RecyclerViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
-            name = (TextView) view.findViewById(R.id.name);
-            reply = (TextView) view.findViewById(R.id.reply);
-            recommend = (TextView) view.findViewById(R.id.recommend);
-            date = (TextView) view.findViewById(R.id.date);
-            content = (TextView) view.findViewById(R.id.content);
-            linear_spread = (LinearLayout) view.findViewById(R.id.linear_spread);
+            title = (TextView) view.findViewById(R.id.calendar_title);
+            name = (TextView) view.findViewById(R.id.calendar_name);
+            reply = (TextView) view.findViewById(R.id.calendar_reply);
+            recommend = (TextView) view.findViewById(R.id.calendar_recommend);
+            date = (TextView) view.findViewById(R.id.calendar_date);
+            content = (TextView) view.findViewById(R.id.calendar_content);
+            linear_spread = (LinearLayout) view.findViewById(R.id.calendar_linear_spread);
         }
 
         private void changeVisibility(final boolean isExpanded) {

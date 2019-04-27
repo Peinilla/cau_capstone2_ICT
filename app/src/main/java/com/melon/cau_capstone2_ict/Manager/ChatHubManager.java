@@ -1,12 +1,6 @@
 package com.melon.cau_capstone2_ict.Manager;
 
-import android.os.Handler;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -17,8 +11,6 @@ import microsoft.aspnet.signalr.client.http.Request;
 import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
 import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.hubs.HubProxy;
-import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
-import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
 import microsoft.aspnet.signalr.client.transport.ClientTransport;
 import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 

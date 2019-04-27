@@ -4,9 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
-
 
 import com.melon.cau_capstone2_ict.CalendarFragment;
 
