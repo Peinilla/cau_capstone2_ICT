@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.melon.cau_capstone2_ict.*;
 
-
 import java.util.ArrayList;
 
 public class MyBoardAdapter extends BaseAdapter {

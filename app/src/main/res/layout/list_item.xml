@@ -44,7 +44,7 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/calendar_reply"
+                    android:id="@+id/calendar_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -77,13 +77,6 @@
 
         </LinearLayout>
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-
-        </Spinner>
-
     </LinearLayout>
 
     <LinearLayout
@@ -105,6 +98,28 @@
             android:layout_height="wrap_content"
             android:text="내용"
             android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/calendar_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_calendar_modify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="수정"/>
+
+            <Button
+                android:id="@+id/button_calendar_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="삭제"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 

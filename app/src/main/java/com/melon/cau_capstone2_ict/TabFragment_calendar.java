@@ -28,6 +28,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.melon.cau_capstone2_ict.Manager.FragmentAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyCalendar;
 import com.melon.cau_capstone2_ict.Manager.MyCalendarAdapter;
+import com.melon.cau_capstone2_ict.Manager.MyUserData;
 import com.melon.cau_capstone2_ict.Manager.TimeLine;
 import com.melon.cau_capstone2_ict.Manager.TimeLineAdapter;
 import com.melon.cau_capstone2_ict.widget.CalendarItemView;
@@ -323,9 +324,9 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                 try {
                     Log.d("Tag", "response check : " + response);
                     JSONArray array = new JSONArray(response);
-                    for(int inx = 0; inx < array.length(); inx++) {
+                    for(int i = 0; i < array.length(); i++) {
                         MyCalendar myCalendar = new MyCalendar();
-                        JSONObject jsonResponse = array.getJSONObject(inx);
+                        JSONObject jsonResponse = array.getJSONObject(i);
                         myCalendar.setDate(jsonResponse.getString("date"));
                         myCalendar.setText(jsonResponse.getString("text"));
                         myCalendar.setTitle(jsonResponse.getString("title"));

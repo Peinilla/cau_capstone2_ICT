@@ -54,10 +54,10 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
         holder.title.setText(list.get(position).getTitle());
 //        holder.writer.setText(list.get(position).getWriter());
-//        holder.reply.setText(list.get(position).getReply());
+//        holder.comment.setText(list.get(position).getReply());
 //        holder.recommend.setText(list.get(position).getRecommend());
 //        holder.date.setText(list.get(position).getDate());
-//        holder.content.setText(list.get(position).getText());
+//        holder.text.setText(list.get(position).getText());
 
         holder.changeVisibility(selectedItems.get(position));
 
@@ -103,16 +103,19 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
         TextView date;
         TextView content;
         LinearLayout linear_spread;
+        LinearLayout linear_modify;
 
         public RecyclerViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.calendar_title);
             name = (TextView) view.findViewById(R.id.calendar_writer);
-            reply = (TextView) view.findViewById(R.id.calendar_reply);
+            reply = (TextView) view.findViewById(R.id.calendar_comment);
             recommend = (TextView) view.findViewById(R.id.calendar_recommend);
             date = (TextView) view.findViewById(R.id.calendar_date);
             content = (TextView) view.findViewById(R.id.calendar_content);
             linear_spread = (LinearLayout) view.findViewById(R.id.calendar_linear_spread);
+            linear_modify = (LinearLayout) view.findViewById(R.id.calendar_option);
+            linear_modify.setVisibility(View.INVISIBLE);
         }
 
         private void changeVisibility(final boolean isExpanded) {

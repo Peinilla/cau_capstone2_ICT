@@ -4,7 +4,7 @@ public class MyUserData {
     private String nickname;
     private String id;
     private String residence;
-    private  static MyUserData instance = null;
+    private static MyUserData instance = null;
 
 
     public void setData(String id,String name){

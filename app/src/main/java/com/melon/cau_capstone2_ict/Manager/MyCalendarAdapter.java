@@ -9,6 +9,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -53,10 +54,24 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
         holder.title.setText(list.get(position).getTitle());
         holder.writer.setText(list.get(position).getWriter());
-//        holder.reply.setText(list.get(position).getNumComment());
-//        holder.recommend.setText(list.get(position).getNumRecommend());
+        holder.comment.setText("(" + Integer.toString(list.get(position).getNumComment()) + ")");
+        holder.recommend.setText("(" + Integer.toString(list.get(position).getNumRecommend()) + ")");
         holder.date.setText(list.get(position).getDate());
-        holder.content.setText(list.get(position).getText());
+        holder.text.setText(list.get(position).getText());
+
+        holder.modify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Todo:수정하기
+            }
+        });
+
+        holder.remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Todo:삭제하기
+            }
+        });
 
         holder.changeVisibility(selectedItems.get(position));
 
@@ -78,8 +93,6 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
                 notifyItemChanged(position);
                 // 클릭된 position 저장
                 prePosition = position;
-
-//                Toast.makeText(v.getContext(), list.get(position).getTitle(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -101,23 +114,30 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView writer;
-        TextView reply;
+        TextView comment;
         TextView recommend;
         TextView date;
-        TextView content;
+        TextView text;
         LinearLayout linear_spread;
+        LinearLayout linear_modify;
+        Button modify;
+        Button remove;
 
         public RecyclerViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.calendar_title);
             writer = (TextView) view.findViewById(R.id.calendar_writer);
-            writer.setText("");
-            reply = (TextView) view.findViewById(R.id.calendar_reply);
+            comment = (TextView) view.findViewById(R.id.calendar_comment);
             recommend = (TextView) view.findViewById(R.id.calendar_recommend);
             date = (TextView) view.findViewById(R.id.calendar_date);
-            date.setText("");
-            content = (TextView) view.findViewById(R.id.calendar_content);
+            text = (TextView) view.findViewById(R.id.calendar_content);
             linear_spread = (LinearLayout) view.findViewById(R.id.calendar_linear_spread);
+            linear_modify = (LinearLayout) view.findViewById(R.id.calendar_option);
+            modify = (Button) view.findViewById(R.id.button_calendar_modify);
+            remove = (Button) view.findViewById(R.id.button_calendar_remove);
+
+            writer.setText("");
+            date.setText("");
         }
 
         private void changeVisibility(final boolean isExpanded) {

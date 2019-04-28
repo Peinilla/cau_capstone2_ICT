@@ -90,13 +90,14 @@ public class TabFragment_calendarWrite extends Fragment implements MainActivity.
         goBack();
         // Test
 
-//        writeRequest wr = new writeRequest(title,text,responseListener);
-//        RequestQueue queue = Volley.newRequestQueue(getActivity());
-//        queue.add(wr);
+        writeRequest wr = new writeRequest(title,text,responseListener);
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        queue.add(wr);
     }
 
     class writeRequest extends StringRequest {
-        final static private String URL = "https://capston2webapp.azurewebsites.net/api/ResidencePosts";
+        // url
+        final static private String URL = "";
         private Map<String, String> parameters;
 
         public writeRequest(String title, String text, Response.Listener<String> listener) {
@@ -131,8 +132,6 @@ public class TabFragment_calendarWrite extends Fragment implements MainActivity.
         activity.setOnBackPressedListener(null);
         // MainFragment 로 교체
         goBack();
-
-
     }
 
     @Override
