@@ -19,6 +19,11 @@ import android.widget.FrameLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.melon.cau_capstone2_ict.Manager.FragmentAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyCalendar;
@@ -28,13 +33,14 @@ import com.melon.cau_capstone2_ict.Manager.TimeLineAdapter;
 import com.melon.cau_capstone2_ict.widget.CalendarItemView;
 import com.melon.cau_capstone2_ict.widget.CalendarView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Set;
 
 public class TabFragment_calendar extends Fragment implements CalendarFragment.OnFragmentListener {
-    //    private String boardID;
     private String date;
     private Switch mSwitch;
 
@@ -44,7 +50,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     private HashMap<String, ArrayList<MyCalendar>> mMap;
 
     private RecyclerView timelineRecyclerView;
-    private TimeLineAdapter timelineTimeLineAdapter;
+    private TimeLineAdapter timeLineAdapter;
     private ArrayList<TimeLine> timelineArray;
     private LinearLayoutManager timelineLayoutManager;
 
@@ -52,7 +58,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     private ViewPager pager;
     private TextView textDate;
     private TextView textMonth;
-    private FragmentAdapter adapter;
+    private FragmentAdapter fragmentAdapter;
     private ArrayList<String> arrayList;
 
     // Test
@@ -62,20 +68,19 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        boardID = getArguments().getString("boardID");
         final View rootView = inflater.inflate(R.layout.tab_fragment_calendar, container, false);
 
-        mSwitch = rootView.findViewById(R.id.calendar_switch);
-        myRecyclerView = rootView.findViewById(R.id.recycler_my);
-        timelineRecyclerView = rootView.findViewById(R.id.recycler_timeline);
-        pager = rootView.findViewById(R.id.calendar_pager);
-        textDate = rootView.findViewById(R.id.text_calendar_date);
-        textMonth = rootView.findViewById(R.id.text_calendar_title);
+        mSwitch = (Switch) rootView.findViewById(R.id.calendar_switch);
+        myRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_my);
+        timelineRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_timeline);
+        pager = (ViewPager) rootView.findViewById(R.id.calendar_pager);
+        textDate = (TextView) rootView.findViewById(R.id.text_calendar_date);
+        textMonth = (TextView) rootView.findViewById(R.id.text_calendar_title);
 
         // test
-        add = rootView.findViewById(R.id.button_calendaradd);
-        frameLayout = rootView.findViewById(R.id.calendar_board_container);
-        appBarLayout = rootView.findViewById(R.id.calendar_appbar);
+        add = (FloatingActionButton) rootView.findViewById(R.id.button_calendaradd);
+        frameLayout = (FrameLayout) rootView.findViewById(R.id.calendar_board_container);
+        appBarLayout = (AppBarLayout) rootView.findViewById(R.id.calendar_appbar);
 
         initList();
 
@@ -88,10 +93,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                 transaction.replace(R.id.calendar_board_container, childFragment).commit();
                 appBarLayout.setVisibility(View.GONE);
                 frameLayout.setVisibility(View.VISIBLE);
-                //
-
-//                mMap.get(date).add(new MyCalendar("Test", "내용"));
-//                setEvent();
             }
         });
 
@@ -113,14 +114,14 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                textMonth.setText(adapter.getMonthDisplayed(position));
+                textMonth.setText(fragmentAdapter.getMonthDisplayed(position));
 
                 if (position == 0) {
-                    adapter.addPrev();
+                    fragmentAdapter.addPrev();
                     pager.setCurrentItem(COUNT_PAGE, false);
-                } else if (position == adapter.getCount() - 1) {
-                    adapter.addNext();
-                    pager.setCurrentItem(adapter.getCount() - (COUNT_PAGE + 1), false);
+                } else if (position == fragmentAdapter.getCount() - 1) {
+                    fragmentAdapter.addNext();
+                    pager.setCurrentItem(fragmentAdapter.getCount() - (COUNT_PAGE + 1), false);
                 }
             }
 
@@ -149,10 +150,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
 
         return rootView;
     }
-    // TODO: addEvent 구현 -> 캘린더에 setEvent
-//    public void addEvent(){
-//        FragmentTransaction transaction = getActivity().getSupportFragmentManager();
-//    }
 
     public void setEvent() {
         arrayList = new ArrayList<String>();
@@ -171,7 +168,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                         if (arrayList.size() == 0)
                             break;
                         CalendarItemView child = ((CalendarItemView) ((CalendarView) pager.getChildAt(i)).getChildAt(j));
-                        String date1 = adapter.getDateDisplayed(child.getDate());
+                        String date1 = fragmentAdapter.getDateDisplayed(child.getDate());
                         if (arrayList.contains(date1)) {
                             child.setIsEvent(true);
                             child.invalidate();
@@ -185,13 +182,13 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     }
 
     public void initList() {
-        adapter = new FragmentAdapter(getChildFragmentManager());
-        adapter.setOnFragmentListener(this);
-        adapter.setNumOfMonth(COUNT_PAGE);
-        pager.setAdapter(adapter);
+        fragmentAdapter = new FragmentAdapter(getChildFragmentManager());
+        fragmentAdapter.setOnFragmentListener(this);
+        fragmentAdapter.setNumOfMonth(COUNT_PAGE);
+        pager.setAdapter(fragmentAdapter);
         pager.setCurrentItem(COUNT_PAGE);
-        textDate.setText(adapter.getDateDisplayed(Calendar.getInstance().getTimeInMillis()));
-        textMonth.setText(adapter.getMonthDisplayed(pager.getCurrentItem()));
+        textDate.setText(fragmentAdapter.getDateDisplayed(Calendar.getInstance().getTimeInMillis()));
+        textMonth.setText(fragmentAdapter.getMonthDisplayed(pager.getCurrentItem()));
 
         //         My Calendar
         mMap = new HashMap<String, ArrayList<MyCalendar>>();
@@ -246,8 +243,8 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
 
         timelineLayoutManager = new LinearLayoutManager(getActivity());
         timelineRecyclerView.setLayoutManager(timelineLayoutManager);
-        timelineTimeLineAdapter = new TimeLineAdapter(getActivity(), timelineArray);
-        timelineRecyclerView.setAdapter(timelineTimeLineAdapter);
+        timeLineAdapter = new TimeLineAdapter(getActivity(), timelineArray);
+        timelineRecyclerView.setAdapter(timeLineAdapter);
 
         myRecyclerView.setVisibility(View.GONE);
     }
@@ -317,5 +314,35 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     public void getBoard(String title, String text) {
         mMap.get(date).add(new MyCalendar(title, text));
         setEvent();
+    }
+
+    public void getMyCalendarContext(){
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.d("Tag", "response check : " + response);
+                    JSONArray array = new JSONArray(response);
+                    for(int inx = 0; inx < array.length(); inx++) {
+                        MyCalendar myCalendar = new MyCalendar();
+                        JSONObject jsonResponse = array.getJSONObject(inx);
+                        myCalendar.setDate(jsonResponse.getString("date"));
+                        myCalendar.setText(jsonResponse.getString("text"));
+                        myCalendar.setTitle(jsonResponse.getString("title"));
+                        myCalendar.setWriter(jsonResponse.getString("writer"));
+                        myCalendarAdapter.addItem(myCalendar);
+//                        fragmentAdapter.addItem(myCalendar);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        String URL = "https://capston2webapp.azurewebsites.net/api/ResidencePosts?residenceName=" + date; // +id
+        StringRequest getBoardRequest = new StringRequest(Request.Method.GET,URL,responseListener,null);
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        queue.add(getBoardRequest);
     }
 }

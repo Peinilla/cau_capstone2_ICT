@@ -53,11 +53,11 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
         holder.title.setText(list.get(position).getTitle());
-//        holder.name.setText(list.get(position).getName());
+//        holder.writer.setText(list.get(position).getWriter());
 //        holder.reply.setText(list.get(position).getReply());
 //        holder.recommend.setText(list.get(position).getRecommend());
 //        holder.date.setText(list.get(position).getDate());
-//        holder.content.setText(list.get(position).getContent());
+//        holder.content.setText(list.get(position).getText());
 
         holder.changeVisibility(selectedItems.get(position));
 
@@ -107,7 +107,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
         public RecyclerViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.calendar_title);
-            name = (TextView) view.findViewById(R.id.calendar_name);
+            name = (TextView) view.findViewById(R.id.calendar_writer);
             reply = (TextView) view.findViewById(R.id.calendar_reply);
             recommend = (TextView) view.findViewById(R.id.calendar_recommend);
             date = (TextView) view.findViewById(R.id.calendar_date);

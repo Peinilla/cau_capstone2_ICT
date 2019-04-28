@@ -3,14 +3,21 @@ package com.melon.cau_capstone2_ict.Manager;
 public class TimeLine {
     private String title;
     private String name;
-    private String reply;
-    private String recommend;
-    private String date;
-    private String content;
+    private int reply;
+    private int recommend;
+    private String text;
 
-    public TimeLine(String title, String score) {
+    public TimeLine(String title, String text) {
         this.title = title;
-        this.content = content;
+        this.text = text;
+    }
+
+    public TimeLine() {
+        title = "title";
+        name = "writer";
+        reply = 0;
+        recommend = 0;
+        text = "text";
     }
 
     public String getTitle(){
@@ -21,19 +28,15 @@ public class TimeLine {
         return name;
     }
 
-    public String getReply(){
+    public int getReply(){
         return reply;
     }
 
-    public String getRecommend(){
+    public int getRecommend(){
         return recommend;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public String getContent(){
-        return content;
+    public String getText(){
+        return text;
     }
 }

@@ -1,34 +1,75 @@
 package com.melon.cau_capstone2_ict.Manager;
 
-public class MyCalendar {
-    private String title;
-    private String name;
-    private String reply;
-    private String recommend;
-    private String content;
+import android.graphics.drawable.Drawable;
 
-    public MyCalendar(String title, String content) {
+public class MyCalendar {
+    private Drawable icon;
+    private String title;
+    private String writer;
+    private String date;
+    private String text;
+    private int numComment;
+    private int numRecommend;
+
+    public MyCalendar(String title, String text) {
         this.title = title;
-        this.content = content;
+        this.text = text;
+    }
+
+    public MyCalendar() {
+        title = "title";
+        writer = "writer";
+        date = "19.04.01";
+        numComment = 0;
+        numRecommend = 0;
+        text = "text";
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setWriter(String writer) {
+        this.writer = writer;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setNumComment(int numComment) {
+        this.numComment = numComment;
+    }
+
+    public void setNumRecommend(int numRecommend) {
+        this.numRecommend = numRecommend;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public String getTitle(){
         return title;
     }
 
-    public String getName(){
-        return name;
+    public String getWriter(){
+        return writer;
     }
 
-    public String getReply(){
-        return reply;
+    public String getDate(){
+        return date;
     }
 
-    public String getRecommend(){
-        return recommend;
+    public int getNumComment() {
+        return numComment;
     }
 
-    public String getContent(){
-        return content;
+    public int getNumRecommend() {
+        return numRecommend;
+    }
+
+    public String getText(){
+        return text;
     }
 }

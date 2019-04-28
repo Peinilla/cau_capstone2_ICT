@@ -71,7 +71,7 @@ public class ChatHubManager {
             }
         });
 
-        hubProxy = hubConnection.createHubProxy("chatHub"); // web api  necessary method name
+        hubProxy = hubConnection.createHubProxy("chatHub"); // web api  necessary method writer
         ClientTransport clientTransport = new ServerSentEventsTransport((hubConnection.getLogger()));
         SignalRFuture<Void> signalRFuture = hubConnection.start(clientTransport);
 

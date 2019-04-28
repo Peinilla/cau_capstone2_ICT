@@ -88,6 +88,7 @@ public class TabFragment_calendarWrite extends Fragment implements MainActivity.
         // Test
         ((TabFragment_calendar) this.getParentFragment()).getBoard(title, text);
         goBack();
+        // Test
 
 //        writeRequest wr = new writeRequest(title,text,responseListener);
 //        RequestQueue queue = Volley.newRequestQueue(getActivity());

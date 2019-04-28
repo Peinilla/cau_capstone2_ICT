@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.melon.cau_capstone2_ict.R;
 
@@ -53,11 +52,11 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
         holder.title.setText(list.get(position).getTitle());
-//        holder.name.setText(list.get(position).getName());
-//        holder.reply.setText(list.get(position).getReply());
-//        holder.recommend.setText(list.get(position).getRecommend());
-//        holder.date.setText(list.get(position).getDate());
-        holder.content.setText(list.get(position).getContent());
+        holder.writer.setText(list.get(position).getWriter());
+//        holder.reply.setText(list.get(position).getNumComment());
+//        holder.recommend.setText(list.get(position).getNumRecommend());
+        holder.date.setText(list.get(position).getDate());
+        holder.content.setText(list.get(position).getText());
 
         holder.changeVisibility(selectedItems.get(position));
 
@@ -80,7 +79,7 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
                 // 클릭된 position 저장
                 prePosition = position;
 
-                Toast.makeText(v.getContext(), list.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(v.getContext(), list.get(position).getTitle(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -94,10 +93,14 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         return 0;
     }
 
+    public void addItem(MyCalendar myCalendar){
+        list.add(myCalendar);
+    }
+
     // 뷰홀더 클래스
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView title;
-        TextView name;
+        TextView writer;
         TextView reply;
         TextView recommend;
         TextView date;
@@ -107,8 +110,8 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         public RecyclerViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.calendar_title);
-            name = (TextView) view.findViewById(R.id.calendar_name);
-            name.setText("");
+            writer = (TextView) view.findViewById(R.id.calendar_writer);
+            writer.setText("");
             reply = (TextView) view.findViewById(R.id.calendar_reply);
             recommend = (TextView) view.findViewById(R.id.calendar_recommend);
             date = (TextView) view.findViewById(R.id.calendar_date);

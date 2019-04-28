@@ -39,7 +39,7 @@ public class HashKeyManager {
 
         } catch (Exception e) {
 
-            Log.e("name not found", e.toString());
+            Log.e("writer not found", e.toString());
 
         }
 
