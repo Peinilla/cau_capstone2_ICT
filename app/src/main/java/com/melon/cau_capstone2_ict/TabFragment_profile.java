@@ -50,6 +50,7 @@ public class TabFragment_profile extends Fragment {
         adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,chatArray);
 
         ChatHubManager.getInstance().connect();
+
         ChatHubManager.getInstance().getHubProxy().on("getUserList", new SubscriptionHandler1<String>() {
             @Override
             public void run(String s) {
@@ -64,6 +65,7 @@ public class TabFragment_profile extends Fragment {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            Log.d("Tag", "handler run");
                             adapter.notifyDataSetChanged();
                             chatListView.setAdapter(adapter);
                         }
@@ -74,6 +76,7 @@ public class TabFragment_profile extends Fragment {
                 }
             }
         }, String.class);
+
         chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

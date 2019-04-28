@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,7 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
         sendBtn.setOnClickListener(new ImageButton.OnClickListener(){
             @Override
             public void onClick(View v) {
+                Log.d("Tag", "send message :  " + to + " : ");
                 ChatHubManager.getInstance().send(to,myMessage.getText().toString());
                 myMessage.setText("");
             }
@@ -110,7 +112,6 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
         tr.remove(fragment);
         tr.commit();
     }
-
     @Override
     public void onBack() {
         MainActivity activity = (MainActivity)getActivity();
@@ -121,6 +122,13 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
     public void onAttach(Context context) {
         super.onAttach(context);
         ((MainActivity)context).setOnBackPressedListener(this);
+    }
+
+    @Override
+    public void onStop() {
+        Log.d("Tag", "on stop");
+        super.onStop();
+        super.onDetach();
     }
 }
 

@@ -35,6 +35,8 @@ public class BuildingManager {
                 b.name = str[3];
                 b.location.setLatitude(Float.parseFloat(str[1]));
                 b.location.setLongitude(Float.parseFloat(str[2]));
+                b.x = Integer.parseInt(str[4]);
+                b.y = Integer.parseInt(str[5]);
 
                 buildingData.add(b);
             }
@@ -66,6 +68,20 @@ public class BuildingManager {
         }
     }
 
+    public int[] getXY(String name){
+        int[] result = new int[2];
+
+        for(int inx = 0; inx < buildingData.size();inx++){
+            if(buildingData.get(inx).name.equals(name)){
+                result[0] = buildingData.get(inx).x;
+                result[1] = buildingData.get(inx).y;
+
+                return result;
+            }
+        }
+        return result;
+    }
+
     public static synchronized BuildingManager getInstance(){
         if(instance == null){
             instance = new BuildingManager();
@@ -76,6 +92,8 @@ public class BuildingManager {
     public class building{
         String name;
         Location location;
+        int x;
+        int y;
 
         building(){
             name = "";

@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         ChatHubManager.getInstance();
 
         fab = (FloatingActionsMenu)findViewById(R.id.floatingButton);
-        mViewPager = (ViewPager) findViewById(R.id.container);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
@@ -90,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        ChatHubManager.getInstance().connect();
     }
 
     public void onClickProfile(View v){

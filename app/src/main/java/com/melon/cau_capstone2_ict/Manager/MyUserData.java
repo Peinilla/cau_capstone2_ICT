@@ -7,7 +7,8 @@ public class MyUserData {
     private String id = "test0000";
     private String residence = "상도";
     private Location location;
-    private String nearBuilding;
+    private String currentBuilding = "";
+    private String prevBuilding = "";
     private static MyUserData instance = null;
 
 
@@ -19,12 +20,20 @@ public class MyUserData {
         this.location = location;
     }
 
-    public void setNearBuilding(String nearBuilding) {
-        this.nearBuilding = nearBuilding;
+    public void setPrevBuilding(String prevBuilding) {
+        this.prevBuilding = prevBuilding;
     }
 
-    public String getNearBuilding() {
-        return nearBuilding;
+    public String getPrevBuilding() {
+        return prevBuilding;
+    }
+
+    public void setCurrentBuilding(String currentBuilding) {
+        this.currentBuilding = currentBuilding;
+    }
+
+    public String getCurrentBuilding() {
+        return currentBuilding;
     }
 
     public void setResidence(String s){

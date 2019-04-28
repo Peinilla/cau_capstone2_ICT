@@ -12,7 +12,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 
 import android.provider.Settings;
@@ -177,7 +176,7 @@ public class GpsManager extends Service implements LocationListener {
         if(location != null){
             double latitude= location.getLatitude();
             double longitude = location.getLongitude();
-            MyUserData.getInstance().setNearBuilding(BuildingManager.getInstance().getNearBuilding(location));
+            MyUserData.getInstance().setCurrentBuilding(BuildingManager.getInstance().getNearBuilding(location));
 
 
             //Todo

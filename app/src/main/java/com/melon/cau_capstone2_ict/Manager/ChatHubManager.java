@@ -46,6 +46,7 @@ public class ChatHubManager {
             connect();
             return;
         }
+        Log.d("Tag", "connect");
         isConnect = true;
 
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
@@ -86,6 +87,7 @@ public class ChatHubManager {
 
     }
     public void disconnect(){ //disconnection server
+        Log.d("Tag", "disconnect");
         isConnect = false;
         hubConnection.stop();
     }

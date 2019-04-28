@@ -44,6 +44,5 @@ dependencies {
     implementation 'com.smartarmenia:dotnetcoresignalrclientjava:1.14'
     //이미지확대 라이브러리
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
-
-
+    implementation project(':android-zoom-view')
 }
