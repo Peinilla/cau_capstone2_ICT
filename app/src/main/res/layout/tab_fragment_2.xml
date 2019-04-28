@@ -21,12 +21,16 @@
         android:background="@android:color/transparent"
         app:srcCompat="@drawable/arrow_40x40" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        app:srcCompat="@drawable/map" />
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+        android:id="@+id/gps_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/gps_title"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="3" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/floatingButton"

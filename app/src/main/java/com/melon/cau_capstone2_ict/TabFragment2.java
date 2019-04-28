@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.melon.cau_capstone2_ict.Manager.BuildingManager;
 import com.melon.cau_capstone2_ict.Manager.GpsManager;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
@@ -31,6 +33,10 @@ public class TabFragment2 extends Fragment {
         TextView titleView = (TextView)rootView.findViewById(R.id.gps_title);
         ImageButton btn = (ImageButton)rootView.findViewById(R.id.imageButton);
         frameLayout = rootView.findViewById(R.id.gps_board_container);
+
+        SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)rootView.findViewById(R.id.gps_map);
+        imageView.setImage(ImageSource.resource(R.drawable.map));
+
         btn.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
