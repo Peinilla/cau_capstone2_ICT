@@ -124,11 +124,8 @@ public class TabFragment_calendarWrite extends Fragment implements MainActivity.
     @Override
     public void onBack() {
         Log.e("Tag", "onBack()");
-        // 리스너를 설정하기 위해 Activity 를 받아옵니다.
         MainActivity activity = (MainActivity) getActivity();
-        // 한번 뒤로가기 버튼을 눌렀다면 Listener 를 null 로 해제해줍니다.
         activity.setOnBackPressedListener(null);
-        // MainFragment 로 교체
         goBack();
 
 
