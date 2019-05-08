@@ -3,14 +3,22 @@ package com.melon.cau_capstone2_ict.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableContainer;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.zxing.common.BitArray;
 import com.melon.cau_capstone2_ict.R;
 
 import java.text.SimpleDateFormat;
@@ -34,6 +42,7 @@ public class CalendarItemView extends View {
     private int dp1;
     private final float RADIUS = 50f;
     private boolean isEvent = false;
+    private static CalendarItemView instance = null;
 
     CalendarView calendarView;
     ViewPager parent;

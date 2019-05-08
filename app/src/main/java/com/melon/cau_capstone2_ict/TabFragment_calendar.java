@@ -14,8 +14,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -28,7 +31,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.melon.cau_capstone2_ict.Manager.FragmentAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyCalendar;
 import com.melon.cau_capstone2_ict.Manager.MyCalendarAdapter;
-import com.melon.cau_capstone2_ict.Manager.MyUserData;
+import com.melon.cau_capstone2_ict.Manager.RSSHandler;
 import com.melon.cau_capstone2_ict.Manager.TimeLine;
 import com.melon.cau_capstone2_ict.Manager.TimeLineAdapter;
 import com.melon.cau_capstone2_ict.widget.CalendarItemView;
@@ -63,9 +66,23 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     private ArrayList<String> arrayList;
 
     // Test
-    private FloatingActionButton add;
+    private FloatingActionButton fab_add;
+    private FloatingActionButton fab_reload;
     private FrameLayout frameLayout;
     private AppBarLayout appBarLayout;
+
+    // test
+    ImageView weatherImage;
+    TextView tempText;
+    TextView popText;
+    TextView ptyText;
+    TextView wfText;
+    LinearLayout linearLayout;
+    private String finalUrl = "http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=1159060500";
+    private RSSHandler handler = new RSSHandler(finalUrl);
+    String temp, wfKor, pty, pop;
+    int hour;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,13 +96,30 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         textMonth = (TextView) rootView.findViewById(R.id.text_calendar_title);
 
         // test
-        add = (FloatingActionButton) rootView.findViewById(R.id.button_calendaradd);
+        fab_add = (FloatingActionButton) rootView.findViewById(R.id.button_calendar_add);
+        fab_reload = (FloatingActionButton) rootView.findViewById(R.id.button_calendar_reload);
         frameLayout = (FrameLayout) rootView.findViewById(R.id.calendar_board_container);
         appBarLayout = (AppBarLayout) rootView.findViewById(R.id.calendar_appbar);
 
+        // test
+        weatherImage = (ImageView) rootView.findViewById(R.id.imageView_wfKor1);
+        wfText = (TextView) rootView.findViewById(R.id.textView_wfKor1);
+        tempText = (TextView) rootView.findViewById(R.id.textView_temp1);
+        ptyText = (TextView) rootView.findViewById(R.id.textView_pty1);
+        popText = (TextView) rootView.findViewById(R.id.textView_pop1);
+        linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_pty1);
+
+        handler.fetchXML();
+        Log.d("Tag", toString().valueOf(handler.parsingComplete));
+        Log.d("Tag", "111");
+        while (handler.parsingComplete) ;
+        Log.d("Tag", toString().valueOf(handler.parsingComplete));
+        Log.d("Tag", "112");
+        weatherParse();
+
         initList();
 
-        add.setOnClickListener(new FloatingActionButton.OnClickListener() {
+        fab_add.setOnClickListener(new FloatingActionButton.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Test
@@ -94,6 +128,15 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                 transaction.replace(R.id.calendar_board_container, childFragment).commit();
                 appBarLayout.setVisibility(View.GONE);
                 frameLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        fab_reload.setOnClickListener(new FloatingActionButton.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Test
+                myCalendarAdapter.notifyDataSetChanged();
+                timeLineAdapter.notifyDataSetChanged();
             }
         });
 
@@ -142,12 +185,16 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                 if (isChecked) {
                     timelineRecyclerView.setVisibility(View.GONE);
                     myRecyclerView.setVisibility(View.VISIBLE);
+                    timeLineAdapter.notifyDataSetChanged();
                 } else {
                     myRecyclerView.setVisibility(View.GONE);
                     timelineRecyclerView.setVisibility(View.VISIBLE);
+                    myCalendarAdapter.notifyDataSetChanged();
                 }
             }
         });
+
+//        weatherParse();
 
         return rootView;
     }
@@ -317,14 +364,14 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         setEvent();
     }
 
-    public void getMyCalendarContext(){
+    public void getMyCalendarContext() {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     Log.d("Tag", "response check : " + response);
                     JSONArray array = new JSONArray(response);
-                    for(int i = 0; i < array.length(); i++) {
+                    for (int i = 0; i < array.length(); i++) {
                         MyCalendar myCalendar = new MyCalendar();
                         JSONObject jsonResponse = array.getJSONObject(i);
                         myCalendar.setDate(jsonResponse.getString("date"));
@@ -342,8 +389,76 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
             }
         };
         String URL = "https://capston2webapp.azurewebsites.net/api/ResidencePosts?residenceName=" + date; // +id
-        StringRequest getBoardRequest = new StringRequest(Request.Method.GET,URL,responseListener,null);
+        StringRequest getBoardRequest = new StringRequest(Request.Method.GET, URL, responseListener, null);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(getBoardRequest);
+    }
+
+    // test
+    public void weatherParse() {
+
+
+        Log.d("Tag", "12");
+        hour = handler.getHour();
+        wfKor = handler.getWfKor();
+        temp = handler.getTemp();
+        pop = handler.getPop();
+        pty = handler.getPty();
+        wfText.setText(wfKor);
+        tempText.setText(temp);
+        popText.setText(pop);
+        ptyText.setText(pty);
+
+//        if(pop == "0")
+//            linearLayout.setVisibility(View.GONE);
+//        else
+//            linearLayout.setVisibility(View.VISIBLE);
+
+        switch (wfKor) {
+            case "맑음":
+                if (hour >= 6 && hour < 18)
+                    weatherImage.setImageResource(R.drawable.db01_b);
+                else
+                    weatherImage.setImageResource(R.drawable.db01_n_b);
+                break;
+            case "구름 조금":
+                if (hour >= 6 && hour < 18)
+                    weatherImage.setImageResource(R.drawable.db02_b);
+                else
+                    weatherImage.setImageResource(R.drawable.db02_n_b);
+                break;
+            case "구름 많음":
+                if (hour >= 6 && hour < 18)
+                    weatherImage.setImageResource(R.drawable.db03_b);
+                else
+                    weatherImage.setImageResource(R.drawable.db03_n_b);
+                break;
+            case "흐림":
+                if (hour >= 6 && hour < 18)
+                    weatherImage.setImageResource(R.drawable.db04_b);
+                else
+                    weatherImage.setImageResource(R.drawable.db04_n_b);
+                break;
+            case "비":
+                if (hour >= 6 && hour < 18)
+                    weatherImage.setImageResource(R.drawable.db05_b);
+                else
+                    weatherImage.setImageResource(R.drawable.db05_n_b);
+                break;
+            case "눈/비":
+                if (hour >= 6 && hour < 18)
+                    weatherImage.setImageResource(R.drawable.db06_b);
+                else
+                    weatherImage.setImageResource(R.drawable.db06_n_b);
+                break;
+            case "눈":
+                if (hour >= 6 && hour < 18)
+                    weatherImage.setImageResource(R.drawable.db08_b);
+                else
+                    weatherImage.setImageResource(R.drawable.db08_n_b);
+                break;
+        }
+
+        Log.d("Tag", "2");
     }
 }

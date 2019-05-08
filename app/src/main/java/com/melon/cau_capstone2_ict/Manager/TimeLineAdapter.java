@@ -44,7 +44,6 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-//        Toast.makeText(context, list.get(position).getTitle(), Toast.LENGTH_SHORT);
         Log.d("onCreateVieHolder: ", "Create");
         return new RecyclerViewHolder(view);
     }
@@ -79,8 +78,6 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
                 notifyItemChanged(position);
                 // 클릭된 position 저장
                 prePosition = position;
-
-                Toast.makeText(v.getContext(), list.get(position).getTitle(), Toast.LENGTH_SHORT).show();
             }
         });
     }

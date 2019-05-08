@@ -38,11 +38,28 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setText("프로필"));
-        tabLayout.addTab(tabLayout.newTab().setText("거주지"));
-        tabLayout.addTab(tabLayout.newTab().setText("현재위치"));
-        tabLayout.addTab(tabLayout.newTab().setText("지금나는"));
-        tabLayout.addTab(tabLayout.newTab().setText("캘린더"));
+        View view1 = getLayoutInflater().inflate(R.layout.customtab, null);
+        view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.profile);
+        tabLayout.addTab(tabLayout.newTab().setCustomView(view1));
+        View view2 = getLayoutInflater().inflate(R.layout.customtab, null);
+        view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.home);
+        tabLayout.addTab(tabLayout.newTab().setCustomView(view2));
+        View view3 = getLayoutInflater().inflate(R.layout.customtab, null);
+        view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.univ);
+        tabLayout.addTab(tabLayout.newTab().setCustomView(view3));
+        View view4 = getLayoutInflater().inflate(R.layout.customtab, null);
+        view4.findViewById(R.id.icon).setBackgroundResource(R.drawable.iam);
+        tabLayout.addTab(tabLayout.newTab().setCustomView(view4));
+        View view5 = getLayoutInflater().inflate(R.layout.customtab, null);
+        view5.findViewById(R.id.icon).setBackgroundResource(R.drawable.calendar);
+        tabLayout.addTab(tabLayout.newTab().setCustomView(view5));
+
+//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.pro));
+//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.home));
+//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.univ));
+//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.im));
+//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.cal));
+//        tabLayout.height
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
