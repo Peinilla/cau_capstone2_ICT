@@ -4,7 +4,7 @@ import android.location.Location;
 
 public class MyUserData {
     private String nickname = "테스트용";
-    private String id = "test0000";
+    private String id = "debugUser";
     private String residence = "상도";
     private Location location;
     private String currentBuilding = "";

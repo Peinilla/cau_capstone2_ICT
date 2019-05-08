@@ -51,7 +51,7 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
         btn.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
-                goBack();
+                onBack();
             }
             });
         write.setOnClickListener(new Button.OnClickListener(){
@@ -106,7 +106,7 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
             parameters.put("residence", boardID);
             Log.d("Tag", "re " + title);
 
-            goBack();
+            onBack();
         }
 
         @Override
@@ -124,15 +124,9 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
     }
     @Override
     public void onBack() {
-        Log.e("Tag", "onBack()");
-        // 리스너를 설정하기 위해 Activity 를 받아옵니다.
         MainActivity activity = (MainActivity)getActivity();
-        // 한번 뒤로가기 버튼을 눌렀다면 Listener 를 null 로 해제해줍니다.
         activity.setOnBackPressedListener(null);
-        // MainFragment 로 교체
         goBack();
-
-
     }
     @Override
     //                     혹시 Context 로 안되시는분은 Activity 로 바꿔보시기 바랍니다.

@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ChatHubManager.getInstance().connect();
     }
 
     public void onClickProfile(View v){
@@ -155,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        ChatHubManager.getInstance().disconnect();
         super.onPause();
     }
 
@@ -167,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        ChatHubManager.getInstance().connect();
         super.onResume();
     }
 }

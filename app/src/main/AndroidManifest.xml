@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.NFC" />
 
     <application
         android:name=".Manager.GlobalApplication"
@@ -18,9 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".testActivity">
-
-        </activity>
+        <activity android:name=".profileViewActivity"></activity>
+        <activity android:name=".NfcActivity" />
+        <activity android:name=".testActivity" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
@@ -34,13 +35,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <activity
             android:name=".SignupActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
@@ -49,11 +44,16 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".HomeSelectActivity" />
         <activity android:name=".ProfileActvity" />
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />

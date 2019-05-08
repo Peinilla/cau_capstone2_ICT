@@ -7,8 +7,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +18,13 @@ import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.melon.cau_capstone2_ict.Manager.ChatHubManager;
-import com.melon.cau_capstone2_ict.Manager.MyChat;
 import com.melon.cau_capstone2_ict.Manager.MyChatAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
 
 
-public class TabFragment_chat extends Fragment implements MainActivity.OnBackPressedListener {
+public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBackPressedListener {
     MyChatAdapter adapter;
 
     FloatingActionsMenu fam;
@@ -38,16 +35,16 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
     ImageButton sendBtn;
 
     Handler mHandler = new Handler();
-    ////
-    String to;
-    ////
+    String group;
+    int containerID;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_chat, container, false);
 
-        to = getArguments().getString("ToUser");
+        group = getArguments().getString("GroupID");
+        containerID = getArguments().getInt("ContainerID");
         chatTitle = rootView.findViewById(R.id.chat_title);
         myMessage = rootView.findViewById(R.id.textView_chat);
         sendBtn = rootView.findViewById(R.id.image_upload);
@@ -55,7 +52,8 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
         fam = (FloatingActionsMenu)rootView.findViewById(R.id.chat_floatingButton);
         chatList = (ListView) rootView.findViewById(R.id.chat_list);
 
-        chatTitle.setText(to);
+
+        chatTitle.setText(group + " (그룹)");
 
         adapter = new MyChatAdapter();
 
@@ -75,40 +73,32 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
         sendBtn.setOnClickListener(new ImageButton.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Log.d("Tag", "send message :  " + to + " : ");
-                ChatHubManager.getInstance().send(to,myMessage.getText().toString());
+                ChatHubManager.getInstance().group_send(myMessage.getText().toString());
                 myMessage.setText("");
             }
         });
 
-        ChatHubManager.getInstance().getHubProxy().on("sendMessage", new SubscriptionHandler2<String, String>() {
+        ChatHubManager.getInstance().getHubProxygroup().on("onGroupChat", new SubscriptionHandler2<String, String>() {
             @Override
             public void run(final String s, final String s2) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        getMessage(s,s2);
+                        getMessage(s2,s);
                     }
                 });
             }
         },String.class,String.class);
-        chatList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MyChat m = (MyChat) parent.getItemAtPosition(position);
-                if(m.getType()!=0 && m.getType()!=1) {
-                    Intent intent = new Intent(getActivity(), profileViewActivity.class);
-                    intent.putExtra("id", m.getWriter());
-                    startActivity(intent);
-                }
-            }
-        });
+
+
+
         return  rootView;
+
     }
 
 
     void getMessage(String s, String s2){
-        if(s2.equals(to)) {
+        if(!MyUserData.getInstance().getId().equals(s2)) {
             adapter.addItem(2, s, s2);
         }else{
             adapter.addItem(0,s,MyUserData.getInstance().getNickname());
@@ -119,7 +109,7 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
     }
     void goBack(){
         FragmentManager fm = getFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.profile_container);
+        Fragment fragment = fm.findFragmentById(containerID);
         FragmentTransaction tr = fm.beginTransaction();
         tr.remove(fragment);
         tr.commit();
@@ -135,7 +125,6 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
         super.onAttach(context);
         ((MainActivity)context).setOnBackPressedListener(this);
     }
-
     @Override
     public void onStop() {
         super.onStop();
