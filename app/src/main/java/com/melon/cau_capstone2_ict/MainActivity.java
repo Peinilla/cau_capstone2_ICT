@@ -21,12 +21,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.melon.cau_capstone2_ict.Manager.*;
 
 public class MainActivity extends AppCompatActivity {
-
-    private String ID;
-    private String name;
-    private ViewPager mViewPager;
-    private FloatingActionsMenu fab;
-
     private long pressedTime;
     private OnBackPressedListener mBackListener;
 
@@ -41,9 +35,6 @@ public class MainActivity extends AppCompatActivity {
                     0);
         }
         ChatHubManager.getInstance();
-
-        fab = (FloatingActionsMenu) findViewById(R.id.floatingButton);
-        mViewPager = (ViewPager) findViewById(R.id.container);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
@@ -76,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         final MyPagerAdapter adapter = new MyPagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
-
+        viewPager.setOffscreenPageLimit(5);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

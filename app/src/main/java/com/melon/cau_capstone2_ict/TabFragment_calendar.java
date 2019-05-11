@@ -78,8 +78,8 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     TextView ptyText;
     TextView wfText;
     LinearLayout linearLayout;
-    private String finalUrl = "http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=1159060500";
-    private RSSHandler handler = new RSSHandler(finalUrl);
+    private static String finalUrl = "http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=1159060500";
+    private static RSSHandler handler = new RSSHandler(finalUrl);
     String temp, wfKor, pty, pop;
     int hour;
 

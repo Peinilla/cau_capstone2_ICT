@@ -37,7 +37,6 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
         </activity>
         <activity
             android:name=".SignupActivity"
@@ -59,8 +58,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".HomeSelectActivity" />
-        <activity android:name=".ProfileActvity" />
 
         <uses-library
             android:name="org.apache.http.legacy"
