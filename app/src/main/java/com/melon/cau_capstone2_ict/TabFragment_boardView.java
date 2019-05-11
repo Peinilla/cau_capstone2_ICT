@@ -1,6 +1,7 @@
 package com.melon.cau_capstone2_ict;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,7 +22,12 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
     FrameLayout frameLayout;
     TextView titleView;
     TextView textView;
+    TextView writerView;
     TextView dateView;
+    View view;
+
+    String writer;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_boardview, container, false);
@@ -34,11 +40,14 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         titleView = rootView.findViewById(R.id.board_title);
         textView = rootView.findViewById(R.id.board_text);
         dateView = rootView.findViewById(R.id.board_date);
+        writerView = rootView.findViewById(R.id.board_writer);
+        view = rootView.findViewById(R.id.viewProfile);
 
         titleView.setText(m.getTitle());
         textView.setText(m.getText());
         dateView.setText(m.getDate());
-
+        writer = m.getWriter();
+        writerView.setText(writer);
 
         ImageButton btn = (ImageButton)rootView.findViewById(R.id.board_back);
         frameLayout = (FrameLayout)rootView.findViewById(R.id.board_container);
@@ -48,18 +57,25 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         btn.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
-                goBack();
+                onBack();
             }
             });
 
-
+        view.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), profileViewActivity.class);
+                intent.putExtra("id",writer);
+                startActivity(intent);
+            }
+        });
         return rootView;
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
     }
-
     void goBack(){
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.board_container);
@@ -70,12 +86,8 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
 
     @Override
     public void onBack() {
-        Log.e("Tag", "onBack()");
-        // 리스너를 설정하기 위해 Activity 를 받아옵니다.
         MainActivity activity = (MainActivity)getActivity();
-        // 한번 뒤로가기 버튼을 눌렀다면 Listener 를 null 로 해제해줍니다.
         activity.setOnBackPressedListener(null);
-        // MainFragment 로 교체
         goBack();
 
 
@@ -86,7 +98,4 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         super.onAttach(context);
         ((MainActivity)context).setOnBackPressedListener(this);
     }
-
-
-
 }

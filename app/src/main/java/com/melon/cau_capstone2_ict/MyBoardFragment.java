@@ -51,7 +51,6 @@ public class MyBoardFragment extends Fragment {
     ImageButton closeImage;
     TextView titleView;
     SwipeRefreshLayout mSWL;
-    FrameLayout frameLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,7 +65,6 @@ public class MyBoardFragment extends Fragment {
         searchImage = (ImageButton) rootView.findViewById(R.id.image_search);
         closeImage = (ImageButton) rootView.findViewById(R.id.image_close);
         mSWL = rootView.findViewById(R.id.board_swipe);
-        frameLayout = rootView.findViewById(R.id.board_container);
 
         titleView.setText(boardID + " 게시판");
 
@@ -103,7 +101,6 @@ public class MyBoardFragment extends Fragment {
                 childFragment.setArguments(bundle);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.board_container, childFragment).commit();
-                frameLayout.setVisibility(View.VISIBLE);
             }
         });
 
@@ -117,9 +114,11 @@ public class MyBoardFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment childFragment = new TabFragment_boardWrite();
+                Bundle bundle = new Bundle(1);
+                bundle.putString("boardID",boardID);
+                childFragment.setArguments(bundle);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.board_container, childFragment).commit();
-                frameLayout.setVisibility(View.VISIBLE);
             }
         });
 
@@ -162,8 +161,6 @@ public class MyBoardFragment extends Fragment {
                         m.setWriter(jsonResponse.getString("nickname"));
                         adapter.addItem(m);
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

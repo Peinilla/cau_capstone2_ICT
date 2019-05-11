@@ -37,11 +37,23 @@
             android:id="@+id/board_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/board_icon"
+            android:layout_alignBottom="@+id/board_writer"
+            android:layout_alignParentBottom="false"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/board_writer"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/board_writer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/board_title"
             android:layout_alignParentBottom="false"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/board_icon"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/board_icon"
@@ -56,7 +68,6 @@
             android:id="@+id/board_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/board_date"
             android:layout_centerVertical="false"
             android:layout_toRightOf="@+id/board_icon"
             android:layout_weight="1"
@@ -74,6 +85,13 @@
         android:layout_marginBottom="20dp"
         android:text="TextViewffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
         android:textSize="18sp" />
+
+    <View
+        android:id="@+id/viewProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/board_title_container"
+        android:layout_alignBottom="@+id/board_title_container" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/chat_floatingButton"
