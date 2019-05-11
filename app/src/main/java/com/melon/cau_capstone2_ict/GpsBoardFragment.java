@@ -1,15 +1,12 @@
 package com.melon.cau_capstone2_ict;
 
-import android.app.DownloadManager;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,24 +18,22 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
+
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.melon.cau_capstone2_ict.Manager.MyBoard;
 import com.melon.cau_capstone2_ict.Manager.MyBoardAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
+import com.melon.cau_capstone2_ict.Manager.RSSHandler;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class GpsBoardFragment extends Fragment {
 
@@ -55,6 +50,15 @@ public class GpsBoardFragment extends Fragment {
     TextView titleView;
     SwipeRefreshLayout mSWL;
     FrameLayout frameLayout;
+//    // test
+//    ImageView weatherImage;
+//    TextView tempText;
+//    TextView popText;
+//    TextView ptyText;
+//    TextView wfText;
+//    LinearLayout linearLayout;
+//    private String finalUrl = "http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=1159060500";
+//    private RSSHandler handler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,7 +92,6 @@ public class GpsBoardFragment extends Fragment {
         });
 
         adapter = new MyBoardAdapter();
-
 
         getBoardContext();
 
@@ -142,6 +145,21 @@ public class GpsBoardFragment extends Fragment {
         });
 
         final Spinner spinner_field = (Spinner) rootView.findViewById(R.id.spinner_search);
+
+//        // test
+//        weatherImage = (ImageView) rootView.findViewById(R.id.imageView_wfKor);
+//        wfText = (TextView) rootView.findViewById(R.id.textView_wfKor);
+//        tempText = (TextView) rootView.findViewById(R.id.textView_temp);
+//        ptyText = (TextView) rootView.findViewById(R.id.textView_pty);
+//        popText = (TextView) rootView.findViewById(R.id.textView_pop);
+//        linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_pty);
+//        Log.d("Tag", "1");
+//        handler = new RSSHandler(finalUrl);
+//        Log.d("Tag", "11");
+//        handler.fetchXML();
+//        Log.d("Tag", "111");
+//        while (handler.parsingComplete) ;
+
         spinner_field.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -151,6 +169,7 @@ public class GpsBoardFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+
         String[] str = getResources().getStringArray(R.array.search_item);
         final ArrayAdapter<String> s_adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
         s_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -187,6 +206,7 @@ public class GpsBoardFragment extends Fragment {
         queue.add(getBoardRequest);
     }
 
+    //        weatherParse();
     void goBack(){
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.gps_board_container);
@@ -195,4 +215,67 @@ public class GpsBoardFragment extends Fragment {
         tr.commit();
     }
 
+//    // test
+//    public void weatherParse() {
+//
+//        Log.d("Tag", "12");
+//        int hour = handler.getHour();
+//        String wfKor = handler.getWfKor();
+//        wfText.setText(wfKor);
+//        tempText.setText(handler.getTemp());
+//        popText.setText(handler.getPop());
+//        ptyText.setText(handler.getPty());
+//
+//        if(handler.getPop().equals("0"))
+//            linearLayout.setVisibility(View.GONE);
+//        else
+//            linearLayout.setVisibility(View.VISIBLE);
+//
+//        switch (wfKor) {
+//            case "맑음":
+//                if (hour >= 6 && hour < 18)
+//                    weatherImage.setImageResource(R.drawable.db01_b);
+//                else
+//                    weatherImage.setImageResource(R.drawable.db01_n_b);
+//                break;
+//            case "구름 조금":
+//                if (hour >= 6 && hour < 18)
+//                    weatherImage.setImageResource(R.drawable.db02_b);
+//                else
+//                    weatherImage.setImageResource(R.drawable.db02_n_b);
+//                break;
+//            case "구름 많음":
+//                if (hour >= 6 && hour < 18)
+//                    weatherImage.setImageResource(R.drawable.db03_b);
+//                else
+//                    weatherImage.setImageResource(R.drawable.db03_n_b);
+//                break;
+//            case "흐림":
+//                if (hour >= 6 && hour < 18)
+//                    weatherImage.setImageResource(R.drawable.db04_b);
+//                else
+//                    weatherImage.setImageResource(R.drawable.db04_n_b);
+//                break;
+//            case "비":
+//                if (hour >= 6 && hour < 18)
+//                    weatherImage.setImageResource(R.drawable.db05_b);
+//                else
+//                    weatherImage.setImageResource(R.drawable.db05_n_b);
+//                break;
+//            case "눈/비":
+//                if (hour >= 6 && hour < 18)
+//                    weatherImage.setImageResource(R.drawable.db06_b);
+//                else
+//                    weatherImage.setImageResource(R.drawable.db06_n_b);
+//                break;
+//            case "눈":
+//                if (hour >= 6 && hour < 18)
+//                    weatherImage.setImageResource(R.drawable.db08_b);
+//                else
+//                    weatherImage.setImageResource(R.drawable.db08_n_b);
+//                break;
+//        }
+//
+//        Log.d("Tag", "2");
+//    }
 }

@@ -69,7 +69,6 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
                 startActivity(intent);
             }
         });
-
         return rootView;
     }
 
@@ -77,7 +76,6 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
     }
-
     void goBack(){
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.board_container);
@@ -100,7 +98,4 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         super.onAttach(context);
         ((MainActivity)context).setOnBackPressedListener(this);
     }
-
-
-
 }

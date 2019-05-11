@@ -41,6 +41,7 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
         final View rootView = inflater.inflate(R.layout.tab_fragment_boardwrite, container, false);
         boardID = getArguments().getString("boardID");
 
+
         titleView = rootView.findViewById(R.id.board_wtitle);
         textView = rootView.findViewById(R.id.board_wtext);
 
@@ -68,8 +69,6 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
     }
-
-
     void writeRequest(){
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -114,7 +113,6 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
             return parameters;
         }
     }
-
     void goBack(){
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.board_container);

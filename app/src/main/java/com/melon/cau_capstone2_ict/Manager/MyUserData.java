@@ -35,7 +35,6 @@ public class MyUserData {
     public String getCurrentBuilding() {
         return currentBuilding;
     }
-
     public void setResidence(String s){
         residence = s;
     }

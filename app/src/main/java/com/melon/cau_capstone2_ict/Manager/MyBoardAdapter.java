@@ -12,14 +12,14 @@ import com.melon.cau_capstone2_ict.*;
 import java.util.ArrayList;
 
 public class MyBoardAdapter extends BaseAdapter {
-    private ArrayList<MyBoard> listViewItemList = new ArrayList<>() ;
+    private ArrayList<MyBoard> listViewItemList = new ArrayList<>();
 
     public MyBoardAdapter() {
     }
 
     @Override
     public int getCount() {
-        return listViewItemList.size() ;
+        return listViewItemList.size();
     }
 
     @Override
@@ -57,19 +57,18 @@ public class MyBoardAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return position ;
+        return position;
     }
 
     @Override
     public Object getItem(int position) {
-        return listViewItemList.get(position) ;
+        return listViewItemList.get(position);
     }
 
     //Todo 아이템 추가
     public void addItem(MyBoard m) {
         listViewItemList.add(m);
     }
-
     public void clear(){
         listViewItemList.clear();
     }

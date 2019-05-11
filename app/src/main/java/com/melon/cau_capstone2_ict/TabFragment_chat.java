@@ -142,4 +142,3 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
         super.onDetach();
     }
 }
-
