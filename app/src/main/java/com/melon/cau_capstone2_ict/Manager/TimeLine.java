@@ -9,11 +9,6 @@ public class TimeLine {
     private String date;
     private String content;
 
-    public TimeLine(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
-
     public TimeLine() {
         writer = "writer";
         title = "title";

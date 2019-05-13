@@ -39,24 +39,39 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
         this.list = list;
     }
 
-    // 최초에 뷰홀더를 생성해주는 함수
+    @Override
+    public int getItemCount() {
+        if(list != null)
+            return list.size();
+        return 0;
+    }
+
+    public void addItem(TimeLine timeLine) {
+        list.add(timeLine);
+    }
+
+    public Object getItem(int position) {
+        return this.list.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-        Log.d("onCreateVieHolder: ", "Create");
         return new RecyclerViewHolder(view);
     }
 
-    // 기존 뷰홀더와 새롭게 보여줘야할 데이터를 바인드해주는 함수
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
         holder.title.setText(list.get(position).getTitle());
-//        holder.writer.setText(list.get(position).getWriter());
-//        holder.comment.setText(list.get(position).getReply());
-//        holder.recommend.setText(list.get(position).getRecommend());
-//        holder.date.setText(list.get(position).getDate());
-//        holder.text.setText(list.get(position).getText());
+        holder.writer.setText(list.get(position).getWriter());
+        holder.date.setText(list.get(position).getDate());
+        holder.content.setText(list.get(position).getContent());
 
         holder.changeVisibility(selectedItems.get(position));
 
@@ -82,23 +97,10 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
         });
     }
 
-    // 총 아이템 수
-    @Override
-    public int getItemCount() {
-        if (list != null) {
-            return list.size();
-        }
-        return 0;
-    }
-
-    public void addItem(TimeLine timeLine) {
-        list.add(timeLine);
-    }
-
     // 뷰홀더 클래스
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView title;
-        TextView name;
+        TextView writer;
         TextView date;
         TextView content;
         LinearLayout linear_spread;
@@ -107,7 +109,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
         public RecyclerViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.calendar_title);
-            name = (TextView) view.findViewById(R.id.calendar_writer);
+            writer = (TextView) view.findViewById(R.id.calendar_writer);
             date = (TextView) view.findViewById(R.id.calendar_date);
             content = (TextView) view.findViewById(R.id.calendar_content);
             linear_spread = (LinearLayout) view.findViewById(R.id.calendar_linear_spread);

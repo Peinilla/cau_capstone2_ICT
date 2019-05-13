@@ -113,6 +113,7 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
             return parameters;
         }
     }
+
     void goBack(){
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.board_container);

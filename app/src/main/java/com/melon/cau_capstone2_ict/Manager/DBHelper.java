@@ -6,6 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,83 +21,119 @@ public class DBHelper extends SQLiteOpenHelper {
         this.context = context;
     }
 
-    /**
-     * Database가 존재하지 않을 때, 딱 한번 실행된다.
-     * DB를 만드는 역할을 한다.
-     *
-     * @param db
-     */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // String 보다 StringBuffer가 Query 만들기 편하다.
         StringBuffer sb = new StringBuffer();
-        sb.append(" CREATE TABLE TEST_TABLE ( ");
+        sb.append(" CREATE TABLE CALENDAR_TABLE ( ");
         sb.append(" _ID INTEGER PRIMARY KEY AUTOINCREMENT, ");
         sb.append(" TITLE TEXT, ");
         sb.append(" CONTENT TEXT, "); // SQLite Database로 쿼리 실행
+        sb.append(" DATE TEXT ) ");
         db.execSQL(sb.toString());
         Toast.makeText(context, "Table 생성완료", Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * Application의 버전이 올라가서 * Table 구조가 변경되었을 때 실행된다.
-     *
-     * @param db
-     * @param oldVersion
-     * @param newVersion
-     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Toast.makeText(context, "버전이 올라갔습니다.", Toast.LENGTH_SHORT).show();
     }
 
-    /** * */
-    public void testDB() {
+    public void calendarDB() {
         SQLiteDatabase db = getReadableDatabase();
     }
 
-    public void addCalendar(MyCalendar myCalendar) {
-        // 1. 쓸 수 있는 DB 객체를 가져온다.
+    public void add(MyCalendar myCalendar) {
         SQLiteDatabase db = getWritableDatabase();
-        // 2. Person Data를 Insert한다.
-        // _id는 자동으로 증가하기 때문에 넣지 않습니다.
         StringBuffer sb = new StringBuffer();
-        sb.append(" INSERT INTO TEST_TABLE ( ");
-        sb.append(" TITLE, CONTENT ) ");
-        sb.append(" VALUES ( ?, ? ) ");
-        // sb.append(" VALUES ( #NAME#, #AGE#, #PHONE# ) "); // //
-        // Age는 Integer이기 때문에 홀따옴표(')를 주지 않는다.
-        // String query = sb.toString();
-        // query.replace("#NAME#", "'" + person.getName() + "'");
-        // query.replace("#NAME#", person.getAge());
-        // query.replace("#NAME#", "'" + person.getPhone() + "'"); //
-        // db.execSQL(query);
+        sb.append(" INSERT INTO CALENDAR_TABLE ( ");
+        sb.append(" TITLE, CONTENT, DATE ) ");
+        sb.append(" VALUES ( ?, ?, ? ) ");
         db.execSQL(sb.toString(), new Object[]{
                 myCalendar.getTitle(),
-                myCalendar.getContent()
+                myCalendar.getContent(),
+                myCalendar.getDate()
         });
-        ;
         Toast.makeText(context, "Insert 완료", Toast.LENGTH_SHORT).show();
+    }
+
+    public void update(int _id, MyCalendar myCalendar){
+        SQLiteDatabase db = getWritableDatabase();
+        StringBuffer sb = new StringBuffer();
+        sb.append(" UPDATE CALENDAR_TABLE SET ");
+        sb.append(" TITLE = " + myCalendar.getTitle());
+        sb.append(", CONTENT = " + myCalendar.getContent());
+        sb.append(", DATE = " + myCalendar.getDate());
+        sb.append(" WHERE _ID = " + Integer.toString(_id));
+        db.execSQL(sb.toString());
+        Toast.makeText(context, "update 완료", Toast.LENGTH_SHORT).show();
+    }
+
+    public void delete(int _id){
+        StringBuffer sb = new StringBuffer();
+        sb.append(" DELETE FROM CALENDAR_TABLE WHERE _ID = " + Integer.toString(_id));
+        SQLiteDatabase db = getReadableDatabase();
+        db.execSQL(sb.toString());
+        Toast.makeText(context, "delete 완료", Toast.LENGTH_SHORT).show();
     }
 
     public List getAllMyCalendars() {
         StringBuffer sb = new StringBuffer();
-        sb.append(" SELECT _ID, TITLE, CONTENT FROM TEST_TABLE ");
-        // 읽기 전용 DB 객체를 만든다.
+        sb.append(" SELECT _ID, TITLE, CONTENT, DATE FROM CALENDAR_TABLE ");
+
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(sb.toString(), null);
+
         List myCalendars = new ArrayList();
         MyCalendar myCalendar = null;
-        // moveToNext 다음에 데이터가 있으면 true 없으면 false
+
         while (cursor.moveToNext()) {
             myCalendar = new MyCalendar();
             myCalendar.set_id(cursor.getInt(0));
             myCalendar.setTitle(cursor.getString(1));
             myCalendar.setContent(cursor.getString(2));
+            myCalendar.setDate(cursor.getString(3));
             myCalendars.add(myCalendar);
         }
         return myCalendars;
     }
 
+    public ArrayList<String> getCalendarByMonth(String year, String month) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(" SELECT DATE FROM CALENDAR_TABLE WHERE strftime('%Y', DATE) = ? AND strftime('%m', DATE) = ? ");
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(sb.toString(), new String[]{year + "", month + ""});
+
+        ArrayList<String> myCalendars = new ArrayList<String>();
+
+        if (cursor.moveToNext()) {
+            String date = cursor.getString(0);
+            if(!myCalendars.contains(date)){
+                myCalendars.add(date);
+            }
+        }
+        return myCalendars;
+    }
+
+    public List getCalendarByDate(String date) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(" SELECT * FROM CALENDAR_TABLE WHERE DATE = ? ");
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(sb.toString(), new String[]{date + ""});
+
+        List myCalendars = new ArrayList();
+        MyCalendar myCalendar = new MyCalendar();
+
+        if (cursor.moveToNext()) {
+            myCalendar.set_id(cursor.getInt(0));
+            myCalendar.setTitle(cursor.getString(1));
+            myCalendar.setContent(cursor.getString(2));
+            myCalendar.setDate(cursor.getString(3));
+            myCalendar.setWriter(MyUserData.getInstance().getNickname());
+            myCalendars.add(myCalendar);
+        }
+        return myCalendars;
+    }
 }
 

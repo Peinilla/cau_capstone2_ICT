@@ -2,17 +2,25 @@ package com.melon.cau_capstone2_ict.Manager;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.melon.cau_capstone2_ict.R;
 
 import java.util.List;
@@ -21,6 +29,7 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
     private List<MyCalendar> list;
     private LayoutInflater inflater;
     private Context context;
+    private int pos;
 
     // Item의 클릭 상태를 저장할 array 객체
     private SparseBooleanArray selectedItems;
@@ -39,7 +48,6 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         this.list = list;
     }
 
-    // 총 아이템 수
     @Override
     public int getItemCount() {
         return list.size();
@@ -58,8 +66,6 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         return position;
     }
 
-
-    // 최초에 뷰홀더를 생성해주는 함수
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
@@ -70,6 +76,7 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
     // 기존 뷰홀더와 새롭게 보여줘야할 데이터를 바인드해주는 함수
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
+        pos = position;
         holder.title.setText(list.get(position).getTitle());
         holder.writer.setText(list.get(position).getWriter());
         holder.date.setText(list.get(position).getDate());
@@ -78,14 +85,59 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         holder.modify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Todo:수정하기
+//                LinearLayout layout = new LinearLayout(context);
+//                layout.setOrientation(LinearLayout.VERTICAL);
+//                final EditText titleText = new EditText(context);
+//                titleText.setHint("제목");
+//                titleText.setText(list.get(pos).getTitle());
+//                final EditText contentText = new EditText(context);
+//                contentText.setHint("내용");
+//                contentText.setText(list.get(pos).getContent());
+//                layout.addView(titleText);
+//                layout.addView(contentText);
+//                final String date = list.get(pos).getDate();
+//                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+//                dialog.setTitle(date + " (수정)").setView(layout).setPositiveButton("수정", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        String writer = MyUserData.getInstance().getNickname();
+//                        String title = titleText.getText().toString();
+//                        String content = contentText.getText().toString();
+//                        DBHelper dbHelper = new DBHelper(context, "calendar", null, 1);
+//                        MyCalendar myCalendar = new MyCalendar();
+//                        myCalendar.setWriter(writer);
+//                        myCalendar.setTitle(title);
+//                        myCalendar.setContent(content);
+//                        myCalendar.setDate(date);
+//                        dbHelper.update(list.get(pos).get_id(), myCalendar);
+//                    }
+//                }).setNeutralButton("취소", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                    }
+//                }).create().show();
             }
         });
 
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Todo:삭제하기
+                LinearLayout layout = new LinearLayout(context);
+                layout.setOrientation(LinearLayout.VERTICAL);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setTitle("삭제하시겠습니까?").setView(layout).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DBHelper dbHelper = new DBHelper(context, "calendar", null, 1);
+                        deleteRequest(list.get(pos));
+                        dbHelper.delete(list.get(pos).get_id());
+                    }
+                }).setNeutralButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create().show();
             }
         });
 
@@ -113,6 +165,23 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         });
     }
 
+    void deleteRequest(MyCalendar myCalendar) {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.d("Tag", "response check : " + response);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        CalendarRequest cr = new CalendarRequest(myCalendar, "delete", responseListener);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(cr);
+    }
+
     // 뷰홀더 클래스
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView title;
@@ -134,9 +203,6 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
             linear_modify = (LinearLayout) view.findViewById(R.id.calendar_option);
             modify = (Button) view.findViewById(R.id.button_calendar_modify);
             remove = (Button) view.findViewById(R.id.button_calendar_remove);
-
-            writer.setText("");
-            date.setText("");
         }
 
         private void changeVisibility(final boolean isExpanded) {

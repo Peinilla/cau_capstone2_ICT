@@ -126,6 +126,8 @@ public class GpsBoardFragment extends Fragment {
                 Fragment childFragment = new TabFragment_boardWrite();
                 Bundle bundle = new Bundle(1);
                 bundle.putString("boardID",boardID);
+                // test
+                bundle.putBoolean("withBab", true);
                 childFragment.setArguments(bundle);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.board_container, childFragment).commit();
@@ -145,20 +147,6 @@ public class GpsBoardFragment extends Fragment {
         });
 
         final Spinner spinner_field = (Spinner) rootView.findViewById(R.id.spinner_search);
-
-//        // test
-//        weatherImage = (ImageView) rootView.findViewById(R.id.imageView_wfKor);
-//        wfText = (TextView) rootView.findViewById(R.id.textView_wfKor);
-//        tempText = (TextView) rootView.findViewById(R.id.textView_temp);
-//        ptyText = (TextView) rootView.findViewById(R.id.textView_pty);
-//        popText = (TextView) rootView.findViewById(R.id.textView_pop);
-//        linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_pty);
-//        Log.d("Tag", "1");
-//        handler = new RSSHandler(finalUrl);
-//        Log.d("Tag", "11");
-//        handler.fetchXML();
-//        Log.d("Tag", "111");
-//        while (handler.parsingComplete) ;
 
         spinner_field.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -206,7 +194,6 @@ public class GpsBoardFragment extends Fragment {
         queue.add(getBoardRequest);
     }
 
-    //        weatherParse();
     void goBack(){
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.gps_board_container);
@@ -214,68 +201,4 @@ public class GpsBoardFragment extends Fragment {
         tr.remove(fragment);
         tr.commit();
     }
-
-//    // test
-//    public void weatherParse() {
-//
-//        Log.d("Tag", "12");
-//        int hour = handler.getHour();
-//        String wfKor = handler.getWfKor();
-//        wfText.setText(wfKor);
-//        tempText.setText(handler.getTemp());
-//        popText.setText(handler.getPop());
-//        ptyText.setText(handler.getPty());
-//
-//        if(handler.getPop().equals("0"))
-//            linearLayout.setVisibility(View.GONE);
-//        else
-//            linearLayout.setVisibility(View.VISIBLE);
-//
-//        switch (wfKor) {
-//            case "맑음":
-//                if (hour >= 6 && hour < 18)
-//                    weatherImage.setImageResource(R.drawable.db01_b);
-//                else
-//                    weatherImage.setImageResource(R.drawable.db01_n_b);
-//                break;
-//            case "구름 조금":
-//                if (hour >= 6 && hour < 18)
-//                    weatherImage.setImageResource(R.drawable.db02_b);
-//                else
-//                    weatherImage.setImageResource(R.drawable.db02_n_b);
-//                break;
-//            case "구름 많음":
-//                if (hour >= 6 && hour < 18)
-//                    weatherImage.setImageResource(R.drawable.db03_b);
-//                else
-//                    weatherImage.setImageResource(R.drawable.db03_n_b);
-//                break;
-//            case "흐림":
-//                if (hour >= 6 && hour < 18)
-//                    weatherImage.setImageResource(R.drawable.db04_b);
-//                else
-//                    weatherImage.setImageResource(R.drawable.db04_n_b);
-//                break;
-//            case "비":
-//                if (hour >= 6 && hour < 18)
-//                    weatherImage.setImageResource(R.drawable.db05_b);
-//                else
-//                    weatherImage.setImageResource(R.drawable.db05_n_b);
-//                break;
-//            case "눈/비":
-//                if (hour >= 6 && hour < 18)
-//                    weatherImage.setImageResource(R.drawable.db06_b);
-//                else
-//                    weatherImage.setImageResource(R.drawable.db06_n_b);
-//                break;
-//            case "눈":
-//                if (hour >= 6 && hour < 18)
-//                    weatherImage.setImageResource(R.drawable.db08_b);
-//                else
-//                    weatherImage.setImageResource(R.drawable.db08_n_b);
-//                break;
-//        }
-//
-//        Log.d("Tag", "2");
-//    }
 }

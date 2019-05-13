@@ -87,32 +87,6 @@ public class CalendarView extends ViewGroup {
         this.maxDateOfMonth = maxDateOfMonth;
     }
 
-    public void setEventView(Set<String> dates) {
-        ViewPager pager = (ViewPager) getParent();
-        View tag = (View) pager.getTag();
-
-        if (!dates.isEmpty()) {
-
-            for (int i = 0; i < pager.getChildCount(); i++) {
-                for (int j = 7; j < getChildCount(); j++) {
-                    CalendarItemView child = (CalendarItemView) ((CalendarView) pager.getChildAt(i)).getChildAt(j);
-
-                    if (child != null && child.getIsSameDay((long) child.getTag(), (long) tag.getTag())) {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
-                        Date date = new Date();
-                        date.setTime(child.getDate());
-
-                        if (dates.contains(dateFormat.format(date))) {
-                            child.setIsEvent(true);
-                            child.invalidate();
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public void setSelectedView(View view) {
         ViewPager pager = (ViewPager) getParent();
         View tag = (View) pager.getTag();

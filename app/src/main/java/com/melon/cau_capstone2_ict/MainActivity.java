@@ -54,14 +54,7 @@ public class MainActivity extends AppCompatActivity {
         view5.findViewById(R.id.icon).setBackgroundResource(R.drawable.calendar);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view5));
 
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.pro));
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.home));
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.univ));
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.im));
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.cal));
-//        tabLayout.height
-
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+//        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final MyPagerAdapter adapter = new MyPagerAdapter

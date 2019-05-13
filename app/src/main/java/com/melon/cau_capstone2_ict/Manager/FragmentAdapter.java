@@ -72,7 +72,7 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
 
         Calendar calendar = Calendar.getInstance();
         //Todo: -
-        calendar.add(Calendar.MONTH, numOfMonth);
+        calendar.add(Calendar.MONTH, -numOfMonth);
         calendar.set(Calendar.DATE, 1);
 
         for (int i = 0; i < numOfMonth * 2 + 1; i++) {
@@ -130,13 +130,13 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
         return dateFormat.format(date);
     }
 
-//    public String getStrDay(int position) {
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
-//        Date date = new Date();
-//        date.setTime(listMonthByMillis.get(position));
-//
-//        return dateFormat.format(date);
-//    }
+    public String getStrDay(int position) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
+        Date date = new Date();
+        date.setTime(listMonthByMillis.get(position));
+
+        return dateFormat.format(date);
+    }
 
     public String getStrMonthOfYear(int position){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");

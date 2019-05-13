@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable;
 
 import java.io.Serializable;
 
-public class MyCalendar implements Serializable {
+public class MyCalendar {
     private int _id;
     private Drawable icon;
     private String title;
@@ -12,10 +12,6 @@ public class MyCalendar implements Serializable {
     private String date;
     private String content;
 
-    public MyCalendar(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
 
     public MyCalendar() {
         _id = 0;
@@ -32,7 +28,6 @@ public class MyCalendar implements Serializable {
     public void set_id(int _id) {
         this._id = _id;
     }
-
 
     public void setWriter(String writer) {
         this.writer = writer;

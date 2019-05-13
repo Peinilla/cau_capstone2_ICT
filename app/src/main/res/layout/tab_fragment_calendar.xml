@@ -140,8 +140,7 @@
                     android:textSize="20sp"
                     android:gravity="center_horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:layout_height="wrap_content"/>
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -180,16 +179,16 @@
                     android:layout_height="wrap_content"
                     android:padding="4dp"
                     android:switchPadding="8dp"
-                    android:text="@string/string_timeline"
+                    android:text="@string/my_calendar"
                     android:textColor="@color/com_facebook_blue"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/text_calendar"
+                    android:id="@+id/text_timeline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="@string/my_calendar"
+                    android:text="@string/string_timeline"
                     android:textColor="@color/com_facebook_blue"
                     android:textStyle="bold" />
 
@@ -212,28 +211,17 @@
     </LinearLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/floatingButton"
+        android:id="@+id/floatingactionbutton_calendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginBottom="60dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
         app:fab_addButtonColorNormal="@color/white"
         app:fab_addButtonColorPressed="@color/white_pressed"
         app:fab_addButtonPlusIconColor="@color/half_black"
         app:fab_addButtonSize="mini"
         app:fab_expandDirection="left">
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_calendar_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_colorNormal="@color/white"
-            app:fab_colorPressed="@color/white_pressed"
-            app:fab_icon="@drawable/write_40x40"
-            app:fab_title="Set bottom menu enabled/disabled" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_calendar_reload"
@@ -242,6 +230,15 @@
             app:fab_colorNormal="@color/white"
             app:fab_colorPressed="@color/white_pressed"
             app:fab_icon="@android:drawable/ic_menu_rotate"
+            app:fab_title="Set bottom menu enabled/disabled" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_calendar_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
+            app:fab_icon="@drawable/write_40x40"
             app:fab_title="Set bottom menu enabled/disabled" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
