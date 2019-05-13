@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -42,6 +43,8 @@ public class CalendarItemView extends View {
     private int dp1;
     private final float RADIUS = 50f;
     private boolean isEvent = false;
+
+    //test
     private static CalendarItemView instance = null;
 
     CalendarView calendarView;
@@ -85,7 +88,7 @@ public class CalendarItemView extends View {
                         ((CalendarView) getParent()).setSelectedView(view);
 
                         TextView textView = getRootView().findViewById(R.id.text_calendar_date);
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         Date date = new Date();
                         date.setTime(todayMillis);
                         textView.setText(dateFormat.format(date));

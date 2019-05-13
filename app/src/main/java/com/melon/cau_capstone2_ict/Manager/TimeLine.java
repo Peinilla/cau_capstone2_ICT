@@ -1,42 +1,55 @@
 package com.melon.cau_capstone2_ict.Manager;
 
-public class TimeLine {
-    private String title;
-    private String name;
-    private int reply;
-    private int recommend;
-    private String text;
+import android.graphics.drawable.Drawable;
 
-    public TimeLine(String title, String text) {
+public class TimeLine {
+    private Drawable icon;
+    private String title;
+    private String writer;
+    private String date;
+    private String content;
+
+    public TimeLine(String title, String content) {
         this.title = title;
-        this.text = text;
+        this.content = content;
     }
 
     public TimeLine() {
+        writer = "writer";
         title = "title";
-        name = "writer";
-        reply = 0;
-        recommend = 0;
-        text = "text";
+        content = "content";
+        date = "2019-04-01";
+    }
+
+    public void setWriter(String writer) {
+        this.writer = writer;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getWriter(){
+        return writer;
     }
 
     public String getTitle(){
         return title;
     }
 
-    public String getName(){
-        return name;
+    public String getContent(){
+        return content;
     }
 
-    public int getReply(){
-        return reply;
-    }
-
-    public int getRecommend(){
-        return recommend;
-    }
-
-    public String getText(){
-        return text;
+    public String getDate(){
+        return date;
     }
 }

@@ -73,7 +73,6 @@ public class MyBoardFragment extends Fragment {
         mSWL.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 mSWL.setRefreshing(false);
                 adapter.clear();
                 getBoardContext();

@@ -1,11 +1,12 @@
 package com.melon.cau_capstone2_ict;
 
 import android.animation.ValueAnimator;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -14,8 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,9 +29,11 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.melon.cau_capstone2_ict.Manager.DBHelper;
 import com.melon.cau_capstone2_ict.Manager.FragmentAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyCalendar;
 import com.melon.cau_capstone2_ict.Manager.MyCalendarAdapter;
+import com.melon.cau_capstone2_ict.Manager.MyUserData;
 import com.melon.cau_capstone2_ict.Manager.RSSHandler;
 import com.melon.cau_capstone2_ict.Manager.TimeLine;
 import com.melon.cau_capstone2_ict.Manager.TimeLineAdapter;
@@ -43,14 +46,19 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class TabFragment_calendar extends Fragment implements CalendarFragment.OnFragmentListener {
+    private String userId;
     private String date;
+    private String year, month, day;
+
     private Switch mSwitch;
 
     private RecyclerView myRecyclerView;
     private MyCalendarAdapter myCalendarAdapter;
     private LinearLayoutManager myLayoutManager;
+
     private HashMap<String, ArrayList<MyCalendar>> mMap;
 
     private RecyclerView timelineRecyclerView;
@@ -61,7 +69,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     private static final int COUNT_PAGE = 12;
     private ViewPager pager;
     private TextView textDate;
-    private TextView textMonth;
+    private TextView textMonthOfYear;
     private FragmentAdapter fragmentAdapter;
     private ArrayList<String> arrayList;
 
@@ -72,6 +80,10 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     private AppBarLayout appBarLayout;
 
     // test
+    private DBHelper dbHelper;
+    private List<MyCalendar> myCalendars;
+
+    // weather
     ImageView weatherImage;
     TextView tempText;
     TextView popText;
@@ -83,7 +95,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     String temp, wfKor, pty, pop;
     int hour;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_calendar, container, false);
@@ -92,8 +103,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         myRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_my);
         timelineRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_timeline);
         pager = (ViewPager) rootView.findViewById(R.id.calendar_pager);
-        textDate = (TextView) rootView.findViewById(R.id.text_calendar_date);
-        textMonth = (TextView) rootView.findViewById(R.id.text_calendar_title);
+        textMonthOfYear = (TextView) rootView.findViewById(R.id.text_calendar_title);
 
         // test
         fab_add = (FloatingActionButton) rootView.findViewById(R.id.button_calendar_add);
@@ -101,7 +111,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         frameLayout = (FrameLayout) rootView.findViewById(R.id.calendar_board_container);
         appBarLayout = (AppBarLayout) rootView.findViewById(R.id.calendar_appbar);
 
-        // test
+        // weather
         weatherImage = (ImageView) rootView.findViewById(R.id.imageView_wfKor1);
         wfText = (TextView) rootView.findViewById(R.id.textView_wfKor1);
         tempText = (TextView) rootView.findViewById(R.id.textView_temp1);
@@ -110,11 +120,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_pty1);
 
         handler.fetchXML();
-        Log.d("Tag", toString().valueOf(handler.parsingComplete));
-        Log.d("Tag", "111");
         while (handler.parsingComplete) ;
-        Log.d("Tag", toString().valueOf(handler.parsingComplete));
-        Log.d("Tag", "112");
         weatherParse();
 
         initList();
@@ -122,21 +128,49 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         fab_add.setOnClickListener(new FloatingActionButton.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Test
-                Fragment childFragment = new TabFragment_calendarWrite();
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.replace(R.id.calendar_board_container, childFragment).commit();
-                appBarLayout.setVisibility(View.GONE);
-                frameLayout.setVisibility(View.VISIBLE);
+                LinearLayout layout = new LinearLayout(getContext());
+                layout.setOrientation(LinearLayout.VERTICAL);
+                final EditText titleText = new EditText(getContext());
+                titleText.setHint("제목");
+                final EditText contentText = new EditText(getContext());
+                contentText.setHint("내용");
+                layout.addView(titleText);
+                layout.addView(contentText);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                dialog.setTitle(date).setView(layout).setPositiveButton("등록", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String title = titleText.getText().toString();
+                        String content = contentText.getText().toString();
+                        if (dbHelper == null) {
+                            dbHelper = new DBHelper(getContext(), "TEST", null, 1);
+                        }
+                        MyCalendar myCalendar = new MyCalendar();
+                        myCalendar.setTitle(title);
+                        myCalendar.setContent(content);
+                        dbHelper.addCalendar(myCalendar);
+                    }
+                }).setNeutralButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).create().show();
+
+
+                // write
+//                Fragment childFragment = new TabFragment_calendarWrite();
+//                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//                transaction.replace(R.id.calendar_board_container, childFragment).commit();
+//                appBarLayout.setVisibility(View.GONE);
+//                frameLayout.setVisibility(View.VISIBLE);
             }
         });
 
         fab_reload.setOnClickListener(new FloatingActionButton.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Test
-                myCalendarAdapter.notifyDataSetChanged();
-                timeLineAdapter.notifyDataSetChanged();
+                // Todo reload
+
             }
         });
 
@@ -158,7 +192,9 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                textMonth.setText(fragmentAdapter.getMonthDisplayed(position));
+                year = fragmentAdapter.getStrYear(position);
+                month = fragmentAdapter.getStrMonth(position);
+                textMonthOfYear.setText(fragmentAdapter.getStrMonthOfYear(position));
 
                 if (position == 0) {
                     fragmentAdapter.addPrev();
@@ -185,43 +221,45 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                 if (isChecked) {
                     timelineRecyclerView.setVisibility(View.GONE);
                     myRecyclerView.setVisibility(View.VISIBLE);
-                    timeLineAdapter.notifyDataSetChanged();
+                    // Todo reload
+//                    timeLineAdapter.notifyDataSetChanged();
                 } else {
                     myRecyclerView.setVisibility(View.GONE);
                     timelineRecyclerView.setVisibility(View.VISIBLE);
-                    myCalendarAdapter.notifyDataSetChanged();
+                    // Todo reload
+//                    myCalendarAdapter.notifyDataSetChanged();
                 }
             }
         });
-
-//        weatherParse();
 
         return rootView;
     }
 
     public void setEvent() {
-        arrayList = new ArrayList<String>();
-
-        for (String m : mMap.keySet()) {
-            if (!arrayList.contains(m) && mMap.get(m).size() != 0)
-                arrayList.add(m);
-        }
+        // Todo 월별로
+//        arrayList = new ArrayList<String>();
+//
+//        for (String m : mMap.keySet()) {
+//            if (!arrayList.contains(m) && mMap.get(m).size() != 0)
+//                arrayList.add(m);
+//        }
 
         String date = toString().valueOf(textDate.getText());
-        Log.d("getChild", Integer.toString(pager.getChildCount()));
-        if (!arrayList.isEmpty() && pager.getChildCount() != 0) {
+
+//        if (!arrayList.isEmpty() && pager.getChildCount() != 0) {
+        if (pager.getChildCount() != 0) {
             for (int i = 0; i < pager.getChildCount(); i++) {
                 if (((CalendarView) pager.getChildAt(i)).getChildCount() != 0) {
                     for (int j = 7; j < ((CalendarView) pager.getChildAt(i)).getChildCount(); j++) {
-                        if (arrayList.size() == 0)
-                            break;
+//                        if (arrayList.size() == 0)
+//                            break;
                         CalendarItemView child = ((CalendarItemView) ((CalendarView) pager.getChildAt(i)).getChildAt(j));
-                        String date1 = fragmentAdapter.getDateDisplayed(child.getDate());
-                        if (arrayList.contains(date1)) {
-                            child.setIsEvent(true);
-                            child.invalidate();
-                            arrayList.remove(date1);
-                        }
+//                        String date1 = fragmentAdapter.getDateDisplayed(child.getDate());
+//                        if (arrayList.contains(date1)) {
+//                            child.setIsEvent(true);
+//                            child.invalidate();
+//                            arrayList.remove(date1);
+//                        }
                     }
                 }
             }
@@ -229,65 +267,83 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         textDate.setText(date);
     }
 
+    private void createDB() {
+        if (date.length() > 0) {
+            dbHelper = new DBHelper(getContext(), date, null, 1);
+            dbHelper.testDB();
+        }
+    }
+
     public void initList() {
+        userId = MyUserData.getInstance().getId();
         fragmentAdapter = new FragmentAdapter(getChildFragmentManager());
         fragmentAdapter.setOnFragmentListener(this);
         fragmentAdapter.setNumOfMonth(COUNT_PAGE);
         pager.setAdapter(fragmentAdapter);
         pager.setCurrentItem(COUNT_PAGE);
-        textDate.setText(fragmentAdapter.getDateDisplayed(Calendar.getInstance().getTimeInMillis()));
-        textMonth.setText(fragmentAdapter.getMonthDisplayed(pager.getCurrentItem()));
 
-        //         My Calendar
-        mMap = new HashMap<String, ArrayList<MyCalendar>>();
-        date = "2019.04.01";
-        mMap.put(date, new ArrayList<MyCalendar>());
-        mMap.get(date).add(new MyCalendar("리스트1", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트2", "내용"));
+        //Todo year, month, day로 만들기
+        year = fragmentAdapter.getStrYear(pager.getCurrentItem());
+        month = fragmentAdapter.getStrMonth(pager.getCurrentItem());
+        date = fragmentAdapter.getStrDate(Calendar.getInstance().getTimeInMillis());
+        textMonthOfYear.setText(fragmentAdapter.getStrMonthOfYear(pager.getCurrentItem()));
+        textDate.setText(date);
 
-        date = "2019.04.08";
-        mMap.put(date, new ArrayList<MyCalendar>());
-        mMap.get(date).add(new MyCalendar("리스트4", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트5", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트6", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트9", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트10", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트11", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트12", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트4", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트5", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트6", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트4", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트5", "내용"));
-        mMap.get(date).add(new MyCalendar("리스트6", "내용"));
-
-        date = "2019.04.09";
-        mMap.put(date, new ArrayList<MyCalendar>());
-        mMap.get(date).add(new MyCalendar("리스트3", "내용"));
-
-        date = "2019.04.17";
-        mMap.put(date, new ArrayList<MyCalendar>());
-        mMap.get(date).add(new MyCalendar("리스트7", "내용"));
-
-        date = "2019.04.20";
-        mMap.put(date, new ArrayList<MyCalendar>());
-        mMap.get(date).add(new MyCalendar("리스트8", "내용"));
+//        //         My Calendar
+//        mMap = new HashMap<String, ArrayList<MyCalendar>>();
+//        date = "2019.04.01";
+//        mMap.put(date, new ArrayList<MyCalendar>());
+//        mMap.get(date).add(new MyCalendar("리스트1", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트2", "내용"));
+//
+//        date = "2019.04.08";
+//        mMap.put(date, new ArrayList<MyCalendar>());
+//        mMap.get(date).add(new MyCalendar("리스트4", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트5", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트6", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트9", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트10", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트11", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트12", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트4", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트5", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트6", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트4", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트5", "내용"));
+//        mMap.get(date).add(new MyCalendar("리스트6", "내용"));
+//
+//        date = "2019.04.09";
+//        mMap.put(date, new ArrayList<MyCalendar>());
+//        mMap.get(date).add(new MyCalendar("리스트3", "내용"));
+//
+//        date = "2019.04.17";
+//        mMap.put(date, new ArrayList<MyCalendar>());
+//        mMap.get(date).add(new MyCalendar("리스트7", "내용"));
+//
+//        date = "2019.04.20";
+//        mMap.put(date, new ArrayList<MyCalendar>());
+//        mMap.get(date).add(new MyCalendar("리스트8", "내용"));
 
 
         // Timeline
-        timelineArray = new ArrayList<>();
-        for (int i = 1; i <= 50; i++) {
-            String title = "리스트";
-            if (i < 10)
-                title += "0";
-            title += Integer.toString(i);
-            timelineArray.add(new TimeLine(title, "이름 시간 장소"));
-        }
+//        timelineArray = new ArrayList<>();
+//        for (int i = 1; i <= 50; i++) {
+//            String title = "리스트";
+//            if (i < 10)
+//                title += "0";
+//            title += Integer.toString(i);
+//            timelineArray.add(new TimeLine(title, "이름 시간 장소"));
+//        }
 
         myLayoutManager = new LinearLayoutManager(getActivity());
         myRecyclerView.setLayoutManager(myLayoutManager);
-        myCalendarAdapter = new MyCalendarAdapter(getActivity(), mMap.get(date));
-        myRecyclerView.setAdapter(myCalendarAdapter);
+
+        if (dbHelper == null) {
+            dbHelper = new DBHelper(getActivity(), date, null, 1);
+        }
+        List myCalendars = dbHelper.getAllMyCalendars();
+        myRecyclerView.setAdapter(new MyCalendarAdapter(getActivity(), myCalendars));
+
 
         timelineLayoutManager = new LinearLayoutManager(getActivity());
         timelineRecyclerView.setLayoutManager(timelineLayoutManager);
@@ -295,22 +351,26 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         timelineRecyclerView.setAdapter(timeLineAdapter);
 
         myRecyclerView.setVisibility(View.GONE);
+
+        //test
+        createDB();
     }
 
     public void refreshFragment() {
         date = toString().valueOf(textDate.getText());
-        Log.d("date", date);
 
-        if (!mMap.containsKey(date)) {
-            Log.d("CreateArray: ", date);
-            mMap.put(date, new ArrayList<MyCalendar>());
-        }
         myCalendarAdapter.setRecyclerAdapter(mMap.get(date));
         myRecyclerView.setAdapter(myCalendarAdapter);
+
+        getTimeLineContext();
+        timelineRecyclerView.setAdapter(timeLineAdapter);
+
         if (mSwitch.isChecked()) {
             myRecyclerView.setVisibility(View.VISIBLE);
+            timelineRecyclerView.setVisibility(View.GONE);
         } else {
             myRecyclerView.setVisibility(View.GONE);
+            timelineRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -364,7 +424,36 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         setEvent();
     }
 
-    public void getMyCalendarContext() {
+//    public void getMyCalendarContext() {
+//        Response.Listener<String> responseListener = new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                try {
+//                    Log.d("Tag", "response check : " + response);
+//                    JSONArray array = new JSONArray(response);
+//                    for (int i = 0; i < array.length(); i++) {
+//                        MyCalendar myCalendar = new MyCalendar();
+//                        JSONObject jsonResponse = array.getJSONObject(i);
+//                        myCalendar.setWriter(jsonResponse.getString("writer"));
+//                        myCalendar.setTitle(jsonResponse.getString("title"));
+//                        myCalendar.setContent(jsonResponse.getString("content"));
+//                        myCalendar.setDate(jsonResponse.getString("date"));
+//                        myCalendarAdapter.addItem(myCalendar);
+//                    }
+//
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//        String URL = "https://capston2webapp.azurewebsites.net/api/유저ID/캘린더/2016/10" + date; // +id
+//        StringRequest getBoardRequest = new StringRequest(Request.Method.GET, URL, responseListener, null);
+//        RequestQueue queue = Volley.newRequestQueue(getActivity());
+//        queue.add(getBoardRequest);
+//    }
+
+    public void getTimeLineContext() {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -372,33 +461,27 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                     Log.d("Tag", "response check : " + response);
                     JSONArray array = new JSONArray(response);
                     for (int i = 0; i < array.length(); i++) {
-                        MyCalendar myCalendar = new MyCalendar();
+                        TimeLine timeLine = new TimeLine();
                         JSONObject jsonResponse = array.getJSONObject(i);
-                        myCalendar.setDate(jsonResponse.getString("date"));
-                        myCalendar.setText(jsonResponse.getString("text"));
-                        myCalendar.setTitle(jsonResponse.getString("title"));
-                        myCalendar.setWriter(jsonResponse.getString("writer"));
-                        myCalendarAdapter.addItem(myCalendar);
-//                        fragmentAdapter.addItem(myCalendar);
+                        timeLine.setWriter(jsonResponse.getString("writer"));
+                        timeLine.setTitle(jsonResponse.getString("title"));
+                        timeLine.setContent(jsonResponse.getString("content"));
+                        timeLine.setDate(jsonResponse.getString("date"));
+                        timeLineAdapter.addItem(timeLine);
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
-        String URL = "https://capston2webapp.azurewebsites.net/api/ResidencePosts?residenceName=" + date; // +id
+        String URL = "https://capston2webapp.azurewebsites.net/api/" + userId + "/calendar/" + year + "/" + month; // +id
         StringRequest getBoardRequest = new StringRequest(Request.Method.GET, URL, responseListener, null);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(getBoardRequest);
     }
 
-    // test
+    // weather
     public void weatherParse() {
-
-
-        Log.d("Tag", "12");
         hour = handler.getHour();
         wfKor = handler.getWfKor();
         temp = handler.getTemp();
@@ -408,11 +491,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         tempText.setText(temp);
         popText.setText(pop);
         ptyText.setText(pty);
-
-//        if(pop == "0")
-//            linearLayout.setVisibility(View.GONE);
-//        else
-//            linearLayout.setVisibility(View.VISIBLE);
 
         switch (wfKor) {
             case "맑음":

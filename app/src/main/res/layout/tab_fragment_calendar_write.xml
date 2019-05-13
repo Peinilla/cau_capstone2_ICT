@@ -56,7 +56,7 @@
     </RelativeLayout>
 
     <EditText
-        android:id="@+id/calendar_board_wtext"
+        android:id="@+id/calendar_board_wcontent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/calendar_board_title_container"

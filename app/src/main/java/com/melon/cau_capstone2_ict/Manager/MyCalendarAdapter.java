@@ -39,13 +39,31 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         this.list = list;
     }
 
+    // 총 아이템 수
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    public void addItem(MyCalendar myCalendar) {
+        list.add(myCalendar);
+    }
+
+    public Object getItem(int position) {
+        return this.list.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+
     // 최초에 뷰홀더를 생성해주는 함수
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-//        Toast.makeText(context, list.get(position).getTitle(), Toast.LENGTH_SHORT);
-        Log.d("onCreateVieHolder: ", "Create");
         return new RecyclerViewHolder(view);
     }
 
@@ -54,10 +72,8 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
         holder.title.setText(list.get(position).getTitle());
         holder.writer.setText(list.get(position).getWriter());
-        holder.comment.setText("(" + Integer.toString(list.get(position).getNumComment()) + ")");
-        holder.recommend.setText("(" + Integer.toString(list.get(position).getNumRecommend()) + ")");
         holder.date.setText(list.get(position).getDate());
-        holder.text.setText(list.get(position).getText());
+        holder.content.setText(list.get(position).getContent());
 
         holder.modify.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,27 +113,12 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         });
     }
 
-    // 총 아이템 수
-    @Override
-    public int getItemCount() {
-        if (list != null) {
-            return list.size();
-        }
-        return 0;
-    }
-
-    public void addItem(MyCalendar myCalendar){
-        list.add(myCalendar);
-    }
-
     // 뷰홀더 클래스
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView writer;
-        TextView comment;
-        TextView recommend;
         TextView date;
-        TextView text;
+        TextView content;
         LinearLayout linear_spread;
         LinearLayout linear_modify;
         Button modify;
@@ -127,10 +128,8 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
             super(view);
             title = (TextView) view.findViewById(R.id.calendar_title);
             writer = (TextView) view.findViewById(R.id.calendar_writer);
-            comment = (TextView) view.findViewById(R.id.calendar_comment);
-            recommend = (TextView) view.findViewById(R.id.calendar_recommend);
             date = (TextView) view.findViewById(R.id.calendar_date);
-            text = (TextView) view.findViewById(R.id.calendar_content);
+            content = (TextView) view.findViewById(R.id.calendar_content);
             linear_spread = (LinearLayout) view.findViewById(R.id.calendar_linear_spread);
             linear_modify = (LinearLayout) view.findViewById(R.id.calendar_option);
             modify = (Button) view.findViewById(R.id.button_calendar_modify);

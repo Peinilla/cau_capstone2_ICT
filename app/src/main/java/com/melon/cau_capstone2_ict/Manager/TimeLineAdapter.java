@@ -91,12 +91,14 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
         return 0;
     }
 
+    public void addItem(TimeLine timeLine){
+        list.add(timeLine);
+    }
+
     // 뷰홀더 클래스
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView name;
-        TextView reply;
-        TextView recommend;
         TextView date;
         TextView content;
         LinearLayout linear_spread;
@@ -106,8 +108,6 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
             super(view);
             title = (TextView) view.findViewById(R.id.calendar_title);
             name = (TextView) view.findViewById(R.id.calendar_writer);
-            reply = (TextView) view.findViewById(R.id.calendar_comment);
-            recommend = (TextView) view.findViewById(R.id.calendar_recommend);
             date = (TextView) view.findViewById(R.id.calendar_date);
             content = (TextView) view.findViewById(R.id.calendar_content);
             linear_spread = (LinearLayout) view.findViewById(R.id.calendar_linear_spread);

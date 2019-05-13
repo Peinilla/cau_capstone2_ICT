@@ -24,16 +24,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TabFragment_calendarWrite extends Fragment implements MainActivity.OnBackPressedListener {
-
+    static private String userId = MyUserData.getInstance().getId();
+    final static private String URL = "https://capston2webapp.azurewebsites.net/api/" + userId + "/calendar";
     EditText titleView;
-    EditText textView;
+    EditText contentView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_calendar_write, container, false);
 
         titleView = rootView.findViewById(R.id.calendar_board_wtitle);
-        textView = rootView.findViewById(R.id.calendar_board_wtext);
+        contentView = rootView.findViewById(R.id.calendar_board_wcontent);
 
         ImageButton btn = (ImageButton) rootView.findViewById(R.id.calendar_board_back);
         ImageButton write = (ImageButton) rootView.findViewById(R.id.calendar_board_write);
@@ -83,24 +84,39 @@ public class TabFragment_calendarWrite extends Fragment implements MainActivity.
             }
         };
         String title = titleView.getText().toString();
-        String text = textView.getText().toString();
-
-        // Test
-        ((TabFragment_calendar) this.getParentFragment()).getBoard(title, text);
-        goBack();
-        // Test
-
-        writeRequest wr = new writeRequest(title,text,responseListener);
+        String content = contentView.getText().toString();
+        writeRequest wr = new writeRequest(title,content,responseListener);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(wr);
+
+//        Response.Listener<String> responseListener = new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                try {
+//                    Log.d("Tag", "response check : " + response);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//        String title = titleView.getText().toString();
+//        String text = textView.getText().toString();
+//
+//        // Test
+//        ((TabFragment_calendar) this.getParentFragment()).getBoard(title, text);
+//        goBack();
+//        // Test
+//
+//        writeRequest wr = new writeRequest(title,text,responseListener);
+//        RequestQueue queue = Volley.newRequestQueue(getActivity());
+//        queue.add(wr);
     }
 
     class writeRequest extends StringRequest {
-        // url
-        final static private String URL = "";
         private Map<String, String> parameters;
 
-        public writeRequest(String title, String text, Response.Listener<String> listener) {
+        public writeRequest(String title, String content, Response.Listener<String> listener) {
             super(Method.POST, URL, listener, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
@@ -108,10 +124,9 @@ public class TabFragment_calendarWrite extends Fragment implements MainActivity.
                 }
             });
             parameters = new HashMap<>();
-            parameters.put("nickname", MyUserData.getInstance().getNickname());
-            parameters.put("text", text);
+            parameters.put("nickname", userId);
+            parameters.put("content", content);
             parameters.put("title", title);
-            parameters.put("residence", MyUserData.getInstance().getResidence());
             Log.d("Tag", "re " + title);
 
             goBack();

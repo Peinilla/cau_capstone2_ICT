@@ -2,74 +2,67 @@ package com.melon.cau_capstone2_ict.Manager;
 
 import android.graphics.drawable.Drawable;
 
-public class MyCalendar {
+import java.io.Serializable;
+
+public class MyCalendar implements Serializable {
+    private int _id;
     private Drawable icon;
     private String title;
     private String writer;
     private String date;
-    private String text;
-    private int numComment;
-    private int numRecommend;
+    private String content;
 
-    public MyCalendar(String title, String text) {
+    public MyCalendar(String title, String content) {
         this.title = title;
-        this.text = text;
+        this.content = content;
     }
 
     public MyCalendar() {
-        title = "title";
+        _id = 0;
         writer = "writer";
-        date = "19.04.01";
-        numComment = 0;
-        numRecommend = 0;
-        text = "text";
+        title = "title";
+        content = "content";
+        date = "2019-04-01";
+    }
+
+    public int get_id() {
+        return _id;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
+    }
+
+
+    public void setWriter(String writer) {
+        this.writer = writer;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setWriter(String writer) {
-        this.writer = writer;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public void setDate(String date) {
         this.date = date;
     }
 
-    public void setNumComment(int numComment) {
-        this.numComment = numComment;
-    }
-
-    public void setNumRecommend(int numRecommend) {
-        this.numRecommend = numRecommend;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getTitle(){
-        return title;
-    }
-
-    public String getWriter(){
+    public String getWriter() {
         return writer;
     }
 
-    public String getDate(){
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getDate() {
         return date;
-    }
-
-    public int getNumComment() {
-        return numComment;
-    }
-
-    public int getNumRecommend() {
-        return numRecommend;
-    }
-
-    public String getText(){
-        return text;
     }
 }
