@@ -17,6 +17,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 public class ChatHubManager {
 
     private HubProxy hubProxy;
+    private HubProxy hubProxy_group;
     private HubConnection hubConnection;
     private boolean isConnect;
 
@@ -31,19 +32,31 @@ public class ChatHubManager {
     public HubProxy getHubProxy(){
         return hubProxy;
     }
+    public HubProxy getHubProxygroup(){
+        return hubProxy_group;
+    }
 
     public void send(String to, String message){
         if(!to.equals("") && !message.equals("")) {
-            hubProxy.invoke("sendMessage", MyUserData.getInstance().getId(), to, message);//we have parameterized what we want in the web API method
+            hubProxy.invoke("sendMessage", MyUserData.getInstance().getId(), to, message);
+        }
+    }
+    public void setTag(String tag){
+        if(!tag.equals("")){
+            hubProxy_group.invoke("UploadTag", MyUserData.getInstance().getId(),tag);
+        }
+    }
+    public void group_send(String message){
+        if(!message.equals("")){
+            hubProxy_group.invoke("SendGroupMsg", MyUserData.getInstance().getId(),message);
         }
     }
 
     public void connect() {
         if(isConnect){
-            disconnect();
-            connect();
             return;
         }
+        Log.d("Tag", "connect");
         isConnect = true;
 
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
@@ -71,7 +84,8 @@ public class ChatHubManager {
             }
         });
 
-        hubProxy = hubConnection.createHubProxy("chatHub"); // web api  necessary method writer
+        hubProxy = hubConnection.createHubProxy("ChatHub"); // web api  necessary method name
+        hubProxy_group = hubConnection.createHubProxy("GroupChatHub");
         ClientTransport clientTransport = new ServerSentEventsTransport((hubConnection.getLogger()));
         SignalRFuture<Void> signalRFuture = hubConnection.start(clientTransport);
 
@@ -84,6 +98,7 @@ public class ChatHubManager {
 
     }
     public void disconnect(){ //disconnection server
+        Log.d("Tag", "disconnect");
         isConnect = false;
         hubConnection.stop();
     }

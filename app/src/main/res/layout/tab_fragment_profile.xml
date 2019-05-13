@@ -5,6 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <ListView
+        android:id="@+id/friend_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/textView4"
+        android:layout_below="@+id/textView_friend"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -21,6 +30,35 @@
         android:layout_below="@+id/textView"
         android:layout_centerInParent="true"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_ID"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="친구목록"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:text="친구추가 수락 대기 중"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="visible" />
+
+    <ListView
+        android:id="@+id/friendrequest_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textView4"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/chat_floatingButton"
@@ -54,7 +92,7 @@
             app:fab_colorPressed="@color/white_pressed" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_search"
+            android:id="@+id/button_nfc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_colorNormal="@color/white"
@@ -63,17 +101,8 @@
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
-    <ListView
-        android:id="@+id/chat_roomlist"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/profile_ID"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="20dp" />
-
     <FrameLayout
-        android:id="@+id/chat_container"
+        android:id="@+id/profile_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

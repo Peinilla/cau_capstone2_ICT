@@ -35,9 +35,12 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
 
     EditText titleView;
     EditText textView;
+    String boardID;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_boardwrite, container, false);
+        boardID = getArguments().getString("boardID");
+
 
         titleView = rootView.findViewById(R.id.board_wtitle);
         textView = rootView.findViewById(R.id.board_wtext);
@@ -49,7 +52,7 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
         btn.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
-                goBack();
+                onBack();
             }
             });
         write.setOnClickListener(new Button.OnClickListener(){
@@ -66,15 +69,6 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
     }
-
-    void goBack(){
-        FragmentManager fm = getFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.board_container);
-        FragmentTransaction tr = fm.beginTransaction();
-        tr.remove(fragment);
-        tr.commit();
-    }
-
     void writeRequest(){
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -108,10 +102,10 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
             parameters.put("nickname", MyUserData.getInstance().getNickname());
             parameters.put("text", text);
             parameters.put("title", title);
-            parameters.put("residence", MyUserData.getInstance().getResidence());
+            parameters.put("residence", boardID);
             Log.d("Tag", "re " + title);
 
-            goBack();
+            onBack();
         }
 
         @Override
@@ -119,18 +113,18 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
             return parameters;
         }
     }
-
+    void goBack(){
+        FragmentManager fm = getFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.board_container);
+        FragmentTransaction tr = fm.beginTransaction();
+        tr.remove(fragment);
+        tr.commit();
+    }
     @Override
     public void onBack() {
-        Log.e("Tag", "onBack()");
-        // 리스너를 설정하기 위해 Activity 를 받아옵니다.
         MainActivity activity = (MainActivity)getActivity();
-        // 한번 뒤로가기 버튼을 눌렀다면 Listener 를 null 로 해제해줍니다.
         activity.setOnBackPressedListener(null);
-        // MainFragment 로 교체
         goBack();
-
-
     }
     @Override
     //                     혹시 Context 로 안되시는분은 Activity 로 바꿔보시기 바랍니다.

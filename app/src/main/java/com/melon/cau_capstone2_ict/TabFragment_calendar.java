@@ -337,13 +337,8 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
 
         myLayoutManager = new LinearLayoutManager(getActivity());
         myRecyclerView.setLayoutManager(myLayoutManager);
-
-        if (dbHelper == null) {
-            dbHelper = new DBHelper(getActivity(), date, null, 1);
-        }
-        List myCalendars = dbHelper.getAllMyCalendars();
-        myRecyclerView.setAdapter(new MyCalendarAdapter(getActivity(), myCalendars));
-
+        myCalendarAdapter = new MyCalendarAdapter(getActivity(), mMap.get(date));
+        myRecyclerView.setAdapter(myCalendarAdapter);
 
         timelineLayoutManager = new LinearLayoutManager(getActivity());
         timelineRecyclerView.setLayoutManager(timelineLayoutManager);
@@ -351,26 +346,22 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         timelineRecyclerView.setAdapter(timeLineAdapter);
 
         myRecyclerView.setVisibility(View.GONE);
-
-        //test
-        createDB();
     }
 
     public void refreshFragment() {
         date = toString().valueOf(textDate.getText());
+        Log.d("date", date);
 
+        if (!mMap.containsKey(date)) {
+            Log.d("CreateArray: ", date);
+            mMap.put(date, new ArrayList<MyCalendar>());
+        }
         myCalendarAdapter.setRecyclerAdapter(mMap.get(date));
         myRecyclerView.setAdapter(myCalendarAdapter);
-
-        getTimeLineContext();
-        timelineRecyclerView.setAdapter(timeLineAdapter);
-
         if (mSwitch.isChecked()) {
             myRecyclerView.setVisibility(View.VISIBLE);
-            timelineRecyclerView.setVisibility(View.GONE);
         } else {
             myRecyclerView.setVisibility(View.GONE);
-            timelineRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -424,36 +415,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         setEvent();
     }
 
-//    public void getMyCalendarContext() {
-//        Response.Listener<String> responseListener = new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                try {
-//                    Log.d("Tag", "response check : " + response);
-//                    JSONArray array = new JSONArray(response);
-//                    for (int i = 0; i < array.length(); i++) {
-//                        MyCalendar myCalendar = new MyCalendar();
-//                        JSONObject jsonResponse = array.getJSONObject(i);
-//                        myCalendar.setWriter(jsonResponse.getString("writer"));
-//                        myCalendar.setTitle(jsonResponse.getString("title"));
-//                        myCalendar.setContent(jsonResponse.getString("content"));
-//                        myCalendar.setDate(jsonResponse.getString("date"));
-//                        myCalendarAdapter.addItem(myCalendar);
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        };
-//        String URL = "https://capston2webapp.azurewebsites.net/api/유저ID/캘린더/2016/10" + date; // +id
-//        StringRequest getBoardRequest = new StringRequest(Request.Method.GET, URL, responseListener, null);
-//        RequestQueue queue = Volley.newRequestQueue(getActivity());
-//        queue.add(getBoardRequest);
-//    }
-
-    public void getTimeLineContext() {
+    public void getMyCalendarContext() {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -461,27 +423,33 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                     Log.d("Tag", "response check : " + response);
                     JSONArray array = new JSONArray(response);
                     for (int i = 0; i < array.length(); i++) {
-                        TimeLine timeLine = new TimeLine();
+                        MyCalendar myCalendar = new MyCalendar();
                         JSONObject jsonResponse = array.getJSONObject(i);
-                        timeLine.setWriter(jsonResponse.getString("writer"));
-                        timeLine.setTitle(jsonResponse.getString("title"));
-                        timeLine.setContent(jsonResponse.getString("content"));
-                        timeLine.setDate(jsonResponse.getString("date"));
-                        timeLineAdapter.addItem(timeLine);
+                        myCalendar.setDate(jsonResponse.getString("date"));
+                        myCalendar.setContent(jsonResponse.getString("content"));
+                        myCalendar.setTitle(jsonResponse.getString("title"));
+                        myCalendar.setWriter(jsonResponse.getString("writer"));
+                        myCalendarAdapter.addItem(myCalendar);
+//                        fragmentAdapter.addItem(myCalendar);
                     }
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
-        String URL = "https://capston2webapp.azurewebsites.net/api/" + userId + "/calendar/" + year + "/" + month; // +id
+        String URL = "https://capston2webapp.azurewebsites.net/api/ResidencePosts?residenceName=" + date; // +id
         StringRequest getBoardRequest = new StringRequest(Request.Method.GET, URL, responseListener, null);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(getBoardRequest);
     }
 
-    // weather
+    // test
     public void weatherParse() {
+
+
+        Log.d("Tag", "12");
         hour = handler.getHour();
         wfKor = handler.getWfKor();
         temp = handler.getTemp();
@@ -491,6 +459,11 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         tempText.setText(temp);
         popText.setText(pop);
         ptyText.setText(pty);
+
+//        if(pop == "0")
+//            linearLayout.setVisibility(View.GONE);
+//        else
+//            linearLayout.setVisibility(View.VISIBLE);
 
         switch (wfKor) {
             case "맑음":

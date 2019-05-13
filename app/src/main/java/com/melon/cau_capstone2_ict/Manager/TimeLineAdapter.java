@@ -91,7 +91,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
         return 0;
     }
 
-    public void addItem(TimeLine timeLine){
+    public void addItem(TimeLine timeLine) {
         list.add(timeLine);
     }
 
