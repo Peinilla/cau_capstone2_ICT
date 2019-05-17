@@ -96,6 +96,8 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     String temp, wfKor, pty, pop;
     int hour;
 
+    String[] dateList = {"선택안함", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_calendar, container, false);
