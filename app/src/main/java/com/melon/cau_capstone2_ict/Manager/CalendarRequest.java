@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CalendarRequest extends StringRequest {
-    final static String URL = "https://capston2webapp.azurewebsites.net/api/" + MyUserData.getInstance().getId() + "/calendar";
+    final static String URL = "https://capston2webapp.azurewebsites.net/api/" + MyUserData.getInstance().getId() + "/calender";
     private Map<String, String> parameters;
 
     public CalendarRequest(MyCalendar myCalendar, String type, Response.Listener<String> listener) {

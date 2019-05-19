@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -35,6 +36,8 @@ import com.melon.cau_capstone2_ict.Manager.RSSHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.StringTokenizer;
+
 public class GpsBoardFragment extends Fragment {
 
     static String boardID;
@@ -50,23 +53,15 @@ public class GpsBoardFragment extends Fragment {
     TextView titleView;
     SwipeRefreshLayout mSWL;
     FrameLayout frameLayout;
-//    // test
-//    ImageView weatherImage;
-//    TextView tempText;
-//    TextView popText;
-//    TextView ptyText;
-//    TextView wfText;
-//    LinearLayout linearLayout;
-//    private String finalUrl = "http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=1159060500";
-//    private RSSHandler handler;
+//    Button joinButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         boardID = getArguments().getString("boardID");
         final View rootView = inflater.inflate(R.layout.gpsboard_fragment, container, false);
 
-        titleView = (TextView)rootView.findViewById(R.id.board_title);
-        bnv = (BottomNavigationView)rootView.findViewById(R.id.SearchBar) ;
+        titleView = (TextView) rootView.findViewById(R.id.board_title);
+        bnv = (BottomNavigationView) rootView.findViewById(R.id.SearchBar);
         listView = (ListView) rootView.findViewById(R.id.listview1);
         searchButton = (FloatingActionButton) rootView.findViewById(R.id.button_search);
         writeButton = rootView.findViewById(R.id.button_write);
@@ -75,6 +70,8 @@ public class GpsBoardFragment extends Fragment {
         closeImage = (ImageButton) rootView.findViewById(R.id.image_close);
         mSWL = rootView.findViewById(R.id.board_swipe);
         frameLayout = rootView.findViewById(R.id.board_container);
+
+//        joinButton = (Button) rootView.findViewById(R.id.button_join);
 
         titleView.setText(boardID + " 게시판");
 
@@ -105,7 +102,7 @@ public class GpsBoardFragment extends Fragment {
                 Fragment childFragment = new TabFragment_boardView();
 
                 Bundle bundle = new Bundle(1);
-                bundle.putSerializable("Board",m);
+                bundle.putSerializable("Board", m);
 
                 childFragment.setArguments(bundle);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -114,18 +111,19 @@ public class GpsBoardFragment extends Fragment {
             }
         });
 
-        searchButton.setOnClickListener(new FloatingActionButton.OnClickListener(){
+        searchButton.setOnClickListener(new FloatingActionButton.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bnv.setVisibility(View.VISIBLE);    }
+                bnv.setVisibility(View.VISIBLE);
+            }
         });
 
-        writeButton.setOnClickListener(new FloatingActionButton.OnClickListener(){
+        writeButton.setOnClickListener(new FloatingActionButton.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment childFragment = new TabFragment_boardWrite();
                 Bundle bundle = new Bundle(1);
-                bundle.putString("boardID",boardID);
+                bundle.putString("boardID", boardID);
                 // test
                 bundle.putBoolean("withBab", true);
                 childFragment.setArguments(bundle);
@@ -134,16 +132,19 @@ public class GpsBoardFragment extends Fragment {
                 frameLayout.setVisibility(View.VISIBLE);
             }
         });
-        backImage.setOnClickListener(new ImageButton.OnClickListener(){
+
+        backImage.setOnClickListener(new ImageButton.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goBack();         }
+                goBack();
+            }
         });
 
-        closeImage.setOnClickListener(new ImageButton.OnClickListener(){
+        closeImage.setOnClickListener(new ImageButton.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bnv.setVisibility(View.GONE);          }
+                bnv.setVisibility(View.GONE);
+            }
         });
 
         final Spinner spinner_field = (Spinner) rootView.findViewById(R.id.spinner_search);
@@ -153,31 +154,62 @@ public class GpsBoardFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 //Todo 제목/글쓴이 검색 선택 구현해야됨
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
 
         String[] str = getResources().getStringArray(R.array.search_item);
-        final ArrayAdapter<String> s_adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
+        final ArrayAdapter<String> s_adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, str);
         s_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_field.setAdapter(s_adapter);
 
         return rootView;
     }
-    public void getBoardContext(){
+
+    public void getBoardContext() {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     Log.d("Tag", "response check : " + response);
                     JSONArray array = new JSONArray(response);
-                    for(int inx = 0; inx < array.length(); inx++) {
+                    for (int inx = 0; inx < array.length(); inx++) {
                         MyBoard m = new MyBoard();
                         JSONObject jsonResponse = array.getJSONObject(inx);
                         m.setDate(jsonResponse.getString("date"));
+//                        m.setTitle(jsonResponse.getString("title"));
+
+                        StringTokenizer tokens = new StringTokenizer(jsonResponse.getString("title"), "|");
+                        String token = tokens.nextToken();
+                        if(token.equals("밥파티")) {
+                            m.setType(token);
+                            if(tokens.hasMoreElements()) {
+                                token = "[밥파티] ";
+                                token += tokens.nextToken();
+                                for (; tokens.hasMoreElements(); )
+                                    token += "|" + tokens.nextToken();
+                            }
+                            m.setTitle(token);
+                        }
+                        else if(token.equals("게시글")){
+                            m.setType(token);
+                            if(tokens.hasMoreElements()) {
+                                token = tokens.nextToken();
+                                for (; tokens.hasMoreElements(); )
+                                    token += "|" + tokens.nextToken();
+                            }
+                            m.setTitle(token);
+                        }
+                        else {
+                            for(; tokens.hasMoreElements();)
+                                token +=  "|" + tokens.nextToken();
+                            m.setTitle(token);
+                        }
+
+
                         m.setText(jsonResponse.getString("text"));
-                        m.setTitle(jsonResponse.getString("title"));
                         m.setWriter(jsonResponse.getString("nickname"));
                         adapter.addItem(m);
                     }
@@ -188,13 +220,13 @@ public class GpsBoardFragment extends Fragment {
                 }
             }
         };
-        String URL = "https://capston2webapp.azurewebsites.net/api/ResidencePosts?residenceName="+boardID;
-        StringRequest getBoardRequest = new StringRequest(Request.Method.GET,URL,responseListener,null);
+        String URL = "https://capston2webapp.azurewebsites.net/api/ResidencePosts?residenceName=" + boardID;
+        StringRequest getBoardRequest = new StringRequest(Request.Method.GET, URL, responseListener, null);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(getBoardRequest);
     }
 
-    void goBack(){
+    void goBack() {
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.gps_board_container);
         FragmentTransaction tr = fm.beginTransaction();

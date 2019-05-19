@@ -1,7 +1,9 @@
 package com.melon.cau_capstone2_ict;
 
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
@@ -15,18 +17,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -49,7 +53,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class TabFragment_calendar extends Fragment implements CalendarFragment.OnFragmentListener {
     private String userId;
@@ -59,14 +62,10 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     private Switch mSwitch;
 
     private RecyclerView myRecyclerView;
-    private MyCalendarAdapter myCalendarAdapter;
     private LinearLayoutManager myLayoutManager;
-
-    private HashMap<String, ArrayList<MyCalendar>> mMap;
 
     private RecyclerView timelineRecyclerView;
     private TimeLineAdapter timeLineAdapter;
-    private ArrayList<TimeLine> timelineArray;
     private LinearLayoutManager timelineLayoutManager;
 
     private static final int COUNT_PAGE = 12;
@@ -96,7 +95,11 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     String temp, wfKor, pty, pop;
     int hour;
 
-    String[] dateList = {"선택안함", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
+    String[] timeList = {" - ", "00시", "01시", "02시", "03시", "04시", "05시", "06시", "07시", "08시", "09시", "10시", "11시", "12시",
+            "13시", "14시", "15시", "16시", "17시", "18시", "19시", "20시", "21시", "22시", "23시"};
+    String[] colorList = {"black", "gray", "white", "blue", "l_blue", "green", "l_green", "red", "pink", "orange", "yellow", "purple"};
+    String str1 = "", str2 = "", color = "";
+    int pos;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -209,27 +212,101 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     public void addCalendar() {
         LinearLayout layout = new LinearLayout(getContext());
         layout.setOrientation(LinearLayout.VERTICAL);
+        final LinearLayout layoutTime = new LinearLayout(getContext());
+        layoutTime.setOrientation(LinearLayout.HORIZONTAL);
+        final TextView timeText = new TextView(getContext());
+        timeText.setText("시간: ");
+        final Spinner spinnerStart = new Spinner(getContext());
+        final ArrayAdapter<String> spAdapterStartDate = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, timeList);
+        spinnerStart.setAdapter(spAdapterStartDate);
+        final TextView forText = new TextView(getContext());
+        forText.setText("~");
+        forText.setPadding(8, 0, 8, 0);
+        final Spinner spinnerEnd = new Spinner(getContext());
+        final ArrayAdapter<String> spAdapterEndDate = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, timeList);
+        spinnerEnd.setAdapter(spAdapterEndDate);
+        final Spinner spinnerColor = new Spinner(getContext());
+        spinnerColor.setAdapter(new MyCustomAdapter(getContext(), R.layout.support_simple_spinner_dropdown_item, colorList));
+        layoutTime.addView(timeText);
+        layoutTime.addView(spinnerStart);
+        layoutTime.addView(forText);
+        layoutTime.addView(spinnerEnd);
+        layoutTime.addView(spinnerColor);
         final EditText titleText = new EditText(getContext());
         titleText.setHint("제목");
         final EditText contentText = new EditText(getContext());
         contentText.setHint("내용");
+        layout.addView(layoutTime);
         layout.addView(titleText);
         layout.addView(contentText);
+
+        spinnerStart.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                str1 = (String) parent.getItemAtPosition(position);
+                if (str1.equals(" - ")) {
+                    spinnerEnd.setEnabled(false);
+                    str1 = "";
+                    str2 = "";
+                } else {
+                    pos = position;
+                    spinnerEnd.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinnerEnd.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                str2 = (String) parent.getItemAtPosition(position);
+                if (str2.equals(" - ")) {
+                    str2 = "";
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinnerColor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                color = (String) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
         dialog.setTitle(date).setView(layout).setPositiveButton("등록", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String writer = MyUserData.getInstance().getNickname();
-                String title = titleText.getText().toString();
+                String title = "";
+                if (!str1.equals("")) {
+                    title += "[" + str1;
+                    if (!str2.equals(""))
+                        title += ("~" + str2);
+                    title += "] ";
+                }
+                title += titleText.getText().toString();
                 String content = contentText.getText().toString();
                 if (dbHelper == null) {
-                    dbHelper = new DBHelper(getContext(), "calendar", null, 1);
+                    dbHelper = new DBHelper(getContext(), MyUserData.getInstance().getNickname(), null, 1);
                 }
                 MyCalendar myCalendar = new MyCalendar();
                 myCalendar.setWriter(writer);
                 myCalendar.setTitle(title);
                 myCalendar.setContent(content);
                 myCalendar.setDate(date);
+                myCalendar.setColor(color);
                 dbHelper.add(myCalendar);
                 writeRequest(myCalendar);
                 refreshFragment();
@@ -243,31 +320,19 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     }
 
     public void setEvent() {
-
-        Log.d("Tag", "2");
-        // Todo 월별로
         if (dbHelper == null) {
-            dbHelper = new DBHelper(getContext(), "calendar", null, 1);
+            dbHelper = new DBHelper(getContext(), MyUserData.getInstance().getNickname(), null, 1);
         }
-        ArrayList<String> myCalendars = dbHelper.getCalendarByMonth(year, month);
 
-        if (!myCalendars.isEmpty() && pager.getChildCount() != 0) {
+        if (!dbHelper.getCalendarByMonth(year, month).isEmpty() && pager.getChildCount() != 0) {
             for (int i = 0; i < pager.getChildCount(); i++) {
                 if (((CalendarView) pager.getChildAt(i)).getChildCount() != 0) {
                     for (int j = 7; j < ((CalendarView) pager.getChildAt(i)).getChildCount(); j++) {
-                        if (myCalendars.size() == 0)
-                            break;
                         CalendarItemView child = ((CalendarItemView) ((CalendarView) pager.getChildAt(i)).getChildAt(j));
-
                         String childDate = fragmentAdapter.getStrDate(child.getDate());
-                        if (myCalendars.contains(childDate)) {
-                            child.setIsEvent(true);
-                            child.invalidate();
-                            myCalendars.remove(childDate);
-                        } else {
-                            if (child.getIsEvent())
-                                child.setIsEvent(false);
-                        }
+                        ArrayList<String> colors = dbHelper.getCalendarByColor(childDate);
+                        child.setColor(colors);
+                        child.invalidate();
                     }
                 }
             }
@@ -283,7 +348,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         pager.setAdapter(fragmentAdapter);
         pager.setCurrentItem(COUNT_PAGE);
 
-        //Todo year, month, day로 만들기
         year = fragmentAdapter.getStrYear(pager.getCurrentItem());
         month = fragmentAdapter.getStrMonth(pager.getCurrentItem());
 
@@ -291,7 +355,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         date = fragmentAdapter.getStrDate(Calendar.getInstance().getTimeInMillis());
         textDate.setText(date);
 
-        dbHelper = new DBHelper(getContext(), "calendar", null, 1);
+        dbHelper = new DBHelper(getContext(), MyUserData.getInstance().getNickname(), null, 1);
         dbHelper.calendarDB();
 
         myLayoutManager = new LinearLayoutManager(getActivity());
@@ -299,7 +363,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         timelineLayoutManager = new LinearLayoutManager(getActivity());
         timelineRecyclerView.setLayoutManager(timelineLayoutManager);
 
-        List myCalendars = dbHelper.getCalendarByDate(date);
+        ArrayList<MyCalendar> myCalendars = dbHelper.getCalendarByDate(date);
         myRecyclerView.setAdapter(new MyCalendarAdapter(getActivity(), myCalendars));
 
         getTimeLineContext();
@@ -311,9 +375,9 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         date = textDate.getText().toString();
 
         if (dbHelper == null) {
-            dbHelper = new DBHelper(getContext(), "calendar", null, 1);
+            dbHelper = new DBHelper(getContext(), MyUserData.getInstance().getNickname(), null, 1);
         }
-        List myCalendars = dbHelper.getCalendarByDate(date);
+        ArrayList<MyCalendar> myCalendars = dbHelper.getCalendarByDate(date);
         myRecyclerView.setAdapter(new MyCalendarAdapter(getActivity(), myCalendars));
         getTimeLineContext();
 
@@ -377,13 +441,12 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
             public void onResponse(String response) {
                 try {
                     Log.d("Tag", "response check : " + response);
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
-        CalendarRequest cr = new CalendarRequest(myCalendar, "delete", responseListener);
+        CalendarRequest cr = new CalendarRequest(myCalendar, "new", responseListener);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(cr);
     }
@@ -398,7 +461,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                     for (int i = 0; i < array.length(); i++) {
                         TimeLine timeLine = new TimeLine();
                         JSONObject jsonResponse = array.getJSONObject(i);
-                        timeLine.setWriter(jsonResponse.getString("writer"));
+                        timeLine.setWriter(jsonResponse.getString("nickname"));
                         timeLine.setTitle(jsonResponse.getString("title"));
                         timeLine.setContent(jsonResponse.getString("content"));
                         timeLine.setDate(jsonResponse.getString("date"));
@@ -410,7 +473,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                 }
             }
         };
-        String URL = "https://capston2webapp.azurewebsites.net/api/" + userId + "/calendar/" + year + "/" + month;
+        String URL = "https://capston2webapp.azurewebsites.net/api/" + userId + "/calender/" + year + "/" + month;
         StringRequest getCalendarRequest = new StringRequest(Request.Method.GET, URL, responseListener, null);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(getCalendarRequest);
@@ -425,8 +488,8 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         pty = handler.getPty();
         wfText.setText(wfKor);
         tempText.setText(temp);
-        popText.setText(pop);
-        ptyText.setText(pty);
+        popText.setText(pop + "%");
+        ptyText.setText(pty + "mm");
 
         switch (wfKor) {
             case "맑음":
@@ -472,7 +535,68 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                     weatherImage.setImageResource(R.drawable.db08_n_b);
                 break;
         }
+    }
 
-        Log.d("Tag", "2");
+    public class MyCustomAdapter extends ArrayAdapter<String> {
+
+        public MyCustomAdapter(Context context, int textViewResourceId, String[] objects) {
+            super(context, textViewResourceId, objects);
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        public View getCustomView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = getLayoutInflater();
+            View row = inflater.inflate(R.layout.color_row, parent, false);
+            ImageView label = (ImageView) row.findViewById(R.id.image_color);
+
+            switch (position) {
+                case 0:
+                    label.setImageResource(R.drawable.black);
+                    break;
+                case 1:
+                    label.setImageResource(R.drawable.gray);
+                    break;
+                case 2:
+                    label.setImageResource(R.drawable.white);
+                    break;
+                case 3:
+                    label.setImageResource(R.drawable.blue);
+                    break;
+                case 4:
+                    label.setImageResource(R.drawable.l_blue);
+                    break;
+                case 5:
+                    label.setImageResource(R.drawable.green);
+                    break;
+                case 6:
+                    label.setImageResource(R.drawable.l_green);
+                    break;
+                case 7:
+                    label.setImageResource(R.drawable.red);
+                    break;
+                case 8:
+                    label.setImageResource(R.drawable.pink);
+                    break;
+                case 9:
+                    label.setImageResource(R.drawable.orange);
+                    break;
+                case 10:
+                    label.setImageResource(R.drawable.yellow);
+                    break;
+                case 11:
+                    label.setImageResource(R.drawable.purple);
+                    break;
+            }
+            return row;
+        }
     }
 }

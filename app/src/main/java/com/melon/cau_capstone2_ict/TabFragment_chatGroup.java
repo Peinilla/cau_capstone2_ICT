@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -95,7 +96,6 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
         return  rootView;
 
     }
-
 
     void getMessage(String s, String s2){
         if(!MyUserData.getInstance().getId().equals(s2)) {

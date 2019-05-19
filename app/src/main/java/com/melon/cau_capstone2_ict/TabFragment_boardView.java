@@ -14,10 +14,13 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.melon.cau_capstone2_ict.Manager.MyBoard;
 
-public class TabFragment_boardView extends Fragment implements MainActivity.OnBackPressedListener{
+import java.util.StringTokenizer;
+
+public class TabFragment_boardView extends Fragment implements MainActivity.OnBackPressedListener {
 
     FrameLayout frameLayout;
     TextView titleView;
@@ -25,8 +28,9 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
     TextView writerView;
     TextView dateView;
     View view;
-
     String writer;
+
+    Button joinButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,12 +40,32 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         Bundle bundle = getArguments();
         MyBoard m = (MyBoard) bundle.getSerializable("Board");
 
-
         titleView = rootView.findViewById(R.id.board_title);
         textView = rootView.findViewById(R.id.board_text);
         dateView = rootView.findViewById(R.id.board_date);
         writerView = rootView.findViewById(R.id.board_writer);
+        joinButton = rootView.findViewById(R.id.button_join);
         view = rootView.findViewById(R.id.viewProfile);
+        ImageButton btn = (ImageButton) rootView.findViewById(R.id.board_back);
+        frameLayout = (FrameLayout) rootView.findViewById(R.id.board_container);
+
+        if (!m.getType().equals("밥파티"))
+            joinButton.setVisibility(View.GONE);
+        else
+            joinButton.setVisibility(View.VISIBLE);
+
+        joinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment childFragment = new TabFragment_chatGroup();
+                Bundle bundle = new Bundle(1);
+                bundle.putString("GroupID", (String) titleView.getText());
+                bundle.putInt("ContainerID",R.id.withbab_container);
+                childFragment.setArguments(bundle);
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.replace(R.id.withbab_container, childFragment).commit();
+            }
+        });
 
         titleView.setText(m.getTitle());
         textView.setText(m.getText());
@@ -49,26 +73,22 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         writer = m.getWriter();
         writerView.setText(writer);
 
-        ImageButton btn = (ImageButton)rootView.findViewById(R.id.board_back);
-        frameLayout = (FrameLayout)rootView.findViewById(R.id.board_container);
-
-
-
-        btn.setOnClickListener(new Button.OnClickListener(){
+        btn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBack();
             }
-            });
+        });
 
-        view.setOnClickListener(new View.OnClickListener(){
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), profileViewActivity.class);
-                intent.putExtra("id",writer);
+                intent.putExtra("id", writer);
                 startActivity(intent);
             }
         });
+
         return rootView;
     }
 
@@ -76,7 +96,8 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
     }
-    void goBack(){
+
+    void goBack() {
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.board_container);
         FragmentTransaction tr = fm.beginTransaction();
@@ -86,16 +107,15 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
 
     @Override
     public void onBack() {
-        MainActivity activity = (MainActivity)getActivity();
+        MainActivity activity = (MainActivity) getActivity();
         activity.setOnBackPressedListener(null);
         goBack();
-
-
     }
+
     @Override
     //                     혹시 Context 로 안되시는분은 Activity 로 바꿔보시기 바랍니다.
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((MainActivity)context).setOnBackPressedListener(this);
+        ((MainActivity) context).setOnBackPressedListener(this);
     }
 }

@@ -11,10 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,34 +31,64 @@ import com.melon.cau_capstone2_ict.Manager.MyUserData;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TabFragment_boardWrite extends Fragment implements MainActivity.OnBackPressedListener{
+public class TabFragment_boardWrite extends Fragment implements MainActivity.OnBackPressedListener {
 
     EditText titleView;
     EditText textView;
     String boardID;
+    Spinner spinner;
+
+    String[] babStrList = {"게시글", "밥파티"};
+    Boolean withBab;
+    String type;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_boardwrite, container, false);
         boardID = getArguments().getString("boardID");
-
+        withBab = getArguments().getBoolean("withBab");
 
         titleView = rootView.findViewById(R.id.board_wtitle);
         textView = rootView.findViewById(R.id.board_wtext);
+        spinner = rootView.findViewById(R.id.spinner_withbab);
 
-        ImageButton btn = (ImageButton)rootView.findViewById(R.id.board_back);
-        ImageButton write = (ImageButton)rootView.findViewById(R.id.board_write);
+        ImageButton btn = (ImageButton) rootView.findViewById(R.id.board_back);
+        ImageButton write = (ImageButton) rootView.findViewById(R.id.board_write);
+        ArrayAdapter<String> spAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, babStrList);
+        spinner.setAdapter(spAdapter);
+
+        if (!withBab)
+            spinner.setVisibility(View.GONE);
+        else
+            spinner.setVisibility(View.VISIBLE);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(withBab) {
+                    type = (String)parent.getItemAtPosition(position);
+                    type += "|";
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
-        btn.setOnClickListener(new Button.OnClickListener(){
+        btn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBack();
             }
-            });
-        write.setOnClickListener(new Button.OnClickListener(){
+        });
+        write.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
                 writeRequest();
@@ -65,11 +98,13 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
 
         return rootView;
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
     }
-    void writeRequest(){
+
+    void writeRequest() {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -81,12 +116,14 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
                 }
             }
         };
-        String title = titleView.getText().toString();
+        String title = type;
+        title += titleView.getText().toString();
         String text = textView.getText().toString();
-        writeRequest wr = new writeRequest(title,text,responseListener);
+        writeRequest wr = new writeRequest(title, text, responseListener);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(wr);
     }
+
     class writeRequest extends StringRequest {
         final static private String URL = "https://capston2webapp.azurewebsites.net/api/ResidencePosts";
         private Map<String, String> parameters;
@@ -100,8 +137,8 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
             });
             parameters = new HashMap<>();
             parameters.put("nickname", MyUserData.getInstance().getNickname());
-            parameters.put("text", text);
             parameters.put("title", title);
+            parameters.put("text", text);
             parameters.put("residence", boardID);
             Log.d("Tag", "re " + title);
 
@@ -114,26 +151,27 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
         }
     }
 
-    void goBack(){
+    void goBack() {
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.board_container);
         FragmentTransaction tr = fm.beginTransaction();
         tr.remove(fragment);
         tr.commit();
     }
+
     @Override
     public void onBack() {
-        MainActivity activity = (MainActivity)getActivity();
+        MainActivity activity = (MainActivity) getActivity();
         activity.setOnBackPressedListener(null);
         goBack();
     }
+
     @Override
     //                     혹시 Context 로 안되시는분은 Activity 로 바꿔보시기 바랍니다.
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((MainActivity)context).setOnBackPressedListener(this);
+        ((MainActivity) context).setOnBackPressedListener(this);
     }
-
 
 
 }

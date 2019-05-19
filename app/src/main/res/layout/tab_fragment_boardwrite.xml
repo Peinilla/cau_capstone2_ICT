@@ -36,11 +36,17 @@
         android:background="@android:color/transparent"
         app:srcCompat="@drawable/write_40x40" />
 
+    <Spinner
+        android:id="@+id/spinner_withbab"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/board_back"
+        android:layout_height="wrap_content"/>
+
     <RelativeLayout
         android:id="@+id/board_title_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/board_back"
+        android:layout_below="@+id/spinner_withbab"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal">

@@ -11,7 +11,7 @@ public class MyCalendar {
     private String writer;
     private String date;
     private String content;
-
+    private String color;
 
     public MyCalendar() {
         _id = 0;
@@ -19,6 +19,7 @@ public class MyCalendar {
         title = "title";
         content = "content";
         date = "2019-04-01";
+        color = "";
     }
 
     public int get_id() {
@@ -45,6 +46,10 @@ public class MyCalendar {
         this.date = date;
     }
 
+    public void setColor(String color){
+        this.color = color;
+    }
+
     public String getWriter() {
         return writer;
     }
@@ -59,5 +64,9 @@ public class MyCalendar {
 
     public String getDate() {
         return date;
+    }
+
+    public String getColor(){
+        return color;
     }
 }

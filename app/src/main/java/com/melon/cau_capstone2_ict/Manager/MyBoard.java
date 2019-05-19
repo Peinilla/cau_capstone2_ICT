@@ -10,6 +10,7 @@ public class MyBoard implements Serializable {
     private String writer;
     private String date;
     private String text;
+    private String type;
     private int numComment;
     private int numRecommend;
 
@@ -18,6 +19,7 @@ public class MyBoard implements Serializable {
         writer = "test12345";
         date = "19.04.07";
         text = "text";
+        type = "게시글";
         numComment = 0;
         numRecommend = 0;
     }
@@ -50,6 +52,10 @@ public class MyBoard implements Serializable {
         this.numRecommend = numRecommend;
     }
 
+    public void setType(String type){
+        this.type = type;
+    }
+
     public int getNumComment() {
         return numComment;
     }
@@ -68,5 +74,9 @@ public class MyBoard implements Serializable {
 
     public String getWriter() {
         return writer;
+    }
+
+    public String getType(){
+        return type;
     }
 }

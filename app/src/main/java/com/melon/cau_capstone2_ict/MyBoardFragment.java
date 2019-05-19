@@ -116,6 +116,8 @@ public class MyBoardFragment extends Fragment {
                 Fragment childFragment = new TabFragment_boardWrite();
                 Bundle bundle = new Bundle(1);
                 bundle.putString("boardID",boardID);
+                // test
+                bundle.putBoolean("withBab", false);
                 childFragment.setArguments(bundle);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.board_container, childFragment).commit();

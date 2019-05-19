@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.Serializable;
@@ -28,7 +29,8 @@ public class DBHelper extends SQLiteOpenHelper {
         sb.append(" _ID INTEGER PRIMARY KEY AUTOINCREMENT, ");
         sb.append(" TITLE TEXT, ");
         sb.append(" CONTENT TEXT, "); // SQLite Database로 쿼리 실행
-        sb.append(" DATE TEXT ) ");
+        sb.append(" DATE TEXT, ");
+        sb.append(" COLOR TEXT )");
         db.execSQL(sb.toString());
         Toast.makeText(context, "Table 생성완료", Toast.LENGTH_SHORT).show();
     }
@@ -46,12 +48,13 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         StringBuffer sb = new StringBuffer();
         sb.append(" INSERT INTO CALENDAR_TABLE ( ");
-        sb.append(" TITLE, CONTENT, DATE ) ");
-        sb.append(" VALUES ( ?, ?, ? ) ");
+        sb.append(" TITLE, CONTENT, DATE, COLOR ) ");
+        sb.append(" VALUES ( ?, ?, ?, ? ) ");
         db.execSQL(sb.toString(), new Object[]{
                 myCalendar.getTitle(),
                 myCalendar.getContent(),
-                myCalendar.getDate()
+                myCalendar.getDate(),
+                myCalendar.getColor()
         });
         Toast.makeText(context, "Insert 완료", Toast.LENGTH_SHORT).show();
     }
@@ -63,6 +66,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sb.append(" TITLE = " + myCalendar.getTitle());
         sb.append(", CONTENT = " + myCalendar.getContent());
         sb.append(", DATE = " + myCalendar.getDate());
+        sb.append(", COLOR = " + myCalendar.getColor());
         sb.append(" WHERE _ID = " + Integer.toString(_id));
         db.execSQL(sb.toString());
         Toast.makeText(context, "update 완료", Toast.LENGTH_SHORT).show();
@@ -76,14 +80,14 @@ public class DBHelper extends SQLiteOpenHelper {
         Toast.makeText(context, "delete 완료", Toast.LENGTH_SHORT).show();
     }
 
-    public List getAllMyCalendars() {
+    public ArrayList<MyCalendar> getAllMyCalendars() {
         StringBuffer sb = new StringBuffer();
-        sb.append(" SELECT _ID, TITLE, CONTENT, DATE FROM CALENDAR_TABLE ");
+        sb.append(" SELECT _ID, TITLE, CONTENT, DATE, COLOR FROM CALENDAR_TABLE ");
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(sb.toString(), null);
 
-        List myCalendars = new ArrayList();
+        ArrayList<MyCalendar> myCalendars = new ArrayList<>();
         MyCalendar myCalendar = null;
 
         while (cursor.moveToNext()) {
@@ -92,6 +96,7 @@ public class DBHelper extends SQLiteOpenHelper {
             myCalendar.setTitle(cursor.getString(1));
             myCalendar.setContent(cursor.getString(2));
             myCalendar.setDate(cursor.getString(3));
+            myCalendar.setColor(cursor.getString(4));
             myCalendars.add(myCalendar);
         }
         return myCalendars;
@@ -106,7 +111,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         ArrayList<String> myCalendars = new ArrayList<String>();
 
-        if (cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             String date = cursor.getString(0);
             if(!myCalendars.contains(date)){
                 myCalendars.add(date);
@@ -115,25 +120,42 @@ public class DBHelper extends SQLiteOpenHelper {
         return myCalendars;
     }
 
-    public List getCalendarByDate(String date) {
+    public ArrayList<MyCalendar> getCalendarByDate(String date) {
         StringBuffer sb = new StringBuffer();
         sb.append(" SELECT * FROM CALENDAR_TABLE WHERE DATE = ? ");
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(sb.toString(), new String[]{date + ""});
 
-        List myCalendars = new ArrayList();
-        MyCalendar myCalendar = new MyCalendar();
+        ArrayList<MyCalendar> myCalendars = new ArrayList<>();
+        MyCalendar myCalendar = null;
 
-        if (cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
+            myCalendar = new MyCalendar();
             myCalendar.set_id(cursor.getInt(0));
             myCalendar.setTitle(cursor.getString(1));
             myCalendar.setContent(cursor.getString(2));
             myCalendar.setDate(cursor.getString(3));
+            myCalendar.setColor(cursor.getString(4));
             myCalendar.setWriter(MyUserData.getInstance().getNickname());
             myCalendars.add(myCalendar);
         }
         return myCalendars;
+    }
+
+    public ArrayList<String> getCalendarByColor(String date){
+        StringBuffer sb = new StringBuffer();
+        sb.append(" SELECT COLOR FROM CALENDAR_TABLE WHERE DATE = ? ");
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(sb.toString(), new String[]{date + ""});
+
+        ArrayList<String> colors = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            colors.add(cursor.getString(0));
+        }
+        return colors;
     }
 }
 
