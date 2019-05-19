@@ -17,7 +17,7 @@
     <color name="color_board_odd">#D5DFFF</color>
     <color name="color_board_even">#F8F8F8</color>
     <color name="selectedDay">#e1e1e1</color>
-    <color name="select_today">#ff9955</color>
+    <color name="select_today">#FCAE7A</color>
     <color name="selct_today_text">#FD408C</color>
     <color name="select">#ffaaff</color>
     <color name="transparent">@android:color/transparent</color>
@@ -34,4 +34,5 @@
     <color name="red">#E91E1E</color>
     <color name="purple">#9C27B0</color>
     <color name="select_color">#8AD1C9</color>
+    <color name="go_back">#C4C4C4</color>
 </resources>

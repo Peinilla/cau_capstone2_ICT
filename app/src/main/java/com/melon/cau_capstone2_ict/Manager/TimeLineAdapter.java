@@ -16,15 +16,14 @@ import android.widget.Toast;
 import com.melon.cau_capstone2_ict.R;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.RecyclerViewHolder> {
     private List<TimeLine> list;
     private LayoutInflater inflater;
     private Context context;
 
-    // Item의 클릭 상태를 저장할 array 객체
     private SparseBooleanArray selectedItems;
-    // 직전에 클릭됐던 Item의 position
     private int prePosition = -1;
 
     public TimeLineAdapter(Context context, List<TimeLine> list) {
@@ -41,7 +40,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
 
     @Override
     public int getItemCount() {
-        if(list != null)
+        if (list != null)
             return list.size();
         return 0;
     }
@@ -68,9 +67,17 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
+//        StringTokenizer tokens = new StringTokenizer(list.get(position).getTitle(), "|");
+//        String token = tokens.nextToken();
+//        holder.time.setText(token);
+//        token = tokens.nextToken();
+//        for (; tokens.hasMoreElements(); )
+//            token += "|" + tokens.nextToken();
+//        holder.title.setText(token);
         holder.title.setText(list.get(position).getTitle());
         holder.writer.setText(list.get(position).getWriter());
         holder.date.setText(list.get(position).getDate());
+        holder.time.setText(list.get(position).getTime());
         holder.content.setText(list.get(position).getContent());
 
         holder.changeVisibility(selectedItems.get(position));
@@ -102,6 +109,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
         TextView title;
         TextView writer;
         TextView date;
+        TextView time;
         TextView content;
         LinearLayout linear_spread;
         LinearLayout linear_modify;
@@ -111,6 +119,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
             title = (TextView) view.findViewById(R.id.calendar_title);
             writer = (TextView) view.findViewById(R.id.calendar_writer);
             date = (TextView) view.findViewById(R.id.calendar_date);
+            time = (TextView) view.findViewById(R.id.calendar_time);
             content = (TextView) view.findViewById(R.id.calendar_content);
             linear_spread = (LinearLayout) view.findViewById(R.id.calendar_linear_spread);
             linear_modify = (LinearLayout) view.findViewById(R.id.calendar_option);

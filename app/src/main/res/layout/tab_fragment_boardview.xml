@@ -93,16 +93,17 @@
         android:text="TextViewffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
         android:textSize="18sp" />
 
-    <Button
+    <ImageButton
+        android:background="@color/white"
         android:id="@+id/button_join"
+        android:src="@drawable/go"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/board_text"
         android:layout_alignStart="@+id/board_text"
-        android:layout_alignEnd="@+id/board_text"
         android:layout_marginStart="150dp"
         android:layout_marginEnd="150dp"
-        android:text="참여하기" />
+        android:layout_alignEnd="@+id/board_text"/>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/chat_floatingButton"

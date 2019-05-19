@@ -39,7 +39,6 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
     String group;
     int containerID;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_chat, container, false);

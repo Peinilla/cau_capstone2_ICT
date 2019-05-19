@@ -9,8 +9,9 @@ public class MyCalendar {
     private Drawable icon;
     private String title;
     private String writer;
-    private String date;
     private String content;
+    private String date;
+    private String time;
     private String color;
 
     public MyCalendar() {
@@ -19,7 +20,8 @@ public class MyCalendar {
         title = "title";
         content = "content";
         date = "2019-04-01";
-        color = "";
+        time = "하루 종일";
+        color = "black";
     }
 
     public int get_id() {
@@ -46,6 +48,10 @@ public class MyCalendar {
         this.date = date;
     }
 
+    public void setTime(String time){
+        this.time = time;
+    }
+
     public void setColor(String color){
         this.color = color;
     }
@@ -64,6 +70,10 @@ public class MyCalendar {
 
     public String getDate() {
         return date;
+    }
+
+    public String getTime(){
+        return time;
     }
 
     public String getColor(){

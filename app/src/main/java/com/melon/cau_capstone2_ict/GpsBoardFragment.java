@@ -53,7 +53,6 @@ public class GpsBoardFragment extends Fragment {
     TextView titleView;
     SwipeRefreshLayout mSWL;
     FrameLayout frameLayout;
-//    Button joinButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,8 +69,6 @@ public class GpsBoardFragment extends Fragment {
         closeImage = (ImageButton) rootView.findViewById(R.id.image_close);
         mSWL = rootView.findViewById(R.id.board_swipe);
         frameLayout = rootView.findViewById(R.id.board_container);
-
-//        joinButton = (Button) rootView.findViewById(R.id.button_join);
 
         titleView.setText(boardID + " 게시판");
 

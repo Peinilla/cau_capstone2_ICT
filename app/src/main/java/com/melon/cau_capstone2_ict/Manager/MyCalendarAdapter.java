@@ -24,16 +24,14 @@ import com.android.volley.toolbox.Volley;
 import com.melon.cau_capstone2_ict.R;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.RecyclerViewHolder> {
     private List<MyCalendar> list;
     private LayoutInflater inflater;
     private Context context;
-    private int pos;
 
-    // Item의 클릭 상태를 저장할 array 객체
     private SparseBooleanArray selectedItems;
-    // 직전에 클릭됐던 Item의 position
     private int prePosition = -1;
 
     public MyCalendarAdapter(Context context, List<MyCalendar> list) {
@@ -50,7 +48,9 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
 
     @Override
     public int getItemCount() {
-        return list.size();
+        if (list != null)
+            return list.size();
+        return 0;
     }
 
     public void addItem(MyCalendar myCalendar) {
@@ -76,10 +76,19 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
     // 기존 뷰홀더와 새롭게 보여줘야할 데이터를 바인드해주는 함수
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
-        pos = position;
+//        StringTokenizer tokens = new StringTokenizer(list.get(position).getTitle(), "|");
+//        Log.d("Tag", "title: " + list.get(position).getTitle());
+//        Log.d("Tag", "tokens: " + Integer.toString(tokens.countTokens()));
+//        String token = tokens.nextToken();
+//        holder.time.setText(token);
+//        token = tokens.nextToken();
+//        for (; tokens.hasMoreElements(); )
+//            token += "|" + tokens.nextToken();
+//        holder.title.setText(token);
         holder.title.setText(list.get(position).getTitle());
         holder.writer.setText(list.get(position).getWriter());
         holder.date.setText(list.get(position).getDate());
+        holder.time.setText(list.get(position).getTime());
         holder.content.setText(list.get(position).getContent());
 
         holder.modify.setOnClickListener(new View.OnClickListener() {
@@ -128,9 +137,9 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
                 dialog.setTitle("삭제하시겠습니까?").setView(layout).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DBHelper dbHelper = new DBHelper(context, "calendar", null, 1);
-                        deleteRequest(list.get(pos));
-                        dbHelper.delete(list.get(pos).get_id());
+                        DBHelper dbHelper = new DBHelper(context, MyUserData.getInstance().getNickname(), null, 1);
+                        deleteRequest(list.get(position));
+                        dbHelper.delete(list.get(position).get_id());
                     }
                 }).setNeutralButton("No", new DialogInterface.OnClickListener() {
                     @Override
@@ -186,8 +195,9 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView writer;
-        TextView date;
         TextView content;
+        TextView date;
+        TextView time;
         LinearLayout linear_spread;
         LinearLayout linear_modify;
         Button modify;
@@ -197,8 +207,10 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
             super(view);
             title = (TextView) view.findViewById(R.id.calendar_title);
             writer = (TextView) view.findViewById(R.id.calendar_writer);
-            date = (TextView) view.findViewById(R.id.calendar_date);
+            writer.setVisibility(View.GONE);
             content = (TextView) view.findViewById(R.id.calendar_content);
+            date = (TextView) view.findViewById(R.id.calendar_date);
+            time = (TextView) view.findViewById(R.id.calendar_time);
             linear_spread = (LinearLayout) view.findViewById(R.id.calendar_linear_spread);
             linear_modify = (LinearLayout) view.findViewById(R.id.calendar_option);
             modify = (Button) view.findViewById(R.id.button_calendar_modify);

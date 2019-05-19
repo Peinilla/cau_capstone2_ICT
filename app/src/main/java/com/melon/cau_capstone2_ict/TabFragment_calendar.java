@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -53,19 +54,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class TabFragment_calendar extends Fragment implements CalendarFragment.OnFragmentListener {
     private String userId;
     private String date;
-    private String year, month, day;
+    private String year, month;
 
     private Switch mSwitch;
 
     private RecyclerView myRecyclerView;
     private LinearLayoutManager myLayoutManager;
-
     private RecyclerView timelineRecyclerView;
-    private TimeLineAdapter timeLineAdapter;
     private LinearLayoutManager timelineLayoutManager;
 
     private static final int COUNT_PAGE = 12;
@@ -74,29 +74,27 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     private TextView textMonthOfYear;
     private FragmentAdapter fragmentAdapter;
 
-    // Test
     private FloatingActionButton fab_add;
     private FloatingActionButton fab_reload;
     private FrameLayout frameLayout;
     private AppBarLayout appBarLayout;
 
-    // test
     private DBHelper dbHelper;
 
-    // weather
     ImageView weatherImage;
     TextView tempText;
     TextView popText;
     TextView ptyText;
     TextView wfText;
     LinearLayout linearLayout;
+
     private String finalUrl = "http://www.kma.go.kr/wid/queryDFSRSS.jsp?zone=1159060500";
     private RSSHandler handler = new RSSHandler(finalUrl);
     String temp, wfKor, pty, pop;
     int hour;
 
-    String[] timeList = {" - ", "00시", "01시", "02시", "03시", "04시", "05시", "06시", "07시", "08시", "09시", "10시", "11시", "12시",
-            "13시", "14시", "15시", "16시", "17시", "18시", "19시", "20시", "21시", "22시", "23시"};
+    String[] timeList = {"하루종일", "00시", "01시", "02시", "03시", "04시", "05시", "06시", "07시", "08시", "09시", "10시", "11시", "12시",
+            "13시", "14시", "15시", "16시", "17시", "18시", "19시", "20시", "21시", "22시", "23시", "24시"};
     String[] colorList = {"black", "gray", "white", "blue", "l_blue", "green", "l_green", "red", "pink", "orange", "yellow", "purple"};
     String str1 = "", str2 = "", color = "";
     int pos;
@@ -112,13 +110,11 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         textDate = (TextView) rootView.findViewById(R.id.text_calendar_date);
         textMonthOfYear = (TextView) rootView.findViewById(R.id.text_calendar_title);
 
-        // test
         fab_add = (FloatingActionButton) rootView.findViewById(R.id.button_calendar_add);
         fab_reload = (FloatingActionButton) rootView.findViewById(R.id.button_calendar_reload);
         frameLayout = (FrameLayout) rootView.findViewById(R.id.calendar_board_container);
         appBarLayout = (AppBarLayout) rootView.findViewById(R.id.calendar_appbar);
 
-        // weather
         weatherImage = (ImageView) rootView.findViewById(R.id.imageView_wfKor1);
         wfText = (TextView) rootView.findViewById(R.id.textView_wfKor1);
         tempText = (TextView) rootView.findViewById(R.id.textView_temp1);
@@ -160,7 +156,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
 
             @Override
             public void afterTextChanged(Editable s) {
-                refreshFragment();
+                refreshSelectDate();
             }
         });
 
@@ -220,7 +216,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         final ArrayAdapter<String> spAdapterStartDate = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, timeList);
         spinnerStart.setAdapter(spAdapterStartDate);
         final TextView forText = new TextView(getContext());
-        forText.setText("~");
+        forText.setText("-");
         forText.setPadding(8, 0, 8, 0);
         final Spinner spinnerEnd = new Spinner(getContext());
         final ArrayAdapter<String> spAdapterEndDate = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, timeList);
@@ -244,12 +240,11 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 str1 = (String) parent.getItemAtPosition(position);
-                if (str1.equals(" - ")) {
+                if (str1.equals("하루종일")) {
                     spinnerEnd.setEnabled(false);
                     str1 = "";
                     str2 = "";
                 } else {
-                    pos = position;
                     spinnerEnd.setEnabled(true);
                 }
             }
@@ -263,7 +258,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 str2 = (String) parent.getItemAtPosition(position);
-                if (str2.equals(" - ")) {
+                if (str2.equals("하루종일")) {
                     str2 = "";
                 }
             }
@@ -291,11 +286,14 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                 String writer = MyUserData.getInstance().getNickname();
                 String title = "";
                 if (!str1.equals("")) {
-                    title += "[" + str1;
+                    title += str1 + " - ";
                     if (!str2.equals(""))
-                        title += ("~" + str2);
-                    title += "] ";
+                        title += str2;
                 }
+                else{
+                    title = "하루 종일";
+                }
+                title += "|";
                 title += titleText.getText().toString();
                 String content = contentText.getText().toString();
                 if (dbHelper == null) {
@@ -307,8 +305,15 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                 myCalendar.setContent(content);
                 myCalendar.setDate(date);
                 myCalendar.setColor(color);
-                dbHelper.add(myCalendar);
                 writeRequest(myCalendar);
+                StringTokenizer tokens = new StringTokenizer(title, "|");
+                String token = tokens.nextToken();
+                myCalendar.setTime(token);
+                token = tokens.nextToken();
+                for(; tokens.hasMoreElements();)
+                    token += "|" + tokens.nextToken();
+                myCalendar.setTitle(token);
+                dbHelper.add(myCalendar);
                 refreshFragment();
                 setEvent();
             }
@@ -324,7 +329,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
             dbHelper = new DBHelper(getContext(), MyUserData.getInstance().getNickname(), null, 1);
         }
 
-        if (!dbHelper.getCalendarByMonth(year, month).isEmpty() && pager.getChildCount() != 0) {
+        if (pager.getChildCount() != 0) {
             for (int i = 0; i < pager.getChildCount(); i++) {
                 if (((CalendarView) pager.getChildAt(i)).getChildCount() != 0) {
                     for (int j = 7; j < ((CalendarView) pager.getChildAt(i)).getChildCount(); j++) {
@@ -363,9 +368,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         timelineLayoutManager = new LinearLayoutManager(getActivity());
         timelineRecyclerView.setLayoutManager(timelineLayoutManager);
 
-        ArrayList<MyCalendar> myCalendars = dbHelper.getCalendarByDate(date);
-        myRecyclerView.setAdapter(new MyCalendarAdapter(getActivity(), myCalendars));
-
+        getMyCalendarContext();
         getTimeLineContext();
 
         timelineRecyclerView.setVisibility(View.GONE);
@@ -379,7 +382,26 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         }
         ArrayList<MyCalendar> myCalendars = dbHelper.getCalendarByDate(date);
         myRecyclerView.setAdapter(new MyCalendarAdapter(getActivity(), myCalendars));
+
         getTimeLineContext();
+
+        if (!mSwitch.isChecked()) {
+            myRecyclerView.setVisibility(View.VISIBLE);
+            timelineRecyclerView.setVisibility(View.GONE);
+        } else {
+            myRecyclerView.setVisibility(View.GONE);
+            timelineRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void refreshSelectDate() {
+        date = textDate.getText().toString();
+
+        if (dbHelper == null) {
+            dbHelper = new DBHelper(getContext(), MyUserData.getInstance().getNickname(), null, 1);
+        }
+        ArrayList<MyCalendar> myCalendars = dbHelper.getCalendarByDate(date);
+        myRecyclerView.setAdapter(new MyCalendarAdapter(getActivity(), myCalendars));
 
         if (!mSwitch.isChecked()) {
             myRecyclerView.setVisibility(View.VISIBLE);
@@ -451,23 +473,71 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         queue.add(cr);
     }
 
+    public void getMyCalendarContext() {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    ArrayList<MyCalendar> myCalendars = new ArrayList<>();
+                    String res = response.substring(1,response.length()-1);
+                    res = res.replace("\\","");
+                    Log.d("Tag", "response check : " + res);
+                    JSONArray array = new JSONArray(res);
+                    for (int inx = 0; inx < array.length(); inx++) {
+                        MyCalendar myCalendar = new MyCalendar();
+                        JSONObject jsonResponse = array.getJSONObject(inx);
+                        myCalendar.setWriter(MyUserData.getInstance().getNickname());
+                        StringTokenizer tokens = new StringTokenizer(jsonResponse.getString("title"), "|");
+                        String token = tokens.nextToken();
+                        myCalendar.setTime(token);
+                        token = tokens.nextToken();
+                        for (; tokens.hasMoreElements(); )
+                            token += "|" + tokens.nextToken();
+                        myCalendar.setTitle(token);
+                        myCalendar.setContent(jsonResponse.getString("content"));
+                        String date = jsonResponse.get("date").toString().substring(0, 10);
+                        myCalendar.setDate(date);
+                        myCalendars.add(myCalendar);
+                    }
+                    myRecyclerView.setAdapter(new MyCalendarAdapter(getActivity(), myCalendars));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        String URL = "https://capston2webapp.azurewebsites.net/api/" + userId + "/calender";
+        StringRequest getCalendarRequest = new StringRequest(Request.Method.GET, URL, responseListener, null);
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        queue.add(getCalendarRequest);
+    }
+
     public void getTimeLineContext() {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.d("Tag", "response check : " + response);
-                    JSONArray array = new JSONArray(response);
-                    for (int i = 0; i < array.length(); i++) {
+                    ArrayList<TimeLine> timeLines = new ArrayList<>();
+                    String res = response.substring(1,response.length()-1);
+                    res = res.replace("\\","");
+                    Log.d("Tag", "response check : " + res);
+                    JSONArray array = new JSONArray(res);
+                    for (int inx = 0; inx < array.length(); inx++) {
                         TimeLine timeLine = new TimeLine();
-                        JSONObject jsonResponse = array.getJSONObject(i);
+                        JSONObject jsonResponse = array.getJSONObject(inx);
                         timeLine.setWriter(jsonResponse.getString("nickname"));
-                        timeLine.setTitle(jsonResponse.getString("title"));
+                        StringTokenizer tokens = new StringTokenizer(jsonResponse.getString("title"), "|");
+                        String token = tokens.nextToken();
+                        timeLine.setTime(token);
+                        token = tokens.nextToken();
+                        for (; tokens.hasMoreElements(); )
+                            token += "|" + tokens.nextToken();
+                        timeLine.setTitle(token);
                         timeLine.setContent(jsonResponse.getString("content"));
-                        timeLine.setDate(jsonResponse.getString("date"));
-                        timeLineAdapter.addItem(timeLine);
+                        String date = jsonResponse.get("date").toString().substring(0, 10);
+                        timeLine.setDate(date);
+                        timeLines.add(timeLine);
                     }
-                    timelineRecyclerView.setAdapter(timeLineAdapter);
+                    timelineRecyclerView.setAdapter(new TimeLineAdapter(getActivity(), timeLines));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -487,9 +557,14 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         pop = handler.getPop();
         pty = handler.getPty();
         wfText.setText(wfKor);
-        tempText.setText(temp);
+        tempText.setText(temp + "℃");
         popText.setText(pop + "%");
         ptyText.setText(pty + "mm");
+
+        if (pop.equals("0")) {
+            ptyText.setVisibility(View.GONE);
+        } else
+            ptyText.setVisibility(View.VISIBLE);
 
         switch (wfKor) {
             case "맑음":

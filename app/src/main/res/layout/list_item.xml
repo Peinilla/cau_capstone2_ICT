@@ -9,15 +9,17 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/calendar_image_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/kakao_editable_profile" />
+        <!--<ImageView-->
+            <!--android:id="@+id/calendar_image_profile"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:src="@drawable/kakao_editable_profile" />-->
 
         <LinearLayout
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -40,6 +42,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:paddingRight="20dp"
                     android:text="name"
                     android:textSize="15sp" />
 
@@ -48,9 +51,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:paddingLeft="20dp"
+                    android:paddingRight="10dp"
                     android:text="yyyy-mm-dd"
                     android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/calendar_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="하루 종일"
+                    android:textSize="15sp"/>
 
             </LinearLayout>
 

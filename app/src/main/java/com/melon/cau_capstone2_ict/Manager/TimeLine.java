@@ -7,6 +7,7 @@ public class TimeLine {
     private String title;
     private String writer;
     private String date;
+    private String time;
     private String content;
 
     public TimeLine() {
@@ -14,6 +15,7 @@ public class TimeLine {
         title = "title";
         content = "content";
         date = "2019-04-01";
+        time = "하루 종일";
     }
 
     public void setWriter(String writer) {
@@ -32,6 +34,10 @@ public class TimeLine {
         this.date = date;
     }
 
+    public void setTime(String time){
+        this.time = time;
+    }
+
     public String getWriter(){
         return writer;
     }
@@ -46,5 +52,9 @@ public class TimeLine {
 
     public String getDate(){
         return date;
+    }
+
+    public String getTime(){
+        return time;
     }
 }

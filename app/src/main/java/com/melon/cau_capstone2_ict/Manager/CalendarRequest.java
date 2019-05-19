@@ -17,13 +17,13 @@ public class CalendarRequest extends StringRequest {
         super(Method.POST, URL, listener, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Tag", "error " + error);
+                Log.d("Tag", "123 " + error);
             }
         });
         parameters = new HashMap<>();
-        parameters.put("title", myCalendar.getTitle());
-        parameters.put("content", myCalendar.getContent());
-        parameters.put("date", myCalendar.getDate());
+        parameters.put("title", myCalendar.getTitle().toString());
+        parameters.put("content", myCalendar.getContent().toString());
+        parameters.put("date", myCalendar.getDate().toString());
         parameters.put("type", type);
     }
 

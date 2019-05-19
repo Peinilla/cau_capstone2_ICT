@@ -30,6 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sb.append(" TITLE TEXT, ");
         sb.append(" CONTENT TEXT, "); // SQLite Database로 쿼리 실행
         sb.append(" DATE TEXT, ");
+        sb.append(" TIME TEXT, ");
         sb.append(" COLOR TEXT )");
         db.execSQL(sb.toString());
         Toast.makeText(context, "Table 생성완료", Toast.LENGTH_SHORT).show();
@@ -48,12 +49,13 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         StringBuffer sb = new StringBuffer();
         sb.append(" INSERT INTO CALENDAR_TABLE ( ");
-        sb.append(" TITLE, CONTENT, DATE, COLOR ) ");
-        sb.append(" VALUES ( ?, ?, ?, ? ) ");
+        sb.append(" TITLE, CONTENT, DATE, TIME, COLOR ) ");
+        sb.append(" VALUES ( ?, ?, ?, ?, ? ) ");
         db.execSQL(sb.toString(), new Object[]{
                 myCalendar.getTitle(),
                 myCalendar.getContent(),
                 myCalendar.getDate(),
+                myCalendar.getTime(),
                 myCalendar.getColor()
         });
         Toast.makeText(context, "Insert 완료", Toast.LENGTH_SHORT).show();
@@ -66,6 +68,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sb.append(" TITLE = " + myCalendar.getTitle());
         sb.append(", CONTENT = " + myCalendar.getContent());
         sb.append(", DATE = " + myCalendar.getDate());
+        sb.append(", TIME = " + myCalendar.getTime());
         sb.append(", COLOR = " + myCalendar.getColor());
         sb.append(" WHERE _ID = " + Integer.toString(_id));
         db.execSQL(sb.toString());
@@ -82,7 +85,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public ArrayList<MyCalendar> getAllMyCalendars() {
         StringBuffer sb = new StringBuffer();
-        sb.append(" SELECT _ID, TITLE, CONTENT, DATE, COLOR FROM CALENDAR_TABLE ");
+        sb.append(" SELECT _ID, TITLE, CONTENT, DATE, TIME, COLOR FROM CALENDAR_TABLE ");
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(sb.toString(), null);
@@ -96,7 +99,8 @@ public class DBHelper extends SQLiteOpenHelper {
             myCalendar.setTitle(cursor.getString(1));
             myCalendar.setContent(cursor.getString(2));
             myCalendar.setDate(cursor.getString(3));
-            myCalendar.setColor(cursor.getString(4));
+            myCalendar.setTime(cursor.getString(4));
+            myCalendar.setColor(cursor.getString(5));
             myCalendars.add(myCalendar);
         }
         return myCalendars;
@@ -136,7 +140,8 @@ public class DBHelper extends SQLiteOpenHelper {
             myCalendar.setTitle(cursor.getString(1));
             myCalendar.setContent(cursor.getString(2));
             myCalendar.setDate(cursor.getString(3));
-            myCalendar.setColor(cursor.getString(4));
+            myCalendar.setTime(cursor.getString(4));
+            myCalendar.setColor(cursor.getString(5));
             myCalendar.setWriter(MyUserData.getInstance().getNickname());
             myCalendars.add(myCalendar);
         }

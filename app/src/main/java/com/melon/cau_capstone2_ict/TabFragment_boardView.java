@@ -30,7 +30,7 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
     View view;
     String writer;
 
-    Button joinButton;
+    ImageButton joinButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

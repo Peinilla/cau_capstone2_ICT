@@ -162,6 +162,7 @@ public class MyBoardFragment extends Fragment {
                         m.setTitle(jsonResponse.getString("title"));
                         m.setWriter(jsonResponse.getString("nickname"));
                         adapter.addItem(m);
+                        Log.d("Tag", "adapter: " + Integer.toString(adapter.getCount()));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
