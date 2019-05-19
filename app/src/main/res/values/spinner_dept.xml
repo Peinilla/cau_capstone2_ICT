@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="select_dept_item">
+        <item>학과를 선택하세요.</item>
+        <item>	경영학부	</item>
+        <item>	지식경영학부	</item>
+        <item>	경제학부	</item>
+        <item>	광고홍보학과	</item>
+        <item>	국제물류학과	</item>
+        <item>	산업보안학과	</item>
+        <item>	응용통계학과	</item>
+        <item>	국어국문학과	</item>
+        <item>	영어영문학과	</item>
+        <item>	유럽문화학부	</item>
+        <item>	아시아문화학부	</item>
+        <item>	철학과	</item>
+        <item>	역사학과	</item>
+        <item>	정치국제학과	</item>
+        <item>	공공인재학부	</item>
+        <item>	심리학과	</item>
+        <item>	문헌정보학과	</item>
+        <item>	사회복지학부	</item>
+        <item>	도시계획/부동산학과	</item>
+        <item>	사회학과	</item>
+        <item>	미디어커뮤니케이션학부	</item>
+        <item>	교육학과	</item>
+        <item>	유아교육과	</item>
+        <item>	영어교육과	</item>
+        <item>	체육교육과	</item>
+        <item>	물리학과	</item>
+        <item>	화학과	</item>
+        <item>	생명과학과	</item>
+        <item>	수학과	</item>
+        <item>	사회기반시스템공학부	</item>
+        <item>	건축학부	</item>
+        <item>	화학신소재공학부	</item>
+        <item>	기계공학부	</item>
+        <item>	에너지시스템공학부	</item>
+        <item>	전자전기공학부	</item>
+        <item>	소프트웨어학부	</item>
+        <item>	융합공학부 	</item>
+        <item>	의학부	</item>
+        <item>	간호학과 	</item>
+
+    </string-array>
+
+</resources>

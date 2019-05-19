@@ -64,8 +64,8 @@ public class ChatHubManager {
         Credentials credentials = new Credentials() {
             @Override
             public void prepareRequest(Request request) {
-                request.addHeader("username", MyUserData.getInstance().getId()); //get username
-
+                request.addHeader("userId", MyUserData.getInstance().getId());
+                request.addHeader("userNick", MyUserData.getInstance().getNickname());
             }
         };
 

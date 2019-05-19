@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -40,10 +40,15 @@ import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 public class TabFragment_profile extends Fragment {
 
     TextView idView;
+    TextView friendRequest_TextView;
     ListView friendListView;
     ListView friendRequestView;
 
     FloatingActionButton btn_nfc_Add;
+    FloatingActionButton btn_recoFriend;
+
+    SwipeRefreshLayout srl1;
+    SwipeRefreshLayout srl2;
 
     static ArrayList<String> friendArray = new ArrayList<>();
     static ArrayList<String> friendRequestArray = new ArrayList<>();
@@ -59,11 +64,16 @@ public class TabFragment_profile extends Fragment {
         final View rootView = inflater.inflate(R.layout.tab_fragment_profile, container, false);
 
         idView = rootView.findViewById(R.id.profile_ID);
+        friendRequest_TextView = rootView.findViewById(R.id.profile_textview4);
         friendListView = rootView.findViewById(R.id.friend_list);
         friendRequestView = rootView.findViewById(R.id.friendrequest_list);
         chatContainer = rootView.findViewById(R.id.profile_container);
         btn_nfc_Add = rootView.findViewById(R.id.button_nfc);
+        btn_recoFriend = rootView.findViewById(R.id.button_reco);
         idView.setText(MyUserData.getInstance().getNickname());
+
+        srl1 = rootView.findViewById(R.id.profile_swipe);
+        srl2 = rootView.findViewById(R.id.profile_swipe2);
 
         friend_adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, friendArray);
         friendListView.setAdapter(friend_adapter);
@@ -79,10 +89,10 @@ public class TabFragment_profile extends Fragment {
             public void run(String s) {
                 try { // we added the list of connected users
                     JSONArray jsonArray = new JSONArray(s);
-                    friendArray.clear();
+                    //friendArray.clear();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        String username = jsonObject.getString("username");
+                        String username = jsonObject.getString("userId");
                         //현재 접속유저 확인
                         //friendArray.add(username);
                     }
@@ -148,20 +158,47 @@ public class TabFragment_profile extends Fragment {
                 startActivity(intent);
             }
         });
+        btn_recoFriend.setOnClickListener(new FloatingActionButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Fragment childFragment = new TabFragment_recommendFriend();
+                Bundle bundle = new Bundle(1);
+                bundle.putInt("ContainerID",R.id.profile_container);
+                childFragment.setArguments(bundle);
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.replace(R.id.profile_container, childFragment).commit();
+            }
+        });
 
         getFriendList();
         getFriendRequestList();
 
+        srl1.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                srl1.setRefreshing(false);
+                getFriendList();
+            }
+        });
+        srl2.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                srl2.setRefreshing(false);
+                getFriendRequestList();
+            }
+        });
+
+
         return rootView;
     }
     public void getFriendList(){
-        friendArray.clear();
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     Log.d("Tag", "친구목록  : " + response);
 
+                    friendArray.clear();
                     String res = response.substring(2,response.length()-2);
                     res = res.replace("\"","");
                     res = res.replace("\\","");
@@ -169,11 +206,10 @@ public class TabFragment_profile extends Fragment {
                     for(int inx = 0; inx < tmp.length; inx++) {
                         if(!tmp[inx].equals("")) {
                             friendArray.add(tmp[inx]);
-                            friend_adapter.notifyDataSetChanged();
-                            friendListView.setAdapter(friend_adapter);
                         }
-
                     }
+                    friend_adapter.notifyDataSetChanged();
+                    friendListView.setAdapter(friend_adapter);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -185,13 +221,13 @@ public class TabFragment_profile extends Fragment {
         queue.add(getBoardRequest);
     }
     public void getFriendRequestList(){
-        friendRequestArray.clear();
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     Log.d("Tag", "친구대기 목록  : " + response);
 
+                    friendRequestArray.clear();
                     String res = response.substring(2,response.length()-2);
                     res = res.replace("\"","");
                     res = res.replace("\\","");
@@ -199,10 +235,16 @@ public class TabFragment_profile extends Fragment {
                     for(int inx = 0; inx < tmp.length; inx++) {
                         if(!tmp[inx].equals("")) {
                             friendRequestArray.add(tmp[inx]);
-                            friendRequest_adapter.notifyDataSetChanged();
-                            friendRequestView.setAdapter(friendRequest_adapter);
                         }
-
+                    }
+                    friendRequest_adapter.notifyDataSetChanged();
+                    friendRequestView.setAdapter(friendRequest_adapter);
+                    if(friendRequest_adapter.getCount() == 0){
+                        srl2.setVisibility(View.GONE);
+                        friendRequest_TextView.setVisibility(View.GONE);
+                    }else{
+                        srl2.setVisibility(View.VISIBLE);
+                        friendRequest_TextView.setVisibility(View.VISIBLE);
                     }
                 } catch (Exception e) {
                     Log.e("Tag", "error " + e.getMessage());
@@ -266,5 +308,12 @@ public class TabFragment_profile extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getFriendList();
+        getFriendRequestList();
     }
 }

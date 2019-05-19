@@ -45,15 +45,11 @@ public class GpsManager extends Service implements LocationListener {
     protected LocationManager locationManager;
 
     public GpsManager() {
-
-        Log.d("Tag", "gps start");
-
     }
     public void setmContext(Context mContext){
         this.mContext = mContext;
     }
     public void Update(){
-        Log.d("Tag", "gps start2");
 
         MyUserData.getInstance().setLocation(getLocation());
     }
@@ -177,9 +173,6 @@ public class GpsManager extends Service implements LocationListener {
             double latitude= location.getLatitude();
             double longitude = location.getLongitude();
             MyUserData.getInstance().setCurrentBuilding(BuildingManager.getInstance().getNearBuilding(location));
-
-
-            //Todo
         }
     }
 

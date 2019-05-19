@@ -24,6 +24,9 @@ import com.melon.cau_capstone2_ict.Manager.MyChat;
 import com.melon.cau_capstone2_ict.Manager.MyChatAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 
+import org.json.JSONObject;
+
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
 
 
@@ -81,17 +84,25 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
             }
         });
 
-        ChatHubManager.getInstance().getHubProxy().on("sendMessage", new SubscriptionHandler2<String, String>() {
+        ChatHubManager.getInstance().getHubProxy().on("sendMessage", new SubscriptionHandler1<String>() {
             @Override
-            public void run(final String s, final String s2) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        getMessage(s,s2);
-                    }
-                });
+            public void run(final String s) {
+                try {
+                    Log.d("Tag", "chat : " + s);
+
+                    JSONObject jsonObject = new JSONObject(s);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            //todo
+                        }
+                    });
+                }catch (Exception e){
+                    Log.e("Tag", "receive Message Error" + e.getMessage());
+                    e.printStackTrace();
+                }
             }
-        },String.class,String.class);
+        },String.class);
         chatList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

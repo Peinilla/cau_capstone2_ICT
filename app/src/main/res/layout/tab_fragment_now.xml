@@ -19,14 +19,12 @@
         android:textSize="18sp"
         android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/now_title"
+    <net.alhazmy13.wordcloud.WordCloudView
+        android:id="@+id/now_wordcloud"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="지금 나는"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/now_taglayout"
+        android:background="@android:color/transparent" />
 
     <ListView
         android:id="@+id/now_taglist"
@@ -42,8 +40,9 @@
         android:id="@+id/now_taglayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/now_title"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -53,7 +52,7 @@
             android:layout_height="wrap_content"
             android:hint="지금 나는 태그를 입력해주세요."
             android:inputType="text"
-            android:maxLength="15"
+            android:maxLength="8"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="18sp" />
 

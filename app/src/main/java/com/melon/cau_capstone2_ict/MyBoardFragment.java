@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -28,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.melon.cau_capstone2_ict.Manager.MyBoard;
 import com.melon.cau_capstone2_ict.Manager.MyBoardAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
@@ -45,12 +47,16 @@ public class MyBoardFragment extends Fragment {
     MyBoardAdapter adapter;
     ListView listView;
     BottomNavigationView bnv;
+    FloatingActionsMenu floatingActionsMenu;
     FloatingActionButton searchButton;
     FloatingActionButton writeButton;
     ImageButton searchImage;
     ImageButton closeImage;
     TextView titleView;
+    EditText searchworrd;
     SwipeRefreshLayout mSWL;
+
+    int type_search = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,8 +70,9 @@ public class MyBoardFragment extends Fragment {
         writeButton = rootView.findViewById(R.id.button_write);
         searchImage = (ImageButton) rootView.findViewById(R.id.image_search);
         closeImage = (ImageButton) rootView.findViewById(R.id.image_close);
+        floatingActionsMenu = rootView.findViewById(R.id.board_float);
         mSWL = rootView.findViewById(R.id.board_swipe);
-
+        searchworrd = rootView.findViewById(R.id.board_searchword);
         titleView.setText(boardID + " 게시판");
 
         mSWL.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -73,18 +80,11 @@ public class MyBoardFragment extends Fragment {
             public void onRefresh() {
 
                 mSWL.setRefreshing(false);
-                adapter.clear();
                 getBoardContext();
-                adapter.notifyDataSetChanged();
-                listView.setAdapter(adapter);
-                listView.setSelection(0);
             }
         });
 
         adapter = new MyBoardAdapter();
-
-
-        getBoardContext();
 
         listView.setAdapter(adapter);
 
@@ -107,12 +107,14 @@ public class MyBoardFragment extends Fragment {
         searchButton.setOnClickListener(new FloatingActionButton.OnClickListener(){
             @Override
             public void onClick(View view) {
+                floatingActionsMenu.collapse();
                 bnv.setVisibility(View.VISIBLE);    }
         });
 
         writeButton.setOnClickListener(new FloatingActionButton.OnClickListener(){
             @Override
             public void onClick(View view) {
+                floatingActionsMenu.collapse();
                 Fragment childFragment = new TabFragment_boardWrite();
                 Bundle bundle = new Bundle(1);
                 bundle.putString("boardID",boardID);
@@ -122,17 +124,29 @@ public class MyBoardFragment extends Fragment {
             }
         });
 
+
         closeImage.setOnClickListener(new ImageButton.OnClickListener(){
             @Override
             public void onClick(View view) {
                 bnv.setVisibility(View.GONE);          }
+        });
+        searchImage.setOnClickListener(new ImageButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                adapter.search(type_search, searchworrd.getText().toString());
+                adapter.notifyDataSetChanged();
+                listView.setAdapter(adapter);
+                listView.setSelection(0);
+                //Todo 검색
+            }
         });
 
         final Spinner spinner_field = (Spinner) rootView.findViewById(R.id.spinner_search);
         spinner_field.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //Todo 제목/글쓴이 검색 선택 구현해야됨
+                Log.d("Tag","search type + " + i);
+                type_search = i;
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -146,10 +160,12 @@ public class MyBoardFragment extends Fragment {
         return rootView;
     }
     public void getBoardContext(){
+
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
+                    adapter.clear();
                     Log.d("Tag", "response check : " + response);
                     JSONArray array = new JSONArray(response);
                     for(int inx = 0; inx < array.length(); inx++) {
@@ -161,6 +177,11 @@ public class MyBoardFragment extends Fragment {
                         m.setWriter(jsonResponse.getString("nickname"));
                         adapter.addItem(m);
                     }
+                    adapter.reverse();
+                    adapter.updateDate();
+                    adapter.notifyDataSetChanged();
+                    listView.setAdapter(adapter);
+                    listView.setSelection(0);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -170,7 +191,12 @@ public class MyBoardFragment extends Fragment {
         StringRequest getBoardRequest = new StringRequest(Request.Method.GET,URL,responseListener,null);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(getBoardRequest);
+
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getBoardContext();
+    }
 }

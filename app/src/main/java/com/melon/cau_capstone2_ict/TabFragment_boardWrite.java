@@ -58,7 +58,20 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
         write.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
-                writeRequest();
+                String title = titleView.getText().toString();
+                String text = textView.getText().toString();
+
+                if(title.equals("")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    AlertDialog dialog = builder.setMessage("제목을 입력해주세요.").setNegativeButton("OK", null).create();
+                    dialog.show();
+                }else if(text.equals("")){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    AlertDialog dialog = builder.setMessage("본문을 입력해주세요.").setNegativeButton("OK", null).create();
+                    dialog.show();
+                }else{
+                    writeRequest(title, text);
+                }
             }
         });
 
@@ -69,7 +82,7 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
     }
-    void writeRequest(){
+    void writeRequest(String title,String text){
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -81,8 +94,6 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
                 }
             }
         };
-        String title = titleView.getText().toString();
-        String text = textView.getText().toString();
         writeRequest wr = new writeRequest(title,text,responseListener);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(wr);
@@ -127,7 +138,6 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
         goBack();
     }
     @Override
-    //                     혹시 Context 로 안되시는분은 Activity 로 바꿔보시기 바랍니다.
     public void onAttach(Context context) {
         super.onAttach(context);
         ((MainActivity)context).setOnBackPressedListener(this);

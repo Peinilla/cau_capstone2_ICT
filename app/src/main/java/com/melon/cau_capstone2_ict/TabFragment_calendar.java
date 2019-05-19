@@ -86,6 +86,8 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("Tag", "calendar start");
+
         final View rootView = inflater.inflate(R.layout.tab_fragment_calendar, container, false);
 
         mSwitch = (Switch) rootView.findViewById(R.id.calendar_switch);
@@ -110,11 +112,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         linearLayout = (LinearLayout) rootView.findViewById(R.id.linear_pty1);
 
         handler.fetchXML();
-        Log.d("Tag", toString().valueOf(handler.parsingComplete));
-        Log.d("Tag", "111");
         while (handler.parsingComplete) ;
-        Log.d("Tag", toString().valueOf(handler.parsingComplete));
-        Log.d("Tag", "112");
         weatherParse();
 
         initList();
@@ -397,7 +395,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     // test
     public void weatherParse() {
 
-
+//
         Log.d("Tag", "12");
         hour = handler.getHour();
         wfKor = handler.getWfKor();
@@ -460,5 +458,10 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         }
 
         Log.d("Tag", "2");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 }

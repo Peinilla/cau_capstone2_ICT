@@ -27,10 +27,7 @@ import java.util.TimerTask;
 
 public class NfcActivity extends AppCompatActivity {
     TextView view_count;
-
-    Timer timer;
-    TimerTask countTask;
-    int count = 30;
+    TextView nfcText;
 
     NfcAdapter nfcAdapter;
     NdefMessage ndefMessage;
@@ -49,26 +46,7 @@ public class NfcActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nfc);
 
         view_count = findViewById(R.id.nfc_time);
-        view_count.setText(String.valueOf(count));
-
-        countTask = new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable(){
-                    public void run(){
-                        view_count.setText(String.valueOf(count--));
-
-                        if(count == 0){
-                            timer.cancel();
-                            nfcStop();
-                        }
-                    }
-                });
-            }
-        };
-
-        timer = new Timer();
-        timer.schedule(countTask,1000,1000);
+        nfcText = findViewById(R.id.nfc_msg);
 
         init();
         sendNfc();
@@ -79,9 +57,10 @@ public class NfcActivity extends AppCompatActivity {
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         if(nfcAdapter.isEnabled()){
-            Toast.makeText(this,"NFC 통신 가능",Toast.LENGTH_SHORT).show();
+            view_count.setText("NFC 작동 중");
         }else{
-            Toast.makeText(this,"NFC 기능을 켜주세요!",Toast.LENGTH_SHORT).show();
+            view_count.setText("NFC 작동 불가");
+            nfcText.setText("휴대폰에서 NFC기능을 켜주세요.");
         }
 
         intent = new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -115,7 +94,6 @@ public class NfcActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        timer.cancel();
         nfcStop();
     }
 
@@ -217,10 +195,8 @@ public class NfcActivity extends AppCompatActivity {
         setNdefMessage();
         if(nfcAdapter.isEnabled()){
             nfcAdapter.setNdefPushMessage(ndefMessage,this); // nfc 송신
-            Toast.makeText(this,ndefMessage.toString(),Toast.LENGTH_SHORT).show();
         }
     }
-
     public void setPopup(String str) {
         final AlertDialog alert = new AlertDialog.Builder(this)
                 .setTitle("NFC 태그가 수신되었습니다")

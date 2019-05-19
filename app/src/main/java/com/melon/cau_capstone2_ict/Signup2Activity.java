@@ -32,10 +32,14 @@ public class Signup2Activity extends AppCompatActivity {
     private String pass;
     private String email;
     private String name,home,birth,hobby,dept;
-    private EditText signup_name, signup_birth,signup_dept, signup_hobby;
+    private EditText signup_name, signup_birth, signup_hobby, signup_email;
     private Button signup_validate;
     private AlertDialog dialog;
     boolean validateName = false;
+
+    Spinner spinner_home;
+    Spinner spinner_dept;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,20 +47,21 @@ public class Signup2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_signup2);
         signup_name = (EditText)findViewById(R.id.signup_name);
         signup_validate = (Button) findViewById(R.id.button_validateName);
-        signup_dept = (EditText)findViewById(R.id.signup_dept);
         signup_hobby = (EditText)findViewById(R.id.signup_hobby);
         signup_birth = (EditText)findViewById(R.id.signup_birth);
+        signup_email = (EditText)findViewById(R.id.signup_email);
+
         home = "";
+        dept = "";
 
         Intent intent;
         intent = getIntent();
 
         id = intent.getStringExtra("Member_ID");
         pass = intent.getStringExtra("Member_pass");
-        email = intent.getStringExtra("Member_email");
 
-        final Spinner spinner_field = (Spinner)findViewById(R.id.signup_home);
-        spinner_field.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner_home = (Spinner)findViewById(R.id.signup_home);
+        spinner_home.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i != 0) {
@@ -67,10 +72,27 @@ public class Signup2Activity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-        String[] str = getResources().getStringArray(R.array.select_home_item);
-        final ArrayAdapter<String> s_adapter= new ArrayAdapter<String>(this,R.layout.spinner_home,str);
-        s_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        spinner_field.setAdapter(s_adapter);
+        String[] str_home = getResources().getStringArray(R.array.select_home_item);
+        ArrayAdapter<String> home_adapter= new ArrayAdapter<String>(this,R.layout.spinner_home,str_home);
+        home_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner_home.setAdapter(home_adapter);
+
+        spinner_dept = (Spinner)findViewById(R.id.signup_dept);
+        spinner_dept.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i != 0) {
+                    dept = (String)adapterView.getItemAtPosition(i);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        String[] str_dept = getResources().getStringArray(R.array.select_dept_item);
+        ArrayAdapter<String> dept_adapter= new ArrayAdapter<String>(this,R.layout.spinner_home,str_dept);
+        dept_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner_dept.setAdapter(dept_adapter);
     }
 
     public void onClickValidate(View v) {
@@ -91,8 +113,8 @@ public class Signup2Activity extends AppCompatActivity {
     }
 
     public void onClickNext(View v) {
+        email = signup_email.getText().toString();
         name = signup_name.getText().toString();
-        dept = signup_dept.getText().toString();
         birth = signup_birth.getText().toString();
         hobby = signup_hobby.getText().toString();
 
@@ -109,12 +131,22 @@ public class Signup2Activity extends AppCompatActivity {
             return;
         }
         else if(home.equals("")){
-            dialog = builder.setMessage("거주지를 입력해주세요.").setNegativeButton("OK", null).create();
+            dialog = builder.setMessage("거주지를 선택해주세요.").setNegativeButton("OK", null).create();
+            dialog.show();
+            return;
+        }
+        else if(dept.equals("")){
+            dialog = builder.setMessage("학과를 선택해주세요.").setNegativeButton("OK", null).create();
             dialog.show();
             return;
         }
         else if(birth.length() != 8){
             dialog = builder.setMessage("생년월일을 입력해주세요.").setNegativeButton("OK", null).create();
+            dialog.show();
+            return;
+        }
+        else if(hobby.equals("")){
+            dialog = builder.setMessage("취미를 입력해주세요..").setNegativeButton("OK", null).create();
             dialog.show();
             return;
         }
@@ -203,7 +235,6 @@ public class Signup2Activity extends AppCompatActivity {
                 }
             });
             parameters = new HashMap<>();
-            Log.d("Tag", "Register error : " + email);
 
             parameters.put("email", email);
             parameters.put("nickname", name);

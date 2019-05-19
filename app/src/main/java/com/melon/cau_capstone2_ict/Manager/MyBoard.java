@@ -3,6 +3,8 @@ package com.melon.cau_capstone2_ict.Manager;
 import android.graphics.drawable.Drawable;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MyBoard implements Serializable {
     private Drawable icon;
