@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="select_habby_item">
+        <item>취미를 선택하세요.</item>
+        <item>음악-가요</item>
+        <item>음악-클래식</item>
+        <item>음악-록</item>
+        <item>음악-기타</item>
+        <item>음악-댄스</item>
+        <item>합창</item>
+        <item>연극</item>
+        <item>마술</item>
+        <item>바둑</item>
+        <item>보드게임</item>
+        <item>여행</item>
+        <item>만화</item>
+        <item>애니메이션</item>
+        <item>독서</item>
+        <item>미술</item>
+        <item>사진</item>
+        <item>영화</item>
+        <item>게임</item>
+        <item>봉사</item>
+        <item>토론</item>
+        <item>종교-기독교</item>
+        <item>종교-불교</item>
+        <item>종교-천주교</item>
+        <item>스포츠-축구</item>
+        <item>스포츠-야구</item>
+        <item>스포츠-농구</item>
+        <item>스포츠-테니스</item>
+        <item>스포츠-탁구</item>
+        <item>스포츠-태권도</item>
+        <item>스포츠-검도</item>
+        <item>스포츠-유도</item>
+        <item>스포츠-보디빌딩</item>
+        <item>스포츠-국궁</item>
+        <item>스포츠-등산</item>
+        <item>스포츠-자전거</item>
+        <item>스포츠-스쿠버다이빙</item>
+        <item>스포츠-요트</item>
+        <item>스포츠-스키</item>
+        <item>천문</item>
+        <item>컴퓨터</item>
+        <item>게임</item>
+    </string-array>
+</resources>

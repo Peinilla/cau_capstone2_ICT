@@ -166,7 +166,7 @@ public class MyBoardFragment extends Fragment {
             public void onResponse(String response) {
                 try {
                     adapter.clear();
-                    Log.d("Tag", "response check : " + response);
+
                     JSONArray array = new JSONArray(response);
                     for(int inx = 0; inx < array.length(); inx++) {
                         MyBoard m = new MyBoard();

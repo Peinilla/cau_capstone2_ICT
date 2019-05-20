@@ -23,7 +23,7 @@
             android:ems="10"
             android:hint="ID"
             android:inputType="textPersonName"
-            android:text="friendtest" />
+            android:text="chatuser" />
 
         <EditText
             android:id="@+id/login_password"
@@ -106,5 +106,15 @@
         </LinearLayout>
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/splash"
+        android:background="@color/white"
+        android:clickable="true"
+        android:visibility="gone"
+        />
 
 </RelativeLayout>

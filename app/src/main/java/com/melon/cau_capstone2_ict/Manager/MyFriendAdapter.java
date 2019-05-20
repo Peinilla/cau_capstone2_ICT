@@ -5,22 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.melon.cau_capstone2_ict.R;
 
 import java.util.ArrayList;
 
-public class MyNowimAdapter extends BaseAdapter {
-    private ArrayList<MyNowim> listViewItemList = new ArrayList<>();
+public class MyFriendAdapter extends BaseAdapter {
 
-    public MyNowimAdapter() {
-    }
-
-    @Override
-    public int getCount() {
-        return listViewItemList.size();
-    }
+    private ArrayList<MyFriendinfo> listViewItemList = new ArrayList<>() ;
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -29,18 +23,25 @@ public class MyNowimAdapter extends BaseAdapter {
         // "listview_item" Layout을 inflate하여 convertView 참조 획득.
         if (convertView == null) {
             convertView = LayoutInflater.from(context).
-                    inflate(R.layout.listview_mynowim, parent, false);
+                    inflate(R.layout.listview_myfriend, parent, false);
         }
 
-        TextView wordView = (TextView) convertView.findViewById(R.id.now_word) ;
-        TextView countView = (TextView) convertView.findViewById(R.id.now_count) ;
+        TextView nameView = convertView.findViewById(R.id.friend_name) ;
+        ImageView nfcView = convertView.findViewById(R.id.friend_nfc);
 
-        MyNowim item = listViewItemList.get(position);
+        MyFriendinfo m = listViewItemList.get(position);
 
-        wordView.setText(item.getWord());
-        countView.setText(String.valueOf(item.getCount()));
+        nameView.setText(m.getNickname());
+        if(m.getType() == 2){
+            nfcView.setVisibility(View.VISIBLE);
+        }
 
         return convertView;
+    }
+
+    @Override
+    public int getCount() {
+        return listViewItemList.size();
     }
 
     @Override
@@ -52,17 +53,13 @@ public class MyNowimAdapter extends BaseAdapter {
     public Object getItem(int position) {
         return listViewItemList.get(position);
     }
+    public void addItem(String name,String id,int type) {
+        MyFriendinfo m =  new MyFriendinfo(name, id , type);
+        listViewItemList.add(m);
+    }
 
-    //Todo 아이템 추가
-    public void addItem(MyNowim m) {
-        listViewItemList.add(m);
-    }
-    public void addItem(String word,int count) {
-        MyNowim m = new MyNowim(word,count);
-        listViewItemList.add(m);
-    }
     public void clear(){
         listViewItemList.clear();
     }
-}
 
+}

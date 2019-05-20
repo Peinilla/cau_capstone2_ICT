@@ -39,6 +39,7 @@ public class ChatHubManager {
     public void send(String to, String message){
         if(!to.equals("") && !message.equals("")) {
             hubProxy.invoke("sendMessage", MyUserData.getInstance().getId(), to, message);
+            Log.d("Tag","sendMessage " + MyUserData.getInstance().getId() +" / " + to);
         }
     }
     public void setTag(String tag){
@@ -56,7 +57,6 @@ public class ChatHubManager {
         if(isConnect){
             return;
         }
-        Log.d("Tag", "connect");
         isConnect = true;
 
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
@@ -73,9 +73,11 @@ public class ChatHubManager {
         try {
             hubConnection = new HubConnection(serverUrl);
         }catch (Exception e){
+            Log.e("Tag", "Chathub connection error : " + e.getMessage());
 
         }
 
+        Log.d("Tag", "connect");
         hubConnection.setCredentials(credentials);
 
         hubConnection.connected(new Runnable() {

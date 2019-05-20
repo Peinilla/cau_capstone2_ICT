@@ -74,6 +74,7 @@ public class MyBoardAdapter extends BaseAdapter {
     public void addItem(MyBoard m) {
         listViewItemList.add(m);
     }
+
     public void updateDate(){
         long now = System.currentTimeMillis();
         Date date = new Date(now);

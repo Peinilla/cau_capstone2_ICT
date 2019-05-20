@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,7 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
         ChatHubManager.getInstance().getHubProxygroup().on("onGroupChat", new SubscriptionHandler2<String, String>() {
             @Override
             public void run(final String s, final String s2) {
+                Log.d("Tag","onGroupChat : " + s);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -90,12 +92,9 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
             }
         },String.class,String.class);
 
-
-
         return  rootView;
 
     }
-
 
     void getMessage(String s, String s2){
         if(!MyUserData.getInstance().getId().equals(s2)) {

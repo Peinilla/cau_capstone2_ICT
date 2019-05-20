@@ -32,13 +32,15 @@ public class Signup2Activity extends AppCompatActivity {
     private String pass;
     private String email;
     private String name,home,birth,hobby,dept;
-    private EditText signup_name, signup_birth, signup_hobby, signup_email;
+    private EditText signup_name, signup_birth, signup_email;
     private Button signup_validate;
     private AlertDialog dialog;
     boolean validateName = false;
 
     Spinner spinner_home;
     Spinner spinner_dept;
+    Spinner spinner_habby;
+
 
 
     @Override
@@ -47,12 +49,12 @@ public class Signup2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_signup2);
         signup_name = (EditText)findViewById(R.id.signup_name);
         signup_validate = (Button) findViewById(R.id.button_validateName);
-        signup_hobby = (EditText)findViewById(R.id.signup_hobby);
         signup_birth = (EditText)findViewById(R.id.signup_birth);
         signup_email = (EditText)findViewById(R.id.signup_email);
 
         home = "";
         dept = "";
+        hobby = "";
 
         Intent intent;
         intent = getIntent();
@@ -93,6 +95,24 @@ public class Signup2Activity extends AppCompatActivity {
         ArrayAdapter<String> dept_adapter= new ArrayAdapter<String>(this,R.layout.spinner_home,str_dept);
         dept_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_dept.setAdapter(dept_adapter);
+
+
+        spinner_habby = findViewById(R.id.signup_hobby);
+        spinner_habby.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i != 0) {
+                    hobby = (String)adapterView.getItemAtPosition(i);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        String[] str_hobby = getResources().getStringArray(R.array.select_habby_item);
+        ArrayAdapter<String> hobby_adapter= new ArrayAdapter<String>(this,R.layout.spinner_home,str_hobby);
+        hobby_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner_habby.setAdapter(hobby_adapter);
     }
 
     public void onClickValidate(View v) {
@@ -116,7 +136,6 @@ public class Signup2Activity extends AppCompatActivity {
         email = signup_email.getText().toString();
         name = signup_name.getText().toString();
         birth = signup_birth.getText().toString();
-        hobby = signup_hobby.getText().toString();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Signup2Activity.this);
 
@@ -146,7 +165,7 @@ public class Signup2Activity extends AppCompatActivity {
             return;
         }
         else if(hobby.equals("")){
-            dialog = builder.setMessage("취미를 입력해주세요..").setNegativeButton("OK", null).create();
+            dialog = builder.setMessage("취미를 선택해주세요..").setNegativeButton("OK", null).create();
             dialog.show();
             return;
         }

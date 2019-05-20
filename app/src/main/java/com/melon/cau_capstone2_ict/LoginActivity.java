@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,8 +14,10 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -50,12 +53,17 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText login_id;
     private EditText login_pass;
+    private ImageView imageView;
+    private AnimationDrawable animationDrawable;
+
     private AlertDialog dialog;
 
     private FaceBookLoginResult mFaceBookLoginResult;
     private LoginManager mLoginManager;
     private CallbackManager mCallbackFacebook;
     private SessionCallback mCallbackKakao;
+
+    private boolean isProceeding;
 
 
     @Override
@@ -66,6 +74,9 @@ public class LoginActivity extends AppCompatActivity {
         login_id = (EditText) findViewById(R.id.signup_id);
         login_pass = (EditText) findViewById(R.id.login_password);
 
+        imageView = findViewById(R.id.imageView_splash);
+        animationDrawable = (AnimationDrawable) imageView.getDrawable();
+
         mFaceBookLoginResult = new FaceBookLoginResult();
         mLoginManager = LoginManager.getInstance();
         mCallbackFacebook = CallbackManager.Factory.create();
@@ -75,6 +86,8 @@ public class LoginActivity extends AppCompatActivity {
 
         mCallbackKakao = new SessionCallback();
         Session.getCurrentSession().addCallback(mCallbackKakao);
+
+        isProceeding = false;
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -92,12 +105,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onClickLogin(View v){
-        //  ID/password check , Login
-
         String id = login_id.getText().toString();
         String pass = login_pass.getText().toString();
 
-        loginAction(id,pass);
+        if(!isProceeding) {
+            loginAction(id, pass);
+        }
     }
 
     public void onClickSignUp(View v){
@@ -114,12 +127,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginAction(String id, String password){
+
+        imageView.setVisibility(View.VISIBLE);
+        animationDrawable.start();
+
         Response.Listener<String> responseListener = new Response.Listener<String> () {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.d("Tag", "response : " + response);
-
                     JSONObject jsonResponse = new JSONObject(response);
                     MyUserData.getInstance().setData(jsonResponse.getString("id"),jsonResponse.getString("nickname"));
                     MyUserData.getInstance().setResidence(jsonResponse.getString("residence"));
@@ -144,10 +159,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
-
+        isProceeding = true;
         LoginRequest loginRequest = new LoginRequest(id, password, responseListener);
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
         queue.add(loginRequest);
+
     }
 
     class LoginRequest extends StringRequest {
@@ -158,10 +174,12 @@ public class LoginActivity extends AppCompatActivity {
             super(Method.POST, URL, listener, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    isProceeding = false;
+                    imageView.setVisibility(View.GONE);
+                    animationDrawable.stop();
                     Log.d("Tag", "error " + error);
                 }
             }); // 해당 정보를 POST 방식으로 URL에 전송
-            Log.d("Tag", "LoginRequest");
             parameters = new HashMap<>();
             parameters.put("id", id);
             parameters.put("password", pw);
@@ -212,7 +230,6 @@ public class LoginActivity extends AppCompatActivity {
 //                    intent.putExtra("id", String.valueOf(result.getId()));
 //                    startActivity(intent);
 //                    finish();
-                    Log.d("Tag", "kakao ID : " + String.valueOf(result.getId()));
                     String kakao_id = "kakao_" + String.valueOf(result.getId());
 
                     //Todo ID 비교해서 회원이면 로그인, 비회원이면 정보입력으로
@@ -275,24 +292,20 @@ public class LoginActivity extends AppCompatActivity {
             return keyHash;
 
         } else {
-
             return null;
-
         }
-
     }
     public void validationCheck(final String memberID){
-        Log.d("Tag", "sns id  :  " + memberID);
-
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
+       Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject jsonResponse = new JSONObject(response);
                     boolean isValidate = jsonResponse.getBoolean("return");
                     if (!isValidate) {
-                        Log.d("Tag", "sns id check");
-                        loginAction(memberID,memberID);
+                        if(!isProceeding) {
+                            loginAction(memberID, memberID);
+                        }
                     } else {
                         Intent intent = new Intent(LoginActivity.this, Signup2Activity.class);
                         intent.putExtra("Member_ID",memberID);
@@ -308,6 +321,7 @@ public class LoginActivity extends AppCompatActivity {
 
         ValidateRequest validateRequest = new LoginActivity.ValidateRequest(memberID, responseListener);
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+        validateRequest.setRetryPolicy(new DefaultRetryPolicy(20000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(validateRequest);
     }
     class ValidateRequest extends StringRequest {
@@ -333,6 +347,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 }
+
 
 
 

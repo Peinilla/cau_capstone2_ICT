@@ -125,7 +125,7 @@ public class TabFragment_nowim extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MyNowim nowim = (MyNowim)parent.getItemAtPosition(position);
-                if(nowim.getCount()>3) {
+                if(nowim.getCount()>=2) {
                     Fragment childFragment = new TabFragment_chatGroup();
                     Bundle bundle = new Bundle(1);
                     bundle.putString("GroupID",nowim.getWord());
@@ -163,8 +163,7 @@ public class TabFragment_nowim extends Fragment {
                 alert.show();
             }
         });
-        //ChatHubManager.getInstance().setTag("지금나는");
-
+        ChatHubManager.getInstance().getHubProxygroup().invoke("GetTag",MyUserData.getInstance().getId());
         return rootView;
     }
 
