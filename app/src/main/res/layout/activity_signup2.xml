@@ -22,10 +22,11 @@
                 android:id="@+id/layout_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_email"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="false"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp">
 
                 <EditText
@@ -50,6 +51,38 @@
                     android:text="중복확인" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/layout_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="false"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginRight="10dp">
+
+                <EditText
+                    android:id="@+id/signup_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:ems="6"
+                    android:hint="Email"
+                    android:inputType="textPersonName" />
+
+                <Button
+                    android:id="@+id/button_validateEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:onClick="onClickValidate"
+                    android:text="중복확인" />
+            </LinearLayout>
+
             <Spinner
                 android:id="@+id/signup_home"
                 android:layout_width="wrap_content"
@@ -63,7 +96,7 @@
                 android:spinnerMode="dropdown"
                 android:textColor="@color/black" />
 
-            <EditText
+            <Spinner
                 android:id="@+id/signup_dept"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -73,8 +106,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
-                android:ems="10"
-                android:hint="학과" />
+                android:spinnerMode="dropdown"
+                android:textColor="@color/black" />
 
             <EditText
                 android:id="@+id/signup_birth"

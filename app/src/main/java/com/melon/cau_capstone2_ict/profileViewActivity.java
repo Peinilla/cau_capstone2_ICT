@@ -1,8 +1,8 @@
 package com.melon.cau_capstone2_ict;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +14,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.melon.cau_capstone2_ict.Manager.MyChat;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 
 import org.json.JSONObject;
@@ -81,7 +80,7 @@ public class profileViewActivity extends AppCompatActivity {
         private Map<String, String> parameters;
 
         public addFriendRequest(Response.Listener<String> listener) {
-            super(Method.POST, "https://capston2webapp.azurewebsites.net/api/"+MyUserData.getInstance().getId() + "/friend/add", listener, new Response.ErrorListener() {
+            super(Method.POST, "https://capston2webapp.azurewebsites.net/api/"+ MyUserData.getInstance().getId() + "/friend/add", listener, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("Tag", "error " + error);
@@ -90,7 +89,7 @@ public class profileViewActivity extends AppCompatActivity {
             parameters = new HashMap<>();
             parameters.put("senderId", MyUserData.getInstance().getId());
             parameters.put("receiverNick", id);
-            Log.d("Tag", "https://capston2webapp.azurewebsites.net/api/"+MyUserData.getInstance().getId() + "/friend/add");
+            Log.d("Tag", "https://capston2webapp.azurewebsites.net/api/"+ MyUserData.getInstance().getId() + "/friend/add");
 
             Log.d("Tag", "sender : " + MyUserData.getInstance().getId() + "/ recv : " + id);
 

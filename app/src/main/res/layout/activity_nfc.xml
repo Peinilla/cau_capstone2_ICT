@@ -25,4 +25,17 @@
         android:text="TextView"
         android:textSize="50sp" />
 
+    <TextView
+        android:id="@+id/nfc_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nfc_time"
+        android:layout_centerInParent="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:text="사용 방법\n1. 친구를 맺을 상대와 같이 NFC친구추가 화면을 킵니다.\n2. 서로의 휴대폰의 뒷면을 맞댑니다.\n3. NFC연결이 확인되면 화면을 터치합니다."
+        android:textSize="20sp" />
+
 </RelativeLayout>

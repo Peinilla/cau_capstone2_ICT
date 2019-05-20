@@ -4,9 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
 import com.melon.cau_capstone2_ict.MyBoardFragment;
-import com.melon.cau_capstone2_ict.TabFragment_gpsMap;
 import com.melon.cau_capstone2_ict.TabFragment_calendar;
+import com.melon.cau_capstone2_ict.TabFragment_gpsMap;
 import com.melon.cau_capstone2_ict.TabFragment_nowim;
 import com.melon.cau_capstone2_ict.TabFragment_profile;
 

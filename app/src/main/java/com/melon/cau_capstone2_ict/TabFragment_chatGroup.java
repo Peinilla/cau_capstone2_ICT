@@ -1,7 +1,6 @@
 package com.melon.cau_capstone2_ict;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -10,8 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -39,6 +36,7 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
     String group;
     int containerID;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_chat, container, false);
@@ -52,10 +50,8 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
         fam = (FloatingActionsMenu)rootView.findViewById(R.id.chat_floatingButton);
         chatList = (ListView) rootView.findViewById(R.id.chat_list);
 
-        if(containerID != R.id.withbab_container)
-            chatTitle.setText(group + " (그룹)");
-        else
-            chatTitle.setText(group + " (1)");
+
+        chatTitle.setText(group + " (그룹)");
 
         adapter = new MyChatAdapter();
 
@@ -92,17 +88,15 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
             }
         },String.class,String.class);
 
-
-
         return  rootView;
-
     }
+
 
     void getMessage(String s, String s2){
         if(!MyUserData.getInstance().getId().equals(s2)) {
             adapter.addItem(2, s, s2);
         }else{
-            adapter.addItem(0,s,MyUserData.getInstance().getNickname());
+            adapter.addItem(0,s, MyUserData.getInstance().getNickname());
         }
         adapter.notifyDataSetChanged();
         chatList.setAdapter(adapter);

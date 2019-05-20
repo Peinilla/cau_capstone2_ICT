@@ -485,6 +485,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                     res = res.replace("\\","");
                     Log.d("Tag", "response check : " + res);
                     JSONArray array = new JSONArray(res);
+                    
                     for (int inx = 0; inx < array.length(); inx++) {
                         MyCalendar myCalendar = new MyCalendar();
                         JSONObject jsonResponse = array.getJSONObject(inx);

@@ -5,35 +5,24 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONObject;
-
-import java.security.MessageDigest;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -44,6 +33,13 @@ import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
+
+import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String AUTH_TYPE = "rerequest";
@@ -97,6 +93,23 @@ public class LoginActivity extends AppCompatActivity {
         String id = login_id.getText().toString();
         String pass = login_pass.getText().toString();
 
+        loginAction(id,pass);
+    }
+
+    public void onClickSignUp(View v){
+        Intent intent = new Intent(this, SignupActivity.class);
+        startActivity(intent);
+    }
+
+    public void onClickSNS_kakao(View v){
+        Session.getCurrentSession().open(AuthType.KAKAO_TALK, LoginActivity.this);
+    }
+
+    public void onClickSNS_facebook(View v){
+        mLoginManager.logInWithReadPermissions(LoginActivity.this, Arrays.asList("email"));
+    }
+
+    public void loginAction(String id, String password){
         Response.Listener<String> responseListener = new Response.Listener<String> () {
             @Override
             public void onResponse(String response) {
@@ -128,23 +141,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
-        LoginRequest loginRequest = new LoginRequest(id, pass, responseListener);
+        LoginRequest loginRequest = new LoginRequest(id, password, responseListener);
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
         queue.add(loginRequest);
-
-    }
-
-    public void onClickSignUp(View v){
-        Intent intent = new Intent(this,SignupActivity.class);
-        startActivity(intent);
-    }
-
-    public void onClickSNS_kakao(View v){
-        Session.getCurrentSession().open(AuthType.KAKAO_TALK, LoginActivity.this);
-    }
-
-    public void onClickSNS_facebook(View v){
-        mLoginManager.logInWithReadPermissions(LoginActivity.this, Arrays.asList("email"));
     }
 
     class LoginRequest extends StringRequest {
@@ -210,8 +209,10 @@ public class LoginActivity extends AppCompatActivity {
 //                    startActivity(intent);
 //                    finish();
                     Log.d("Tag", "kakao ID : " + String.valueOf(result.getId()));
+                    String kakao_id = "kakao_" + String.valueOf(result.getId());
+
                     //Todo ID 비교해서 회원이면 로그인, 비회원이면 정보입력으로
-                    //validationCheck(String.valueOf(result.getId()));
+                    validationCheck(kakao_id);
 
                 }
 
@@ -222,8 +223,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onNotSignedUp() {
-                    Log.d("Tag", "2323 ");
-
                 }
             });
         }
@@ -278,39 +277,38 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
-    public void validationCheck(String memberID){
+    public void validationCheck(final String memberID){
+        Log.d("Tag", "sns id  :  " + memberID);
+
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.d("Tag", "response : " + response);
-
                     JSONObject jsonResponse = new JSONObject(response);
                     boolean isValidate = jsonResponse.getBoolean("return");
-                    if (isValidate) {
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        //Todo sns 로그인시 넘길 정보
-                        intent.putExtra("Member_Name","SNS TEST");
-                        startActivity(intent);
-                        finish();
+                    if (!isValidate) {
+                        Log.d("Tag", "sns id check");
+                        loginAction(memberID,memberID);
                     } else {
                         Intent intent = new Intent(LoginActivity.this, Signup2Activity.class);
-                        intent.putExtra("Member_ID","SNS ID");
+                        intent.putExtra("Member_ID",memberID);
+                        intent.putExtra("Member_pass",memberID);
+
                         startActivity(intent);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    Log.e("Tag", "sns id check error " + e.getMessage());
+                    e.printStackTrace();                }
             }
         };
 
-        LoginActivity.ValidateRequest validateRequest = new LoginActivity.ValidateRequest(memberID, responseListener);
+        ValidateRequest validateRequest = new LoginActivity.ValidateRequest(memberID, responseListener);
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
         queue.add(validateRequest);
     }
     class ValidateRequest extends StringRequest {
         //TODO sns 아이디 확인 주소
-        final static private String URL = "";
+        final static private String URL = "https://capston2webapp.azurewebsites.net/api/Verify";
         private Map<String, String> parameters;
 
         public ValidateRequest(String id, Response.Listener<String> listener) {

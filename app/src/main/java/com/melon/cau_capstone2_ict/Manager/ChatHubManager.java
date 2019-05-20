@@ -1,6 +1,7 @@
 package com.melon.cau_capstone2_ict.Manager;
 
 import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -64,8 +65,8 @@ public class ChatHubManager {
         Credentials credentials = new Credentials() {
             @Override
             public void prepareRequest(Request request) {
-                request.addHeader("username", MyUserData.getInstance().getId()); //get username
-
+                request.addHeader("userId", MyUserData.getInstance().getId());
+                request.addHeader("userNick", MyUserData.getInstance().getNickname());
             }
         };
 
@@ -105,6 +106,10 @@ public class ChatHubManager {
 
     public ArrayList<String> getCurrentUser(){
         return currentUser;
+    }
+
+    public int getNumOfUser(){
+        return currentUser.size();
     }
 
     public ArrayList<MyChat> getChatArrayList(String to){

@@ -1,8 +1,5 @@
 package com.melon.cau_capstone2_ict;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.melon.cau_capstone2_ict.Manager.BuildingManager;
 import com.melon.cau_capstone2_ict.Manager.GpsManager;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
