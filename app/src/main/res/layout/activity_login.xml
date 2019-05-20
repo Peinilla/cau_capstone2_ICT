@@ -23,7 +23,7 @@
             android:ems="10"
             android:hint="ID"
             android:inputType="textPersonName"
-            android:text="test00001" />
+            android:text="test11" />
 
         <EditText
             android:id="@+id/login_password"

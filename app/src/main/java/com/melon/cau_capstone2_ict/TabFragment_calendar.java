@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -60,6 +61,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     private String userId;
     private String date;
     private String year, month;
+    boolean init = false;
 
     private Switch mSwitch;
 
@@ -93,7 +95,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     String temp, wfKor, pty, pop;
     int hour;
 
-    String[] timeList = {"하루종일", "00시", "01시", "02시", "03시", "04시", "05시", "06시", "07시", "08시", "09시", "10시", "11시", "12시",
+    String[] timeList = {"종일", "00시", "01시", "02시", "03시", "04시", "05시", "06시", "07시", "08시", "09시", "10시", "11시", "12시",
             "13시", "14시", "15시", "16시", "17시", "18시", "19시", "20시", "21시", "22시", "23시", "24시"};
     String[] colorList = {"black", "gray", "white", "blue", "l_blue", "green", "l_green", "red", "pink", "orange", "yellow", "purple"};
     String str1 = "", str2 = "", color = "";
@@ -201,7 +203,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                 }
             }
         });
-
         return rootView;
     }
 
@@ -217,7 +218,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         spinnerStart.setAdapter(spAdapterStartDate);
         final TextView forText = new TextView(getContext());
         forText.setText("-");
-        forText.setPadding(8, 0, 8, 0);
+        forText.setPadding(5, 0, 5, 0);
         final Spinner spinnerEnd = new Spinner(getContext());
         final ArrayAdapter<String> spAdapterEndDate = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, timeList);
         spinnerEnd.setAdapter(spAdapterEndDate);
@@ -239,8 +240,9 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         spinnerStart.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                pos = position;
                 str1 = (String) parent.getItemAtPosition(position);
-                if (str1.equals("하루종일")) {
+                if (str1.equals("종일")) {
                     spinnerEnd.setEnabled(false);
                     str1 = "";
                     str2 = "";
@@ -257,8 +259,11 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         spinnerEnd.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(pos > position && position != 0){
+                    parent.setSelection(pos);
+                }
                 str2 = (String) parent.getItemAtPosition(position);
-                if (str2.equals("하루종일")) {
+                if (str2.equals("종일")) {
                     str2 = "";
                 }
             }
@@ -284,14 +289,14 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String writer = MyUserData.getInstance().getNickname();
-                String title = "";
+                String title = color + "|";
                 if (!str1.equals("")) {
                     title += str1 + " - ";
                     if (!str2.equals(""))
                         title += str2;
                 }
                 else{
-                    title = "하루 종일";
+                    title += "하루 종일";
                 }
                 title += "|";
                 title += titleText.getText().toString();
@@ -304,10 +309,11 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                 myCalendar.setTitle(title);
                 myCalendar.setContent(content);
                 myCalendar.setDate(date);
-                myCalendar.setColor(color);
                 writeRequest(myCalendar);
                 StringTokenizer tokens = new StringTokenizer(title, "|");
                 String token = tokens.nextToken();
+                myCalendar.setColor(token);
+                token = tokens.nextToken();
                 myCalendar.setTime(token);
                 token = tokens.nextToken();
                 for(; tokens.hasMoreElements();)
@@ -453,10 +459,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         return date;
     }
 
-    public AppBarLayout getAppBar() {
-        return appBarLayout;
-    }
-
     void writeRequest(MyCalendar myCalendar) {
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -489,6 +491,8 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                         myCalendar.setWriter(MyUserData.getInstance().getNickname());
                         StringTokenizer tokens = new StringTokenizer(jsonResponse.getString("title"), "|");
                         String token = tokens.nextToken();
+                        myCalendar.setColor(token);
+                        token = tokens.nextToken();
                         myCalendar.setTime(token);
                         token = tokens.nextToken();
                         for (; tokens.hasMoreElements(); )
@@ -499,7 +503,9 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                         myCalendar.setDate(date);
                         myCalendars.add(myCalendar);
                     }
-                    myRecyclerView.setAdapter(new MyCalendarAdapter(getActivity(), myCalendars));
+                    dbHelper.addList(myCalendars);
+                    myRecyclerView.setAdapter(new MyCalendarAdapter(getActivity(), dbHelper.getAllMyCalendars()));
+                    setEvent();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -527,6 +533,8 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                         timeLine.setWriter(jsonResponse.getString("nickname"));
                         StringTokenizer tokens = new StringTokenizer(jsonResponse.getString("title"), "|");
                         String token = tokens.nextToken();
+                        timeLine.setColor(token);
+                        token = tokens.nextToken();
                         timeLine.setTime(token);
                         token = tokens.nextToken();
                         for (; tokens.hasMoreElements(); )
@@ -562,9 +570,9 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         ptyText.setText(pty + "mm");
 
         if (pop.equals("0")) {
-            ptyText.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.GONE);
         } else
-            ptyText.setVisibility(View.VISIBLE);
+            linearLayout.setVisibility(View.VISIBLE);
 
         switch (wfKor) {
             case "맑음":

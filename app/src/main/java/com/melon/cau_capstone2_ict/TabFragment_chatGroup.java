@@ -52,8 +52,10 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
         fam = (FloatingActionsMenu)rootView.findViewById(R.id.chat_floatingButton);
         chatList = (ListView) rootView.findViewById(R.id.chat_list);
 
-
-        chatTitle.setText(group + " (그룹)");
+        if(containerID != R.id.withbab_container)
+            chatTitle.setText(group + " (그룹)");
+        else
+            chatTitle.setText(group + " (1)");
 
         adapter = new MyChatAdapter();
 

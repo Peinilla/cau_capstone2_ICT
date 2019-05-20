@@ -8,6 +8,7 @@ public class TimeLine {
     private String writer;
     private String date;
     private String time;
+    private String color;
     private String content;
 
     public TimeLine() {
@@ -16,6 +17,7 @@ public class TimeLine {
         content = "content";
         date = "2019-04-01";
         time = "하루 종일";
+        color = "black";
     }
 
     public void setWriter(String writer) {
@@ -38,6 +40,10 @@ public class TimeLine {
         this.time = time;
     }
 
+    public void setColor(String color){
+        this.color = color;
+    }
+
     public String getWriter(){
         return writer;
     }
@@ -56,5 +62,9 @@ public class TimeLine {
 
     public String getTime(){
         return time;
+    }
+
+    public String getColor(){
+        return color;
     }
 }

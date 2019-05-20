@@ -61,6 +61,26 @@ public class DBHelper extends SQLiteOpenHelper {
         Toast.makeText(context, "Insert 완료", Toast.LENGTH_SHORT).show();
     }
 
+    // myCaledars: 서버, list: DB
+    public void addList(ArrayList<MyCalendar> myCalendars){
+        ArrayList<MyCalendar> list = getAllMyCalendars();
+
+        for(MyCalendar myCalendar : myCalendars){
+            if(!list.contains(myCalendar)){
+                add(myCalendar);
+            }
+        }
+        for(MyCalendar myCalendar : list){
+            if(!myCalendars.contains(myCalendar)){
+                delete(myCalendar.get_id());
+            }
+        }
+    }
+
+    public int size(){
+        return getAllMyCalendars().size();
+    }
+
     public void update(int _id, MyCalendar myCalendar){
         SQLiteDatabase db = getWritableDatabase();
         StringBuffer sb = new StringBuffer();

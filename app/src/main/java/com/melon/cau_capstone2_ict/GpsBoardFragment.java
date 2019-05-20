@@ -176,7 +176,6 @@ public class GpsBoardFragment extends Fragment {
                         MyBoard m = new MyBoard();
                         JSONObject jsonResponse = array.getJSONObject(inx);
                         m.setDate(jsonResponse.getString("date"));
-//                        m.setTitle(jsonResponse.getString("title"));
 
                         StringTokenizer tokens = new StringTokenizer(jsonResponse.getString("title"), "|");
                         String token = tokens.nextToken();

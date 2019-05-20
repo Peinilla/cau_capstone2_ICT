@@ -67,13 +67,6 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
-//        StringTokenizer tokens = new StringTokenizer(list.get(position).getTitle(), "|");
-//        String token = tokens.nextToken();
-//        holder.time.setText(token);
-//        token = tokens.nextToken();
-//        for (; tokens.hasMoreElements(); )
-//            token += "|" + tokens.nextToken();
-//        holder.title.setText(token);
         holder.title.setText(list.get(position).getTitle());
         holder.writer.setText(list.get(position).getWriter());
         holder.date.setText(list.get(position).getDate());

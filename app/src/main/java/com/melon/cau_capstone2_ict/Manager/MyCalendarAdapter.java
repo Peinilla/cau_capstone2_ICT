@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +23,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.melon.cau_capstone2_ict.R;
+import com.melon.cau_capstone2_ict.TabFragment_calendar;
 
 import java.util.List;
 import java.util.StringTokenizer;
@@ -30,6 +32,7 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
     private List<MyCalendar> list;
     private LayoutInflater inflater;
     private Context context;
+    private View view;
 
     private SparseBooleanArray selectedItems;
     private int prePosition = -1;
@@ -75,16 +78,7 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
 
     // 기존 뷰홀더와 새롭게 보여줘야할 데이터를 바인드해주는 함수
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
-//        StringTokenizer tokens = new StringTokenizer(list.get(position).getTitle(), "|");
-//        Log.d("Tag", "title: " + list.get(position).getTitle());
-//        Log.d("Tag", "tokens: " + Integer.toString(tokens.countTokens()));
-//        String token = tokens.nextToken();
-//        holder.time.setText(token);
-//        token = tokens.nextToken();
-//        for (; tokens.hasMoreElements(); )
-//            token += "|" + tokens.nextToken();
-//        holder.title.setText(token);
+    public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, final int position) {
         holder.title.setText(list.get(position).getTitle());
         holder.writer.setText(list.get(position).getWriter());
         holder.date.setText(list.get(position).getDate());
@@ -131,6 +125,7 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                view = v;
                 LinearLayout layout = new LinearLayout(context);
                 layout.setOrientation(LinearLayout.VERTICAL);
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
@@ -138,8 +133,14 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         DBHelper dbHelper = new DBHelper(context, MyUserData.getInstance().getNickname(), null, 1);
-                        deleteRequest(list.get(position));
                         dbHelper.delete(list.get(position).get_id());
+                        MyCalendar myCalendar = list.get(position);
+                        String title = myCalendar.getColor() + "|" + myCalendar.getTime() + "|" + myCalendar.getTitle();
+                        myCalendar.setTitle(title);
+                        deleteRequest(myCalendar);
+                        String date = list.get(position).getDate();
+                        list.remove(position);
+                        notifyItemRemoved(position);
                     }
                 }).setNeutralButton("No", new DialogInterface.OnClickListener() {
                     @Override
