@@ -10,6 +10,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -41,6 +42,7 @@ import com.melon.cau_capstone2_ict.Manager.DBHelper;
 import com.melon.cau_capstone2_ict.Manager.FragmentAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyCalendar;
 import com.melon.cau_capstone2_ict.Manager.MyCalendarAdapter;
+import com.melon.cau_capstone2_ict.Manager.MyCustomAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 import com.melon.cau_capstone2_ict.Manager.RSSHandler;
 import com.melon.cau_capstone2_ict.Manager.TimeLine;
@@ -51,6 +53,7 @@ import com.melon.cau_capstone2_ict.widget.CalendarView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -259,7 +262,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         spinnerEnd.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(pos > position && position != 0){
+                if (pos > position && position != 0) {
                     parent.setSelection(pos);
                 }
                 str2 = (String) parent.getItemAtPosition(position);
@@ -294,8 +297,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                     title += str1 + " - ";
                     if (!str2.equals(""))
                         title += str2;
-                }
-                else{
+                } else {
                     title += "하루 종일";
                 }
                 title += "|";
@@ -316,14 +318,14 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                 token = tokens.nextToken();
                 myCalendar.setTime(token);
                 token = tokens.nextToken();
-                for(; tokens.hasMoreElements();)
+                for (; tokens.hasMoreElements(); )
                     token += "|" + tokens.nextToken();
                 myCalendar.setTitle(token);
                 dbHelper.add(myCalendar);
                 refreshFragment();
                 setEvent();
             }
-        }).setNeutralButton("취소", new DialogInterface.OnClickListener() {
+        }).setCancelable(false).setNeutralButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }
@@ -481,11 +483,11 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
             public void onResponse(String response) {
                 try {
                     ArrayList<MyCalendar> myCalendars = new ArrayList<>();
-                    String res = response.substring(1,response.length()-1);
-                    res = res.replace("\\","");
+                    String res = response.substring(1, response.length() - 1);
+                    res = res.replace("\\", "");
                     Log.d("Tag", "response check : " + res);
                     JSONArray array = new JSONArray(res);
-                    
+
                     for (int inx = 0; inx < array.length(); inx++) {
                         MyCalendar myCalendar = new MyCalendar();
                         JSONObject jsonResponse = array.getJSONObject(inx);
@@ -523,9 +525,10 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
             @Override
             public void onResponse(String response) {
                 try {
+                    ArrayList<TimeLine> temp = new ArrayList<>();
                     ArrayList<TimeLine> timeLines = new ArrayList<>();
-                    String res = response.substring(1,response.length()-1);
-                    res = res.replace("\\","");
+                    String res = response.substring(1, response.length() - 1);
+                    res = res.replace("\\", "");
                     Log.d("Tag", "response check : " + res);
                     JSONArray array = new JSONArray(res);
                     for (int inx = 0; inx < array.length(); inx++) {
@@ -544,7 +547,18 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                         timeLine.setContent(jsonResponse.getString("content"));
                         String date = jsonResponse.get("date").toString().substring(0, 10);
                         timeLine.setDate(date);
-                        timeLines.add(timeLine);
+                        temp.add(timeLine);
+                    }
+                    for (TimeLine t : temp) {
+                        for (int i = 0; i < timeLines.size(); i++) {
+                            if (Integer.parseInt(t.getDate().substring(8)) < Integer.parseInt(timeLines.get(i).getDate().substring(8))) {
+                                timeLines.add(i, t);
+                                break;
+                            }
+                        }
+                        if (!timeLines.contains(t)) {
+                            timeLines.add(t);
+                        }
                     }
                     timelineRecyclerView.setAdapter(new TimeLineAdapter(getActivity(), timeLines));
                 } catch (Exception e) {
@@ -621,66 +635,66 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         }
     }
 
-    public class MyCustomAdapter extends ArrayAdapter<String> {
-
-        public MyCustomAdapter(Context context, int textViewResourceId, String[] objects) {
-            super(context, textViewResourceId, objects);
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            return getCustomView(position, convertView, parent);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return getCustomView(position, convertView, parent);
-        }
-
-        public View getCustomView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = getLayoutInflater();
-            View row = inflater.inflate(R.layout.color_row, parent, false);
-            ImageView label = (ImageView) row.findViewById(R.id.image_color);
-
-            switch (position) {
-                case 0:
-                    label.setImageResource(R.drawable.black);
-                    break;
-                case 1:
-                    label.setImageResource(R.drawable.gray);
-                    break;
-                case 2:
-                    label.setImageResource(R.drawable.white);
-                    break;
-                case 3:
-                    label.setImageResource(R.drawable.blue);
-                    break;
-                case 4:
-                    label.setImageResource(R.drawable.l_blue);
-                    break;
-                case 5:
-                    label.setImageResource(R.drawable.green);
-                    break;
-                case 6:
-                    label.setImageResource(R.drawable.l_green);
-                    break;
-                case 7:
-                    label.setImageResource(R.drawable.red);
-                    break;
-                case 8:
-                    label.setImageResource(R.drawable.pink);
-                    break;
-                case 9:
-                    label.setImageResource(R.drawable.orange);
-                    break;
-                case 10:
-                    label.setImageResource(R.drawable.yellow);
-                    break;
-                case 11:
-                    label.setImageResource(R.drawable.purple);
-                    break;
-            }
-            return row;
-        }
-    }
+//    public class MyCustomAdapter extends ArrayAdapter<String> {
+//
+//        public MyCustomAdapter(Context context, int textViewResourceId, String[] objects) {
+//            super(context, textViewResourceId, objects);
+//        }
+//
+//        @Override
+//        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+//            return getCustomView(position, convertView, parent);
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            return getCustomView(position, convertView, parent);
+//        }
+//
+//        public View getCustomView(int position, View convertView, ViewGroup parent) {
+//            LayoutInflater inflater = getLayoutInflater();
+//            View row = inflater.inflate(R.layout.color_row, parent, false);
+//            ImageView label = (ImageView) row.findViewById(R.id.image_color);
+//
+//            switch (position) {
+//                case 0:
+//                    label.setImageResource(R.drawable.black);
+//                    break;
+//                case 1:
+//                    label.setImageResource(R.drawable.gray);
+//                    break;
+//                case 2:
+//                    label.setImageResource(R.drawable.white);
+//                    break;
+//                case 3:
+//                    label.setImageResource(R.drawable.blue);
+//                    break;
+//                case 4:
+//                    label.setImageResource(R.drawable.l_blue);
+//                    break;
+//                case 5:
+//                    label.setImageResource(R.drawable.green);
+//                    break;
+//                case 6:
+//                    label.setImageResource(R.drawable.l_green);
+//                    break;
+//                case 7:
+//                    label.setImageResource(R.drawable.red);
+//                    break;
+//                case 8:
+//                    label.setImageResource(R.drawable.pink);
+//                    break;
+//                case 9:
+//                    label.setImageResource(R.drawable.orange);
+//                    break;
+//                case 10:
+//                    label.setImageResource(R.drawable.yellow);
+//                    break;
+//                case 11:
+//                    label.setImageResource(R.drawable.purple);
+//                    break;
+//            }
+//            return row;
+//        }
+//    }
 }

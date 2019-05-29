@@ -26,7 +26,6 @@ public class CalendarItemView extends View {
     Paint mPaintTextDate = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mPaintTextToday = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mPaintBackgroundToday = new Paint(Paint.ANTI_ALIAS_FLAG);
-    Paint mPaintBackgroundTodaySelected = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mPaintBackgroundSelected = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mPaintBlack = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mPaintGray = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -79,7 +78,6 @@ public class CalendarItemView extends View {
         mPaintTextToday.setTextSize(dp11);
         mPaintTextToday.setTextAlign(Paint.Align.CENTER);
         mPaintBackgroundToday.setColor(ContextCompat.getColor(getContext(), R.color.select_today));
-//        mPaintBackgroundTodaySelected.setColor(ContextCompat.getColor(getContext(), R.color.selct_today_text));
         mPaintBackgroundSelected.setColor(ContextCompat.getColor(getContext(), R.color.select_color));
         mPaintBlack.setColor(ContextCompat.getColor(getContext(), R.color.black));
         mPaintGray.setColor(ContextCompat.getColor(getContext(), R.color.gray));

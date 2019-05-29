@@ -14,9 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -33,9 +36,15 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
     private LayoutInflater inflater;
     private Context context;
     private View view;
+    private int pos;
 
     private SparseBooleanArray selectedItems;
     private int prePosition = -1;
+
+    String[] timeList = {"종일", "00시", "01시", "02시", "03시", "04시", "05시", "06시", "07시", "08시", "09시", "10시", "11시", "12시",
+            "13시", "14시", "15시", "16시", "17시", "18시", "19시", "20시", "21시", "22시", "23시", "24시"};
+    String[] colorList = {"black", "gray", "white", "blue", "l_blue", "green", "l_green", "red", "pink", "orange", "yellow", "purple"};
+    String str1 = "", str2 = "", color = "";
 
     public MyCalendarAdapter(Context context, List<MyCalendar> list) {
         this.list = list;
@@ -88,37 +97,165 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         holder.modify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                LinearLayout layout = new LinearLayout(context);
-//                layout.setOrientation(LinearLayout.VERTICAL);
-//                final EditText titleText = new EditText(context);
-//                titleText.setHint("제목");
-//                titleText.setText(list.get(pos).getTitle());
-//                final EditText contentText = new EditText(context);
-//                contentText.setHint("내용");
-//                contentText.setText(list.get(pos).getContent());
-//                layout.addView(titleText);
-//                layout.addView(contentText);
-//                final String date = list.get(pos).getDate();
-//                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-//                dialog.setTitle(date + " (수정)").setView(layout).setPositiveButton("수정", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        String writer = MyUserData.getInstance().getNickname();
-//                        String title = titleText.getText().toString();
-//                        String content = contentText.getText().toString();
-//                        DBHelper dbHelper = new DBHelper(context, "calendar", null, 1);
-//                        MyCalendar myCalendar = new MyCalendar();
-//                        myCalendar.setWriter(writer);
-//                        myCalendar.setTitle(title);
-//                        myCalendar.setContent(content);
-//                        myCalendar.setDate(date);
-//                        dbHelper.update(list.get(pos).get_id(), myCalendar);
-//                    }
-//                }).setNeutralButton("취소", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                    }
-//                }).create().show();
+                LinearLayout layout = new LinearLayout(context);
+                layout.setOrientation(LinearLayout.VERTICAL);
+                final LinearLayout layoutTime = new LinearLayout(context);
+                layoutTime.setOrientation(LinearLayout.HORIZONTAL);
+                final TextView timeText = new TextView(context);
+                timeText.setText("시간: ");
+                final Spinner spinnerStart = new Spinner(context);
+                final ArrayAdapter<String> spAdapterStartDate = new ArrayAdapter<String>(context, R.layout.support_simple_spinner_dropdown_item, timeList);
+                spinnerStart.setAdapter(spAdapterStartDate);
+                final TextView forText = new TextView(context);
+                forText.setText("-");
+                forText.setPadding(5, 0, 5, 0);
+                final Spinner spinnerEnd = new Spinner(context);
+                final ArrayAdapter<String> spAdapterEndDate = new ArrayAdapter<String>(context, R.layout.support_simple_spinner_dropdown_item, timeList);
+                spinnerEnd.setAdapter(spAdapterEndDate);
+                final Spinner spinnerColor = new Spinner(context);
+                spinnerColor.setAdapter(new MyCustomAdapter(context, R.layout.support_simple_spinner_dropdown_item, colorList));
+                layoutTime.addView(timeText);
+                layoutTime.addView(spinnerStart);
+                layoutTime.addView(forText);
+                layoutTime.addView(spinnerEnd);
+                layoutTime.addView(spinnerColor);
+                final EditText titleText = new EditText(context);
+                titleText.setHint("제목");
+                titleText.setText(list.get(position).getTitle());
+                final EditText contentText = new EditText(context);
+                contentText.setHint("내용");
+                contentText.setText(list.get(position).getContent());
+                layout.addView(layoutTime);
+                layout.addView(titleText);
+                layout.addView(contentText);
+                final String date = list.get(position).getDate();
+                StringTokenizer tokens = new StringTokenizer(list.get(position).getTime(), "-");
+                String token = tokens.nextToken();
+                Log.d("token", token);
+                if(token.equals("하루 종일")){
+                    str1 = "종일";
+                    str2 = "종일";
+                } else{
+                    str1 = token.substring(0, token.length() - 1);
+                    token = tokens.nextToken();
+                    if(token != null)
+                        str2 = token.substring(1, token.length());
+                }
+                int idx1 = 0, idx2 = 0, idx = 0;
+                for(int i = 0; i < timeList.length; i++){
+                    if(timeList[i].equals(str1))
+                        idx1 = i;
+                    if(timeList[i].equals(str2))
+                        idx2 = i;
+                }
+                spinnerStart.setSelection(idx1);
+                spinnerEnd.setSelection(idx2);
+                for(int i = 0; i < colorList.length; i++){
+                    if(colorList[i].equals(list.get(position).getColor())){
+                        idx = i;
+                        break;
+                    }
+                }
+                spinnerColor.setSelection(idx);
+                spinnerStart.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        pos = position;
+                        str1 = (String) parent.getItemAtPosition(position);
+                        if (str1.equals("종일")) {
+                            spinnerEnd.setEnabled(false);
+                            str1 = "";
+                            str2 = "";
+                        } else {
+                            spinnerEnd.setEnabled(true);
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+                spinnerEnd.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        if (pos > position && position != 0) {
+                            parent.setSelection(pos);
+                        }
+                        str2 = (String) parent.getItemAtPosition(position);
+                        if (str2.equals("종일")) {
+                            str2 = "";
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+                spinnerColor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        color = (String) parent.getItemAtPosition(position);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setTitle(date + " (수정)").setView(layout).setPositiveButton("등록", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DBHelper dbHelper = new DBHelper(context, MyUserData.getInstance().getNickname(), null, 1);
+                        dbHelper.delete(list.get(position).get_id());
+                        MyCalendar myCalendar = list.get(position);
+                        String title = myCalendar.getColor() + "|" + myCalendar.getTime() + "|" + myCalendar.getTitle();
+                        myCalendar.setTitle(title);
+                        deleteRequest(myCalendar);
+                        String date = list.get(position).getDate();
+                        list.remove(position);
+                        notifyItemRemoved(position);
+
+                        String writer = MyUserData.getInstance().getNickname();
+                        title = color + "|";
+                        if (!str1.equals("")) {
+                            title += str1 + " - ";
+                            if (!str2.equals(""))
+                                title += str2;
+                        } else {
+                            title += "하루 종일";
+                        }
+                        title += "|";
+                        title += titleText.getText().toString();
+                        String content = contentText.getText().toString();
+                        if (dbHelper == null) {
+                            dbHelper = new DBHelper(context, MyUserData.getInstance().getNickname(), null, 1);
+                        }
+                        myCalendar = new MyCalendar();
+                        myCalendar.setWriter(writer);
+                        myCalendar.setTitle(title);
+                        myCalendar.setContent(content);
+                        myCalendar.setDate(date);
+                        writeRequest(myCalendar);
+                        StringTokenizer tokens = new StringTokenizer(title, "|");
+                        String token = tokens.nextToken();
+                        myCalendar.setColor(token);
+                        token = tokens.nextToken();
+                        myCalendar.setTime(token);
+                        token = tokens.nextToken();
+                        for (; tokens.hasMoreElements(); )
+                            token += "|" + tokens.nextToken();
+                        myCalendar.setTitle(token);
+                        dbHelper.add(myCalendar);
+                    }
+                }).setNeutralButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).setCancelable(false).create().show();
             }
         });
 
@@ -147,7 +284,7 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
-                }).create().show();
+                }).setCancelable(false).create().show();
             }
         });
 
@@ -173,6 +310,22 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
                 prePosition = position;
             }
         });
+    }
+
+    void writeRequest(MyCalendar myCalendar) {
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.d("Tag", "response check : " + response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        CalendarRequest cr = new CalendarRequest(myCalendar, "new", responseListener);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(cr);
     }
 
     void deleteRequest(MyCalendar myCalendar) {
