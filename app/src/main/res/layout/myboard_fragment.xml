@@ -10,11 +10,24 @@
         android:id="@+id/board_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_board_title"
+        android:background="@drawable/com_facebook_tooltip_blue_background"
         android:gravity="center"
-        android:padding="5dp"
+        android:padding="10dp"
         android:text="중문거주 게시판"
         android:textSize="30sp" />
+
+    <ImageButton
+        android:id="@+id/board_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/board_swipe"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/transparent"
+        android:visibility="gone"
+        app:srcCompat="@drawable/arrow_left_40x40" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/board_swipe"

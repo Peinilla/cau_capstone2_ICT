@@ -60,6 +60,8 @@ public class TabFragment_nowim extends Fragment {
 
     int dpwidth;
 
+    String myTag;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_now, container, false);
@@ -108,12 +110,7 @@ public class TabFragment_nowim extends Fragment {
             @Override
             public void run(String s) {
                 try {
-                    Log.d("Tag", "updateChatList" +s);
-
-                    JSONArray jsonArray = new JSONArray(s);
-                    chatroomArray.clear();
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                    }
+                    Log.d("Tag", "updateChatroom" +s);
                 } catch (Exception e) {
                     Log.e("Tag", "error " + e.getMessage());
                     e.printStackTrace();
@@ -125,46 +122,60 @@ public class TabFragment_nowim extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MyNowim nowim = (MyNowim)parent.getItemAtPosition(position);
-                if(nowim.getCount()>=2) {
-                    Fragment childFragment = new TabFragment_chatGroup();
-                    Bundle bundle = new Bundle(1);
-                    bundle.putString("GroupID",nowim.getWord());
-                    bundle.putInt("ContainerID",R.id.now_container);
-                    childFragment.setArguments(bundle);
-                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                    transaction.replace(R.id.now_container, childFragment).commit();
+                if(!nowim.getWord().equals(MyUserData.getInstance().getNowimTag()))
+                {
+                    myTag = nowim.getWord();
+                    tagText.setText(myTag);
+                    setPopup();
                 }else{
-                    Toast.makeText(getActivity(), "인원이 충분하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    if(nowim.getCount()>=2) {
+                        Fragment childFragment = new TabFragment_chatGroup();
+                        Bundle bundle = new Bundle(1);
+                        bundle.putString("GroupID",nowim.getWord());
+                        bundle.putInt("ContainerID",R.id.now_container);
+                        childFragment.setArguments(bundle);
+                        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                        transaction.replace(R.id.now_container, childFragment).commit();
+                    }else{
+                        Toast.makeText(getActivity(), "인원이 충분하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    }
                 }
+
             }
         });
 
         btn_upload.setOnClickListener(new ImageButton.OnClickListener(){
             @Override
             public void onClick(View v) {
-                final String str = tagText.getText().toString();
-                final AlertDialog alert = new AlertDialog.Builder(getActivity())
-                        .setTitle("지금나는")
-                        .setMessage("태그를 \""+ str + "\"로 변경 하시겠습니까?")
-                        .setCancelable(true)
-                        .setPositiveButton("확인",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        ChatHubManager.getInstance().setTag(str);
-                                    }
-                                })
-                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .create();
-                alert.show();
+                ChatHubManager.getInstance().getHubProxygroup().invoke("GetRightnowTagUserInfo",MyUserData.getInstance().getId());
+                myTag = tagText.getText().toString();
+                setPopup();
             }
         });
         ChatHubManager.getInstance().getHubProxygroup().invoke("GetTag",MyUserData.getInstance().getId());
         return rootView;
+    }
+    public void setPopup(){
+        AlertDialog alert = new AlertDialog.Builder(getActivity())
+                .setTitle("지금나는")
+                .setMessage("태그를 \""+ myTag + "\"로 변경 하시겠습니까?")
+                .setCancelable(true)
+                .setPositiveButton("확인",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                ChatHubManager.getInstance().setTag(myTag);
+                                MyUserData.getInstance().setNowimTag(myTag);
+                                ChatHubManager.getInstance().getHubProxygroup().invoke("GetTag",MyUserData.getInstance().getId());
+                            }
+                        })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .create();
+        alert.show();
     }
 
     public void updateList(String s){

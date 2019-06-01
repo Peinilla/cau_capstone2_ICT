@@ -135,23 +135,18 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
+                    Log.d("Tag", "login " + response);
                     JSONObject jsonResponse = new JSONObject(response);
                     MyUserData.getInstance().setData(jsonResponse.getString("id"),jsonResponse.getString("nickname"));
                     MyUserData.getInstance().setResidence(jsonResponse.getString("residence"));
+                    MyUserData.getInstance().setBirth(jsonResponse.getString("dateofbirth"));
+                    MyUserData.getInstance().setEmail(jsonResponse.getString("pk_email"));
+                    MyUserData.getInstance().setHobby(jsonResponse.getString("hobby"));
+                    MyUserData.getInstance().setMajor(jsonResponse.getString("major"));
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-
-//                    if (false) {
-//
-//                    }
-//                    else {
-//                        Log.d("Tag", "clicked2");
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-//                        dialog = builder.setMessage("fail").setNegativeButton("ok", null).create();
-//                        dialog.show();
-//                    }
                 }
                 catch (Exception e) {
 

@@ -14,6 +14,8 @@ public class MyBoard implements Serializable {
     private String text;
     private int numComment;
     private int numRecommend;
+    private String postId;
+    private boolean isBabtype = false;
 
     public MyBoard(){
         title = "Test Title";
@@ -22,6 +24,22 @@ public class MyBoard implements Serializable {
         text = "text";
         numComment = 0;
         numRecommend = 0;
+    }
+
+    public void setBabtype(boolean babtype) {
+        isBabtype = babtype;
+    }
+
+    public boolean isBabtype() {
+        return isBabtype;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 
     public String getText() {

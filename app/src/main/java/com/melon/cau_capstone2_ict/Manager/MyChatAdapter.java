@@ -40,9 +40,6 @@ public class MyChatAdapter extends BaseAdapter {
         final Context context = parent.getContext();
         int viewType = getItemViewType(position);
 
-        // "listview_item" Layout을 inflate하여 convertView 참조 획득.
-        if (convertView == null) {
-            Log.d("Tag", "pos : " + pos);
             switch (viewType) {
                 case VIEW_MYCHAT:
                     convertView = LayoutInflater.from(context).
@@ -61,7 +58,7 @@ public class MyChatAdapter extends BaseAdapter {
                             inflate(R.layout.listview_youchatre, parent, false);
                     break;
             }
-        }
+
             MyChat myChat_item = listViewItemList.get(position);
             switch (viewType){
                 case VIEW_MYCHAT:

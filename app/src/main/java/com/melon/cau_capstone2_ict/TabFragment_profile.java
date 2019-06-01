@@ -48,6 +48,9 @@ public class TabFragment_profile extends Fragment {
 
     FloatingActionButton btn_nfc_Add;
     FloatingActionButton btn_recoFriend;
+    FloatingActionButton btn_set;
+    FloatingActionButton btn_logout;
+
 
     SwipeRefreshLayout srl1;
     SwipeRefreshLayout srl2;
@@ -71,6 +74,9 @@ public class TabFragment_profile extends Fragment {
         chatContainer = rootView.findViewById(R.id.profile_container);
         btn_nfc_Add = rootView.findViewById(R.id.button_nfc);
         btn_recoFriend = rootView.findViewById(R.id.button_reco);
+        btn_set = rootView.findViewById(R.id.button_set);
+        btn_logout = rootView.findViewById(R.id.button_logout);
+
         idView.setText(MyUserData.getInstance().getNickname());
 
         srl1 = rootView.findViewById(R.id.profile_swipe);
@@ -82,8 +88,6 @@ public class TabFragment_profile extends Fragment {
         friendRequest_adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, friendRequestArray);
         friendListView.setAdapter(friendRequest_adapter);
 
-
-        ChatHubManager.getInstance().connect();
         ChatHubManager.getInstance().getHubProxy().removeSubscription("getuserlist");
         ChatHubManager.getInstance().getHubProxy().on("getUserList", new SubscriptionHandler1<String>() {
             @Override
@@ -156,6 +160,22 @@ public class TabFragment_profile extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), NfcActivity.class);
                 startActivity(intent);
+            }
+        });
+        btn_set.setOnClickListener(new FloatingActionButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ProfileActvity.class);
+                startActivity(intent);
+            }
+        });
+        btn_logout.setOnClickListener(new FloatingActionButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                ChatHubManager.getInstance().disconnect();
+                startActivity(intent);
+                getActivity().finish();
             }
         });
         btn_recoFriend.setOnClickListener(new FloatingActionButton.OnClickListener(){

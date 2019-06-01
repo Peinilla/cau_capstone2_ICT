@@ -22,6 +22,10 @@ import com.melon.cau_capstone2_ict.Manager.ChatHubManager;
 import com.melon.cau_capstone2_ict.Manager.MyChatAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
 
 
@@ -82,15 +86,43 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
         ChatHubManager.getInstance().getHubProxygroup().on("onGroupChat", new SubscriptionHandler2<String, String>() {
             @Override
             public void run(final String s, final String s2) {
-                Log.d("Tag","onGroupChat : " + s);
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        getMessage(s2,s);
-                    }
-                });
+                try {
+                    JSONObject jsonResponse = new JSONObject(s2);
+                    getMessage(jsonResponse.getString("text"), jsonResponse.getString("userNick"));
+                }catch (Exception e){
+                    Log.e("Tag", "onGroupChat Error" + e.getMessage());
+                    e.printStackTrace();
+                }
             }
         },String.class,String.class);
+
+        ChatHubManager.getInstance().getHubProxygroup().invoke("GetRightnowMessageByIndex", MyUserData.getInstance().getId(), group, 0);
+        ChatHubManager.getInstance().getHubProxygroup().on("updateGroupChatByIndex", new SubscriptionHandler2<String, String>() {
+            @Override
+            public void run(String s1, String s2) {
+                try {
+                    Log.d("Tag", "getChatLog : " + s2);
+                    JSONArray array = new JSONArray(s2);
+
+                    for(int inx = 0; inx < array.length(); inx++) {
+                        JSONObject jsonResponse = array.getJSONObject(inx);
+                        getMessage(jsonResponse.getString("text"),jsonResponse.getString("userNick"),jsonResponse.getString("time"));
+                    }
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            chatList.setAdapter(adapter);
+                            chatList.setSelection(adapter.getCount() - 1);
+                        }
+                    });
+
+                }catch (Exception e){
+                    Log.e("Tag", "receive Message Error" + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        },String.class, String.class);
 
         return  rootView;
 
@@ -105,6 +137,13 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
         adapter.notifyDataSetChanged();
         chatList.setAdapter(adapter);
         chatList.setSelection(adapter.getCount() - 1);
+    }
+    void getMessage(String s, String s2,String date){
+        if(s2.equals(MyUserData.getInstance().getId())) {
+            adapter.addItem(0,s, MyUserData.getInstance().getNickname(),date);
+        }else{
+            adapter.addItem(2, s, s2,date);
+        }
     }
     void goBack(){
         FragmentManager fm = getFragmentManager();

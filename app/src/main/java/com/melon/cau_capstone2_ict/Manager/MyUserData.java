@@ -9,12 +9,66 @@ public class MyUserData {
     private Location location;
     private String currentBuilding = "";
     private String prevBuilding = "";
+    private String nowimTag = "";
+    private String email = "";
+    private String birth = "";
+    private String major = "";
+    private String hobby = "";
+    private String Bop = "0";
     private static MyUserData instance = null;
 
+    public void setNowimTag(String nowimTag) {
+        this.nowimTag = nowimTag;
+    }
 
-    public void setData(String id,String name){
+    public String getBirth() {
+        return birth;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getHobby() {
+        return hobby;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setBirth(String birth) {
+        this.birth = birth;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setHobby(String hobby) {
+        this.hobby = hobby;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getBop() {
+        return Bop;
+    }
+
+    public void setBop(String bop) {
+        Bop = bop;
+    }
+
+    public String getNowimTag() {
+        return nowimTag;
+    }
+
+    public void setData(String id, String name){
         this.id = id;
         nickname = name;
+        Bop = "0";
     }
     public void setLocation(Location location){
         this.location = location;

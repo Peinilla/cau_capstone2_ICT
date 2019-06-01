@@ -66,6 +66,7 @@ public class ChatHubManager {
             public void prepareRequest(Request request) {
                 request.addHeader("userId", MyUserData.getInstance().getId());
                 request.addHeader("userNick", MyUserData.getInstance().getNickname());
+                request.addHeader("bopParty", MyUserData.getInstance().getBop());
             }
         };
 
@@ -77,12 +78,12 @@ public class ChatHubManager {
 
         }
 
-        Log.d("Tag", "connect");
         hubConnection.setCredentials(credentials);
 
         hubConnection.connected(new Runnable() {
             @Override
             public void run() {
+                Log.d("Tag", "connect");
             }
         });
 

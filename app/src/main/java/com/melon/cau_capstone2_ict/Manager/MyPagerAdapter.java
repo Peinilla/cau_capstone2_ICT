@@ -24,8 +24,9 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 MyBoardFragment tab1 = new MyBoardFragment();
                 //게시판 ID 보내기
-                Bundle bundle = new Bundle(1);
+                Bundle bundle = new Bundle(2);
                 bundle.putString("boardID", MyUserData.getInstance().getResidence());
+                bundle.putBoolean("isGPS", false);
                 tab1.setArguments(bundle);
                 return tab1;
             case 2:
