@@ -7,11 +7,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.melon.cau_capstone2_ict.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Observable;
 import java.util.Set;
 
 public class CalendarView extends ViewGroup {
@@ -88,6 +91,7 @@ public class CalendarView extends ViewGroup {
     }
 
     public void setSelectedView(View view) {
+        FloatingActionsMenu fab = getRootView().findViewById(R.id.fab_calendar);
         ViewPager pager = (ViewPager) getParent();
         View tag = (View) pager.getTag();
 
@@ -96,11 +100,14 @@ public class CalendarView extends ViewGroup {
             calendar = Calendar.getInstance();
             calendar.setTimeInMillis(time);
 
+
+
             for (int i = 0; i < pager.getChildCount(); i++) {
                 for (int j = 7; j < getChildCount(); j++) {
                     child = (CalendarItemView) ((CalendarView) pager.getChildAt(i)).getChildAt(j);
 
                     if (child != null && child.getIsSameDay((long) child.getTag(), (long) tag.getTag())) {
+                        fab.collapse();
                         child.invalidate();
                         child = null;
                         break;
@@ -115,6 +122,7 @@ public class CalendarView extends ViewGroup {
         }
 
         long time = (long) view.getTag();
+        fab.expand();
         calendar = Calendar.getInstance();
         calendar.setTimeInMillis(time);
         pager.setTag(view);

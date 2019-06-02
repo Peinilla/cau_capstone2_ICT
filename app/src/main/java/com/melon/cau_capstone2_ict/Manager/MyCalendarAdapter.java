@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +30,13 @@ import com.melon.cau_capstone2_ict.R;
 import com.melon.cau_capstone2_ict.TabFragment_calendar;
 
 import java.util.List;
+import java.util.Observable;
 import java.util.StringTokenizer;
 
 public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.RecyclerViewHolder> {
     private List<MyCalendar> list;
     private LayoutInflater inflater;
     private Context context;
-    private View view;
     private int pos;
 
     private SparseBooleanArray selectedItems;
@@ -63,6 +64,10 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         if (list != null)
             return list.size();
         return 0;
+    }
+
+    public void setPrePosition(int pos){
+        prePosition = pos;
     }
 
     public void addItem(MyCalendar myCalendar) {
@@ -93,14 +98,28 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         holder.date.setText(list.get(position).getDate());
         holder.time.setText(list.get(position).getTime());
         holder.content.setText(list.get(position).getContent());
+        if(position % 2 == 0){
+            holder.itemView.setBackgroundResource(R.color.yellow_transparent);
+        }else{
+            holder.itemView.setBackgroundResource(R.color.white_pressed);
+        }
 
         holder.modify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LinearLayout layout = new LinearLayout(context);
+                final LinearLayout titleLayout = new LinearLayout(context);
+                titleLayout.setGravity(Gravity.CENTER);
+                titleLayout.setOrientation(LinearLayout.HORIZONTAL);
+                final TextView title = new TextView(context);
+                final String date = list.get(position).getDate();
+                title.setText(date + " (수정)");
+                title.setTextSize(24);
+                titleLayout.addView(title);
+                final LinearLayout layout = new LinearLayout(context);
                 layout.setOrientation(LinearLayout.VERTICAL);
                 final LinearLayout layoutTime = new LinearLayout(context);
                 layoutTime.setOrientation(LinearLayout.HORIZONTAL);
+                layoutTime.setGravity(Gravity.CENTER);
                 final TextView timeText = new TextView(context);
                 timeText.setText("시간: ");
                 final Spinner spinnerStart = new Spinner(context);
@@ -122,13 +141,14 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
                 final EditText titleText = new EditText(context);
                 titleText.setHint("제목");
                 titleText.setText(list.get(position).getTitle());
+                titleText.setPadding(10, 0, 10, 0);
                 final EditText contentText = new EditText(context);
                 contentText.setHint("내용");
                 contentText.setText(list.get(position).getContent());
+                contentText.setPadding(10, 0, 10, 0);
                 layout.addView(layoutTime);
                 layout.addView(titleText);
                 layout.addView(contentText);
-                final String date = list.get(position).getDate();
                 StringTokenizer tokens = new StringTokenizer(list.get(position).getTime(), "-");
                 String token = tokens.nextToken();
                 Log.d("token", token);
@@ -205,7 +225,7 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
                     }
                 });
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-                dialog.setTitle(date + " (수정)").setView(layout).setPositiveButton("등록", new DialogInterface.OnClickListener() {
+                dialog.setCustomTitle(titleLayout).setView(layout).setPositiveButton("등록", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         DBHelper dbHelper = new DBHelper(context, MyUserData.getInstance().getNickname(), null, 1);
@@ -262,11 +282,15 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                view = v;
-                LinearLayout layout = new LinearLayout(context);
-                layout.setOrientation(LinearLayout.VERTICAL);
+                final LinearLayout layout = new LinearLayout(context);
+                layout.setOrientation(LinearLayout.HORIZONTAL);
+                layout.setGravity(Gravity.CENTER);
+                final TextView title = new TextView(context);
+                title.setText("삭제하시겠습니까?");
+                title.setTextSize(24);
+                layout.addView(title);
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-                dialog.setTitle("삭제하시겠습니까?").setView(layout).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                dialog.setView(layout).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         DBHelper dbHelper = new DBHelper(context, MyUserData.getInstance().getNickname(), null, 1);
@@ -326,6 +350,12 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         CalendarRequest cr = new CalendarRequest(myCalendar, "new", responseListener);
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(cr);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull RecyclerViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        prePosition = -1;
     }
 
     void deleteRequest(MyCalendar myCalendar) {

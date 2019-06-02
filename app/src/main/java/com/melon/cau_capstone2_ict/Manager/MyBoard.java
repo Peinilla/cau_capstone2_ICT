@@ -1,11 +1,13 @@
 package com.melon.cau_capstone2_ict.Manager;
 
 import android.graphics.drawable.Drawable;
+import android.widget.ImageButton;
 
 import java.io.Serializable;
 
 public class MyBoard implements Serializable {
     private Drawable icon;
+    private ImageButton rice;
     private String title;
     private String writer;
     private String date;

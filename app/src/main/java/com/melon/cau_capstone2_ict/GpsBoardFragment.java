@@ -182,8 +182,8 @@ public class GpsBoardFragment extends Fragment {
                         if(token.equals("밥파티")) {
                             m.setType(token);
                             if(tokens.hasMoreElements()) {
-                                token = "[밥파티] ";
-                                token += tokens.nextToken();
+//                                token = "[밥파티] ";
+                                token = tokens.nextToken();
                                 for (; tokens.hasMoreElements(); )
                                     token += "|" + tokens.nextToken();
                             }

@@ -35,4 +35,5 @@
     <color name="purple">#9C27B0</color>
     <color name="select_color">#8AD1C9</color>
     <color name="go_back">#C4C4C4</color>
+    <color name="yellow_transparent">#80FFEB3B</color>
 </resources>

@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.melon.cau_capstone2_ict.Manager.CalendarRequest;
 import com.melon.cau_capstone2_ict.Manager.DBHelper;
 import com.melon.cau_capstone2_ict.Manager.FragmentAdapter;
@@ -52,20 +54,21 @@ import com.melon.cau_capstone2_ict.widget.CalendarView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.StringTokenizer;
 
 public class TabFragment_calendar extends Fragment implements CalendarFragment.OnFragmentListener {
     private String userId;
     private String date;
     private String year, month;
-    boolean init = false;
-
     private Switch mSwitch;
 
     private RecyclerView myRecyclerView;
@@ -79,6 +82,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     private TextView textMonthOfYear;
     private FragmentAdapter fragmentAdapter;
 
+    private FloatingActionsMenu fab;
     private FloatingActionButton fab_add;
     private FloatingActionButton fab_reload;
     private FrameLayout frameLayout;
@@ -115,6 +119,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         textDate = (TextView) rootView.findViewById(R.id.text_calendar_date);
         textMonthOfYear = (TextView) rootView.findViewById(R.id.text_calendar_title);
 
+        fab = (FloatingActionsMenu) rootView.findViewById(R.id.fab_calendar);
         fab_add = (FloatingActionButton) rootView.findViewById(R.id.button_calendar_add);
         fab_reload = (FloatingActionButton) rootView.findViewById(R.id.button_calendar_reload);
         frameLayout = (FrameLayout) rootView.findViewById(R.id.calendar_board_container);
@@ -210,10 +215,18 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     }
 
     public void addCalendar() {
+        final LinearLayout titleLayout = new LinearLayout(getContext());
+        titleLayout.setGravity(Gravity.CENTER);
+        titleLayout.setOrientation(LinearLayout.HORIZONTAL);
+        final TextView title = new TextView(getContext());
+        title.setText(date);
+        title.setTextSize(24);
+        titleLayout.addView(title);
         LinearLayout layout = new LinearLayout(getContext());
         layout.setOrientation(LinearLayout.VERTICAL);
         final LinearLayout layoutTime = new LinearLayout(getContext());
         layoutTime.setOrientation(LinearLayout.HORIZONTAL);
+        layoutTime.setGravity(Gravity.CENTER);
         final TextView timeText = new TextView(getContext());
         timeText.setText("시간: ");
         final Spinner spinnerStart = new Spinner(getContext());
@@ -234,8 +247,10 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         layoutTime.addView(spinnerColor);
         final EditText titleText = new EditText(getContext());
         titleText.setHint("제목");
+        titleText.setPadding(10, 0, 10, 0);
         final EditText contentText = new EditText(getContext());
         contentText.setHint("내용");
+        contentText.setPadding(10, 0, 10, 0);
         layout.addView(layoutTime);
         layout.addView(titleText);
         layout.addView(contentText);
@@ -288,7 +303,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
             }
         });
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-        dialog.setTitle(date).setView(layout).setPositiveButton("등록", new DialogInterface.OnClickListener() {
+        dialog.setCustomTitle(titleLayout).setView(layout).setPositiveButton("등록", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String writer = MyUserData.getInstance().getNickname();
@@ -634,67 +649,4 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                 break;
         }
     }
-
-//    public class MyCustomAdapter extends ArrayAdapter<String> {
-//
-//        public MyCustomAdapter(Context context, int textViewResourceId, String[] objects) {
-//            super(context, textViewResourceId, objects);
-//        }
-//
-//        @Override
-//        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-//            return getCustomView(position, convertView, parent);
-//        }
-//
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//            return getCustomView(position, convertView, parent);
-//        }
-//
-//        public View getCustomView(int position, View convertView, ViewGroup parent) {
-//            LayoutInflater inflater = getLayoutInflater();
-//            View row = inflater.inflate(R.layout.color_row, parent, false);
-//            ImageView label = (ImageView) row.findViewById(R.id.image_color);
-//
-//            switch (position) {
-//                case 0:
-//                    label.setImageResource(R.drawable.black);
-//                    break;
-//                case 1:
-//                    label.setImageResource(R.drawable.gray);
-//                    break;
-//                case 2:
-//                    label.setImageResource(R.drawable.white);
-//                    break;
-//                case 3:
-//                    label.setImageResource(R.drawable.blue);
-//                    break;
-//                case 4:
-//                    label.setImageResource(R.drawable.l_blue);
-//                    break;
-//                case 5:
-//                    label.setImageResource(R.drawable.green);
-//                    break;
-//                case 6:
-//                    label.setImageResource(R.drawable.l_green);
-//                    break;
-//                case 7:
-//                    label.setImageResource(R.drawable.red);
-//                    break;
-//                case 8:
-//                    label.setImageResource(R.drawable.pink);
-//                    break;
-//                case 9:
-//                    label.setImageResource(R.drawable.orange);
-//                    break;
-//                case 10:
-//                    label.setImageResource(R.drawable.yellow);
-//                    break;
-//                case 11:
-//                    label.setImageResource(R.drawable.purple);
-//                    break;
-//            }
-//            return row;
-//        }
-//    }
 }

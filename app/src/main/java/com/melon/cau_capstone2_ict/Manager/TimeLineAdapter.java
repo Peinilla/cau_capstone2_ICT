@@ -72,6 +72,11 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
         holder.date.setText(list.get(position).getDate());
         holder.time.setText(list.get(position).getTime());
         holder.content.setText(list.get(position).getContent());
+        if(position % 2 == 0){
+            holder.itemView.setBackgroundResource(R.color.yellow_transparent);
+        }else{
+            holder.itemView.setBackgroundResource(R.color.white_pressed);
+        }
 
         holder.changeVisibility(selectedItems.get(position));
 
@@ -95,6 +100,12 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.Recycl
                 prePosition = position;
             }
         });
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull TimeLineAdapter.RecyclerViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        prePosition = -1;
     }
 
     // 뷰홀더 클래스

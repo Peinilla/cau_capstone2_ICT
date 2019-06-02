@@ -14,12 +14,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.melon.cau_capstone2_ict.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Observable;
 
 public class CalendarItemView extends View {
 
@@ -158,8 +160,6 @@ public class CalendarItemView extends View {
                 for(int i = 0; i < color.size(); i++) {
                     if(i == 3)
                         break;
-//                    RectF rect = new RectF(xPos - (dp1 * 20), canvas.getHeight() / 2 - (dp1 * 10) + (i * 15) + 25,
-//                                xPos + (dp1 * 20), canvas.getHeight() / 2 - (dp1 * 16) + (i * 15) + 25);
                     RectF rect = new RectF((float) (xPos - (canvas.getWidth() / 2) * 0.5),
                             (float) (yPos - (canvas.getHeight() / 2) * 0.1 + (i * canvas.getHeight() / 2 * 0.3)),
                             (float) (xPos + (canvas.getWidth() / 2) * 0.5),
@@ -207,7 +207,6 @@ public class CalendarItemView extends View {
                 if (getIsSelected()) {
                     if (getIsSameDay(todayMillis, (long) tagView.getTag())) {
                         canvas.drawRect(rectF, mPaintBackgroundSelected);
-//                        canvas.drawRoundRect(rectF, RADIUS, RADIUS, mPaintBackgroundSelected);
                     }
                 }
                 canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos - 30, mPaintTextDate);

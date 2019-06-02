@@ -31,6 +31,7 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
     String writer;
 
     ImageButton joinButton;
+    ImageButton riceImage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,14 +46,19 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         dateView = rootView.findViewById(R.id.board_date);
         writerView = rootView.findViewById(R.id.board_writer);
         joinButton = rootView.findViewById(R.id.button_join);
+        riceImage = rootView.findViewById(R.id.image_rice);
         view = rootView.findViewById(R.id.viewProfile);
         ImageButton btn = (ImageButton) rootView.findViewById(R.id.board_back);
         frameLayout = (FrameLayout) rootView.findViewById(R.id.board_container);
 
-        if (!m.getType().equals("밥파티"))
+        if (!m.getType().equals("밥파티")) {
+            riceImage.setVisibility(View.GONE);
             joinButton.setVisibility(View.GONE);
-        else
+        }
+        else {
+            riceImage.setVisibility(View.VISIBLE);
             joinButton.setVisibility(View.VISIBLE);
+        }
 
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
