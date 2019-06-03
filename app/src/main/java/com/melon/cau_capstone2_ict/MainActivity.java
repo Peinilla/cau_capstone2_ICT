@@ -17,7 +17,10 @@ import com.melon.cau_capstone2_ict.Manager.BuildingManager;
 import com.melon.cau_capstone2_ict.Manager.ChatHubManager;
 import com.melon.cau_capstone2_ict.Manager.GpsManager;
 import com.melon.cau_capstone2_ict.Manager.MyPagerAdapter;
+import com.melon.cau_capstone2_ict.Manager.MyUserData;
 import com.melon.cau_capstone2_ict.Manager.OnBackManager;
+
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 
 public class MainActivity extends AppCompatActivity {
     private long pressedTime;
@@ -134,6 +137,19 @@ public class MainActivity extends AppCompatActivity {
         GpsManager.getInstance().Update();
         BuildingManager.getInstance().setData(this);
 
+        ChatHubManager.getInstance().connect();
+        ChatHubManager.getInstance().getHubProxy_bab().invoke("GetMyBopPartyID", MyUserData.getInstance().getId());
+        ChatHubManager.getInstance().getHubProxy_bab().on("onMyBopParty", new SubscriptionHandler1<String>() {
+                @Override
+                public void run(final String s) {
+                Log.d("Tag","기존 밥파티 ID : " +s );
+                MyUserData.getInstance().setBop(s);
+                if(!s.equals("-1")){
+                    MyUserData.getInstance().setBabPartyPosting(true);
+                }
+                ChatHubManager.getInstance().getHubProxy_bab().removeSubscription("onMyBopParty".toLowerCase());
+            }
+        }, String.class);
     }
 
     public interface OnBackPressedListener {
@@ -168,12 +184,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        //ChatHubManager.getInstance().disconnect();
         super.onPause();
     }
 
     @Override
     public void finish() {
+        if(!MyUserData.getInstance().isBabPartyPosting()) {
+            ChatHubManager.getInstance().getHubProxy_bab().invoke("LeaveBopParty", MyUserData.getInstance().getId());
+        }
+        ChatHubManager.getInstance().disconnect();
         super.finish();
     }
 

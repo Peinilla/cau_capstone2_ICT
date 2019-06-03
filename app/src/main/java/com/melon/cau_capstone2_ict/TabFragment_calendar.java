@@ -82,7 +82,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     private TextView textMonthOfYear;
     private FragmentAdapter fragmentAdapter;
 
-    private FloatingActionsMenu fab;
     private FloatingActionButton fab_add;
     private FloatingActionButton fab_reload;
     private FrameLayout frameLayout;
@@ -119,7 +118,7 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         textDate = (TextView) rootView.findViewById(R.id.text_calendar_date);
         textMonthOfYear = (TextView) rootView.findViewById(R.id.text_calendar_title);
 
-        fab = (FloatingActionsMenu) rootView.findViewById(R.id.fab_calendar);
+        //fab = (FloatingActionsMenu) rootView.findViewById(R.id.fab_calendar);
         fab_add = (FloatingActionButton) rootView.findViewById(R.id.button_calendar_add);
         fab_reload = (FloatingActionButton) rootView.findViewById(R.id.button_calendar_reload);
         frameLayout = (FrameLayout) rootView.findViewById(R.id.calendar_board_container);
@@ -247,10 +246,10 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         layoutTime.addView(spinnerColor);
         final EditText titleText = new EditText(getContext());
         titleText.setHint("제목");
-        titleText.setPadding(10, 0, 10, 0);
+        //titleText.setPadding(10, 0, 0, 0);
         final EditText contentText = new EditText(getContext());
         contentText.setHint("내용");
-        contentText.setPadding(10, 0, 10, 0);
+        //contentText.setPadding(10, 0, 0, 0);
         layout.addView(layoutTime);
         layout.addView(titleText);
         layout.addView(contentText);
@@ -441,7 +440,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         resizeHeight(view);
         setEvent();
     }
-
     public void resizeHeight(View rootView) {
         if (rootView.getHeight() < 1) {
             return;

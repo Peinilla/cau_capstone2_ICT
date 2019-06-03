@@ -51,7 +51,6 @@ public class TabFragment_profile extends Fragment {
     FloatingActionButton btn_nfc_Add;
     FloatingActionButton btn_recoFriend;
     FloatingActionButton btn_set;
-    FloatingActionButton btn_logout;
 
 
     SwipeRefreshLayout srl1;
@@ -77,7 +76,6 @@ public class TabFragment_profile extends Fragment {
         btn_nfc_Add = rootView.findViewById(R.id.button_nfc);
         btn_recoFriend = rootView.findViewById(R.id.button_reco);
         btn_set = rootView.findViewById(R.id.button_set);
-        btn_logout = rootView.findViewById(R.id.button_logout);
 
         idView.setText(MyUserData.getInstance().getNickname());
 
@@ -169,16 +167,6 @@ public class TabFragment_profile extends Fragment {
                 startActivity(intent);
             }
         });
-        btn_logout.setOnClickListener(new FloatingActionButton.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                ChatHubManager.getInstance().disconnect();
-                MyUserData.getInstance().clear();
-                startActivity(intent);
-                getActivity().finish();
-            }
-        });
         btn_recoFriend.setOnClickListener(new FloatingActionButton.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -245,17 +233,10 @@ public class TabFragment_profile extends Fragment {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.d("Tag", "친구대기 목록  : " + response);
-
                     friendRequestArray.clear();
-                    String res = response.substring(2,response.length()-2);
-                    res = res.replace("\"","");
-                    res = res.replace("\\","");
-                    String[] tmp = res.split(",");
-                    for(int inx = 0; inx < tmp.length; inx++) {
-                        if(!tmp[inx].equals("")) {
-                            friendRequestArray.add(tmp[inx]);
-                        }
+                    JSONArray array = new JSONArray(response);
+                    for(int inx = 0; inx < array.length(); inx++) {
+                        friendRequestArray.add(array.getString(inx));
                     }
                     friendRequest_adapter.notifyDataSetChanged();
                     friendRequestView.setAdapter(friendRequest_adapter);

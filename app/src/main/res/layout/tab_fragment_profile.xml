@@ -21,21 +21,19 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="프로필페이지"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
         android:id="@+id/profile_ID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_centerInParent="true"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:background="@drawable/com_facebook_tooltip_blue_background"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="15dp"
+        android:text="채팅용2"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/textView_friend"
@@ -90,18 +88,11 @@
         app:fab_expandDirection="up">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_colorNormal="@color/white"
-            app:fab_colorPressed="@color/white_pressed"
-            app:fab_title="Click to logout" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_colorNormal="@color/white"
+            app:fab_icon="@drawable/setting_40x40"
             app:fab_colorPressed="@color/white_pressed"
             app:fab_title="Click to set Profile" />
 
@@ -110,6 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_colorNormal="@color/white"
+            app:fab_icon="@drawable/userplus_40x40"
             app:fab_colorPressed="@color/white_pressed" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton

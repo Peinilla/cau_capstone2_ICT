@@ -1,6 +1,7 @@
 package com.melon.cau_capstone2_ict;
 
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,12 @@ public class profileViewActivity extends AppCompatActivity {
     String receiverNick;
     boolean isNFC;
     TextView idView;
+
+    TextView birthView;
+    TextView residendceView;
+    TextView hobbyView;
+    TextView majorView;
+
     Button btn_addFriend;
 
     @Override
@@ -42,13 +49,31 @@ public class profileViewActivity extends AppCompatActivity {
         isNFC = intent.getBooleanExtra("isNFC",false);
 
         idView = findViewById(R.id.profileview_ID);
+        birthView = findViewById(R.id.profileview_birth);
+        residendceView = findViewById(R.id.profileview_residence);
+        hobbyView = findViewById(R.id.profileview_hobby);
+        majorView = findViewById(R.id.profileview_dept);
+
         btn_addFriend = findViewById(R.id.profileview_addFriend);
         idView.setText(receiverNick);
 
-        if(isNFC){
-            btn_addFriend.setText("NFC 친구 신청");
-        }
+        getProfile();
 
+        if(MyUserData.getInstance().getFriendList().contains(receiverNick)){
+            if(isNFC){
+                btn_addFriend.setText("NFC 친구 신청");
+            }else{
+                btn_addFriend.setText("이미 친구입니다.");
+                btn_addFriend.setClickable(false);
+            }
+        }else{
+            if(isNFC){
+                AlertDialog dialog;
+                AlertDialog.Builder builder = new AlertDialog.Builder(profileViewActivity.this);
+                dialog = builder.setMessage("NFC 친구가 되기 전에 먼저 온라인친구가 되어야합니다.").setNegativeButton("확인", null).create();
+                dialog.show();
+            }
+        }
 
     }
 
@@ -128,12 +153,24 @@ public class profileViewActivity extends AppCompatActivity {
             return parameters;
         }
     }
-    public void getMyProfile(){
+    public void getProfile(){
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
+                    if(!jsonObject.getString("dateofbirth").equals("null")){
+                        birthView.setText(jsonObject.getString("dateofbirth"));
+                    }
+                    if(!jsonObject.getString("residence").equals("null")){
+                        residendceView.setText(jsonObject.getString("residence"));
+                    }
+                    if(!jsonObject.getString("major").equals("null")){
+                        majorView.setText(jsonObject.getString("major"));
+                    }
+                    if(!jsonObject.getString("hobby").equals("null")){
+                        hobbyView.setText(jsonObject.getString("hobby"));
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();

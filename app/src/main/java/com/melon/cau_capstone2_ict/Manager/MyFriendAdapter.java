@@ -20,11 +20,9 @@ public class MyFriendAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final Context context = parent.getContext();
 
-        // "listview_item" Layout을 inflate하여 convertView 참조 획득.
-        if (convertView == null) {
-            convertView = LayoutInflater.from(context).
+        convertView = LayoutInflater.from(context).
                     inflate(R.layout.listview_myfriend, parent, false);
-        }
+
 
         TextView nameView = convertView.findViewById(R.id.friend_name) ;
         ImageView nfcView = convertView.findViewById(R.id.friend_nfc);

@@ -15,12 +15,21 @@ public class MyUserData {
     private String birth = "";
     private String major = "";
     private String hobby = "";
-    private String Bop = "0";
+    private String Bop = "-1";
     private ArrayList<String> friendList;
+    private boolean isBabPartyPosting;
     private static MyUserData instance = null;
 
     private MyUserData(){
         friendList = new ArrayList<>();
+    }
+
+    public boolean isBabPartyPosting() {
+        return isBabPartyPosting;
+    }
+
+    public void setBabPartyPosting(boolean babPartyPosting) {
+        isBabPartyPosting = babPartyPosting;
     }
 
     public void clear(){
@@ -31,7 +40,7 @@ public class MyUserData {
         birth = "";
         major = "";
         hobby = "";
-        Bop = "0";
+        Bop = "-1";
     }
     public void clearFriendList(){
         friendList.clear();
@@ -94,7 +103,7 @@ public class MyUserData {
     public void setData(String id, String name){
         this.id = id;
         nickname = name;
-        Bop = "0";
+        Bop = "-1";
     }
     public void setLocation(Location location){
         this.location = location;

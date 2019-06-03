@@ -174,7 +174,7 @@ public class ProfileActvity extends AppCompatActivity {
                 }
             }
         };
-        String URL = "https://capston2webapp.azurewebsites.net/api/UserInfo/"+ MyUserData.getInstance().getId();
+        String URL = "https://capston2webapp.azurewebsites.net/api/UserInfo/"+ MyUserData.getInstance().getNickname();
         StringRequest getBoardRequest = new StringRequest(Request.Method.GET,URL,responseListener,null);
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(getBoardRequest);

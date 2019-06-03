@@ -100,14 +100,12 @@ public class CalendarView extends ViewGroup {
             calendar = Calendar.getInstance();
             calendar.setTimeInMillis(time);
 
-
-
             for (int i = 0; i < pager.getChildCount(); i++) {
                 for (int j = 7; j < getChildCount(); j++) {
                     child = (CalendarItemView) ((CalendarView) pager.getChildAt(i)).getChildAt(j);
 
                     if (child != null && child.getIsSameDay((long) child.getTag(), (long) tag.getTag())) {
-                        fab.collapse();
+                        //fab.collapse();
                         child.invalidate();
                         child = null;
                         break;
@@ -122,7 +120,9 @@ public class CalendarView extends ViewGroup {
         }
 
         long time = (long) view.getTag();
-        fab.expand();
+        if(!fab.isExpanded()) {
+            fab.expand();
+        }
         calendar = Calendar.getInstance();
         calendar.setTimeInMillis(time);
         pager.setTag(view);

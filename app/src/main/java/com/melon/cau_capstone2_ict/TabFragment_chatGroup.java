@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.melon.cau_capstone2_ict.Manager.ChatHubManager;
+import com.melon.cau_capstone2_ict.Manager.MyChat;
 import com.melon.cau_capstone2_ict.Manager.MyChatAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 import com.melon.cau_capstone2_ict.Manager.OnBackManager;
@@ -85,6 +86,18 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
             public void onClick(View v) {
                 ChatHubManager.getInstance().group_send(myMessage.getText().toString());
                 myMessage.setText("");
+            }
+        });
+
+        chatList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MyChat m = (MyChat) parent.getItemAtPosition(position);
+                if(m.getType()!=0 && m.getType()!=1) {
+                    Intent intent = new Intent(getActivity(), profileViewActivity.class);
+                    intent.putExtra("id", m.getWriter());
+                    startActivity(intent);
+                }
             }
         });
 

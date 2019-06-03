@@ -108,8 +108,11 @@ public class LoginActivity extends AppCompatActivity {
         String pass = login_pass.getText().toString();
 
         if(!isProceeding) {
-            loginAction(id, pass);
+            if(!id.equals("") && !pass.equals("")) {
+                loginAction(id, pass);
+            }
         }
+
     }
 
     public void onClickSignUp(View v){
@@ -157,6 +160,7 @@ public class LoginActivity extends AppCompatActivity {
         isProceeding = true;
         LoginRequest loginRequest = new LoginRequest(id, password, responseListener);
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+        loginRequest.setRetryPolicy(new DefaultRetryPolicy(20000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(loginRequest);
 
     }

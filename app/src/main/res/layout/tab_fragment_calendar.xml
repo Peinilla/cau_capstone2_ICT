@@ -23,10 +23,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/my_calendar"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    xmlns:android="http://schemas.android.com/apk/res/android"
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -34,6 +34,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:gravity="center"
                         android:text="학교 현재 날씨"
                         android:textSize="20sp"
@@ -45,32 +46,32 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:paddingStart="10dp"
                             android:id="@+id/imageView_wfKor1"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:paddingStart="10dp" />
 
                         <LinearLayout
-                            android:paddingStart="10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:paddingStart="10dp">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="날씨: "/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="날씨: " />
 
-                            <TextView
-                                android:id="@+id/textView_wfKor1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="날씨"/>
+                                <TextView
+                                    android:id="@+id/textView_wfKor1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="날씨" />
 
                             </LinearLayout>
 
@@ -82,7 +83,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="온도: "/>
+                                    android:text="온도: " />
 
                                 <TextView
                                     android:id="@+id/textView_temp1"
@@ -100,7 +101,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="강수확률: "/>
+                                    android:text="강수확률: " />
 
                                 <TextView
                                     android:id="@+id/textView_pop1"
@@ -112,13 +113,13 @@
                                     android:id="@+id/linear_pty1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:paddingLeft="8dp"
-                                    android:orientation="horizontal">
+                                    android:orientation="horizontal"
+                                    android:paddingLeft="8dp">
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="강수량: "/>
+                                        android:text="강수량: " />
 
                                     <TextView
                                         android:id="@+id/textView_pty1"
@@ -138,11 +139,11 @@
 
                 <TextView
                     android:id="@+id/text_calendar_title"
-                    android:text=""
-                    android:textSize="20sp"
-                    android:gravity="center_horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text=""
+                    android:textSize="20sp" />
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/calendar_pager"
@@ -152,11 +153,11 @@
 
                 <TextView
                     android:id="@+id/text_calendar_date"
-                    android:text=""
-                    android:textSize="20sp"
-                    android:gravity="center_horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text=""
+                    android:textSize="20sp" />
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -266,31 +267,5 @@
         android:visibility="gone">
 
     </FrameLayout>
-
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/floatingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginBottom="60dp"
-        app:fab_addButtonColorNormal="@color/white"
-        app:fab_addButtonColorPressed="@color/white_pressed"
-        app:fab_addButtonPlusIconColor="@color/half_black"
-        app:fab_addButtonSize="mini"
-        app:fab_expandDirection="left">
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_calendaradd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_colorNormal="@color/white"
-            app:fab_colorPressed="@color/white_pressed"
-            app:fab_icon="@drawable/search"
-            app:fab_title="Set bottom menu enabled/disabled" />
-
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -29,6 +29,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.melon.cau_capstone2_ict.Manager.ChatHubManager;
 import com.melon.cau_capstone2_ict.Manager.MyBoard;
 import com.melon.cau_capstone2_ict.Manager.MyReply;
 import com.melon.cau_capstone2_ict.Manager.MyReplyAdapter;
@@ -40,6 +42,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 
 public class TabFragment_boardView extends Fragment implements MainActivity.OnBackPressedListener {
 
@@ -60,11 +64,15 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
     ImageButton btn_back;
     ImageButton riceImage;
 
+    FloatingActionButton btn_delete;
+    FloatingActionButton btn_edit;
+
     SwipeRefreshLayout mSWL;
 
     MyBoard m;
     Handler mHandler = new Handler();
     boolean isPosting = false;
+    boolean isDeletAction = false;
     String index;
 
     @Override
@@ -79,6 +87,9 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         dateView = rootView.findViewById(R.id.board_date);
         writerView = rootView.findViewById(R.id.board_writer);
         view = rootView.findViewById(R.id.viewProfile);
+
+        btn_delete = rootView.findViewById(R.id.borad_view_delete);
+        btn_edit = rootView.findViewById(R.id.borad_view_edit);
 
         replyText = rootView.findViewById(R.id.board_reply_edit);
         btn_join = rootView.findViewById(R.id.button_join);
@@ -104,13 +115,64 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         btn_join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment childFragment = new TabFragment_chatGroup();
-                Bundle bundle = new Bundle(1);
-                bundle.putString("GroupID", (String) titleView.getText());
-                bundle.putInt("ContainerID",R.id.withbab_container);
-                childFragment.setArguments(bundle);
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.replace(R.id.withbab_container, childFragment).commit();
+                if(MyUserData.getInstance().getNickname().equals(m.getWriter())){
+                    Fragment childFragment = new TabFragment_chatBab();
+                    Bundle bundle = new Bundle(2);
+                    bundle.putString("GroupID", m.getWriter());
+                    bundle.putInt("ContainerID", R.id.withbab_container);
+                    childFragment.setArguments(bundle);
+                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                    transaction.replace(R.id.withbab_container, childFragment).commit();
+                }
+                else if(MyUserData.getInstance().getBop().equals("-1")) {
+                    Fragment childFragment = new TabFragment_chatBab();
+                    Bundle bundle = new Bundle(2);
+                    bundle.putString("GroupID", m.getWriter());
+                    bundle.putInt("ContainerID", R.id.withbab_container);
+                    childFragment.setArguments(bundle);
+                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                    transaction.replace(R.id.withbab_container, childFragment).commit();
+                }else if(MyUserData.getInstance().isBabPartyPosting()){
+                    AlertDialog alert = new AlertDialog.Builder(getActivity())
+                            .setMessage("이미 밥파티를 모집중입니다.\n새로운 밥파티를 위해서는 기존 게시글을 삭제해주세요.")
+                            .setCancelable(true)
+                            .setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .create();
+                    alert.show();
+                }
+                else{
+                    AlertDialog alert = new AlertDialog.Builder(getActivity())
+                            .setMessage("이미 밥파티에 참여중입니다.\n기존에 참여하시던 밥파티를 나가시겠습니까?")
+                            .setCancelable(true)
+                            .setPositiveButton("나가기",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            ChatHubManager.getInstance().getHubProxy_bab().invoke("LeaveBopParty", MyUserData.getInstance().getId());
+                                            ChatHubManager.getInstance().getHubProxy_bab().on("onBopPartyLeave", new SubscriptionHandler1<String>() {
+                                                @Override
+                                                public void run(final String s) {
+                                                    Log.d("Tag","밥파티 나가기 성공");
+                                                    MyUserData.getInstance().setBop("-1");
+                                                    ChatHubManager.getInstance().getHubProxy_bab().removeSubscription("updategroupchatbyindex");
+                                                    ChatHubManager.getInstance().getHubProxy_bab().removeSubscription("onBopPartyMsgReceived".toLowerCase());
+                                                    ChatHubManager.getInstance().getHubProxy_bab().removeSubscription("onBopPartyLeave".toLowerCase());
+
+                                                }
+                                            }, String.class);                                        }
+                                    })
+                            .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .create();
+                    alert.show();
+                }
             }
         });
 
@@ -130,16 +192,19 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), profileViewActivity.class);
-                intent.putExtra("id", writer);
-                startActivity(intent);
+                if(!writer.equals(MyUserData.getInstance().getNickname())) {
+                    Intent intent = new Intent(getActivity(), profileViewActivity.class);
+                    intent.putExtra("id", writer);
+                    startActivity(intent);
+                }
             }
         });
         btn_postReply.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isPosting) {
-                    postReply(replyText.getText().toString());
+                String text = replyText.getText().toString();
+                if(!isPosting && !text.equals("")) {
+                    postReply(text);
                 }
             }
         });
@@ -171,7 +236,7 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MyReply reply = new MyReply();
                 reply = (MyReply) parent.getItemAtPosition(position);
-                if(reply.getType() == 0){
+                if(reply.getType() == 0 && !isDeletAction){
                     index = reply.getIndex();
                     AlertDialog alert = new AlertDialog.Builder(getActivity())
                             .setMessage("댓글을 삭제하시겠습니까?")
@@ -180,6 +245,7 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             deleteReply();
+
                                         }
                                     })
                             .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -194,6 +260,43 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
             }
         });
 
+        btn_delete.setOnClickListener(new FloatingActionButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if(MyUserData.getInstance().getNickname().equals(m.getWriter())) {
+                    AlertDialog alert = new AlertDialog.Builder(getActivity())
+                            .setMessage("게시글을 삭제하시겠습니까?")
+                            .setCancelable(true)
+                            .setPositiveButton("확인",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            deletePost();
+                                        }
+                                    })
+                            .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .create();
+                    alert.show();
+                }else{
+                    AlertDialog dialog;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    dialog = builder.setMessage("본인이 작성한 게시글만 삭제할 수 있습니다.").setNegativeButton("확인", null).create();
+                    dialog.show();
+                }
+            }
+        });
+        btn_edit.setOnClickListener(new FloatingActionButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.d("Tag","수정 클릭");
+
+            }
+        });
+
         getReply();
         replyList.setSelection(0);
 
@@ -205,7 +308,7 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
     }
     void postReply(String text){
         isPosting = true;
-
+        replyText.setText("");
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -215,7 +318,6 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            replyText.setText("");
                             getReply();
                         }
                     });
@@ -275,6 +377,11 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
                     adapter.notifyDataSetChanged();
                     replyList.setAdapter(adapter);
                     replyList.setSelection(adapter.getCount()-1);
+
+                    if(isDeletAction) {
+                        isDeletAction = false;
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -288,11 +395,12 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
     }
 
     void deleteReply(){
+        isDeletAction = true;
+
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -331,6 +439,54 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
             return parameters;
         }
     }
+
+    void deletePost(){
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.d("Tag", "deletePost check : " + response);
+                    if(m.isBabtype()){
+                        ChatHubManager.getInstance().getHubProxy_bab().invoke("DeleteBopParty",MyUserData.getInstance().getId());
+                        MyUserData.getInstance().setBabPartyPosting(false);
+                        MyUserData.getInstance().setBop("-1");
+                    }
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            onBack();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        String URL = "https://capston2webapp.azurewebsites.net/api/posts/delete";
+        deletePostRequest req = new deletePostRequest(URL,responseListener);
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        queue.add(req);
+    }
+    class deletePostRequest extends StringRequest {
+        private Map<String, String> parameters;
+
+        public deletePostRequest(String URL, Response.Listener<String> listener) {
+            super(Method.POST, URL, listener, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("Tag", "deletePostRequest error : " + error);
+                }
+            });
+            parameters = new HashMap<>();
+            parameters.put("userId", MyUserData.getInstance().getId());
+            parameters.put("postId", m.getPostId());
+        }
+        @Override
+        public Map<String, String> getParams() {
+            return parameters;
+        }
+    }
+
 
     void goBack(){
         FragmentManager fm = getFragmentManager();

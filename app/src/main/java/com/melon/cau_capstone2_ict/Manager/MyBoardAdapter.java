@@ -34,15 +34,11 @@ public class MyBoardAdapter extends BaseAdapter {
         final int pos = position;
         final Context context = parent.getContext();
 
-        if (convertView == null) {
-            convertView = LayoutInflater.from(context).
-                    inflate(R.layout.listview_myboard, parent, false);
-        }
+        convertView = LayoutInflater.from(context).inflate(R.layout.listview_myboard, parent, false);
+
 
         TextView titleView = (TextView) convertView.findViewById(R.id.title) ;
         TextView writerView = (TextView) convertView.findViewById(R.id.chat_writer) ;
-        TextView commentView = (TextView) convertView.findViewById(R.id.comment) ;
-        TextView recommendView = (TextView) convertView.findViewById(R.id.recommend) ;
         TextView dateView = (TextView) convertView.findViewById(R.id.date) ;
         ImageButton riceView = (ImageButton) convertView.findViewById(R.id.board_babImage);
 
@@ -59,8 +55,6 @@ public class MyBoardAdapter extends BaseAdapter {
 
         titleView.setText(myBoard_item.getTitle());
         writerView.setText(myBoard_item.getWriter());
-        commentView.setText("("+myBoard_item.getNumComment()+")");
-        recommendView.setText("("+myBoard_item.getNumRecommend()+")");
         dateView.setText(myBoard_item.getDate());
 
         return convertView;

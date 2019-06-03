@@ -56,42 +56,14 @@
         android:text="글쓴이123" />
 
     <TextView
-        android:id="@+id/comment"
+        android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_title"
+        android:layout_alignBottom="@+id/chat_writer"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/chat_writer"
-        android:layout_weight="1"
-        android:gravity="left|center"
-        android:text="(댓글수)"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/recommend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_title"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/comment"
-        android:layout_weight="1"
-        android:gravity="left|center"
-        android:text="(추천수)"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_title"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/recommend"
         android:layout_weight="1"
         android:gravity="left|center"
         android:text="19.04.07"

@@ -61,7 +61,7 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
         ImageButton write = (ImageButton)rootView.findViewById(R.id.board_write);
 
         if(!isGPS){
-            babCheck.setVisibility(View.GONE);
+            //babCheck.setVisibility(View.GONE);
         }
 
         btn.setOnClickListener(new Button.OnClickListener(){
@@ -131,17 +131,35 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    if(jsonObject.getString("reason").equals("DUPLICATE REQUEST")){
-                        setBabParyError();
-                    }
+
                     if(babCheck.isChecked()){
-                        ChatHubManager.getInstance().getHubProxy_bab().invoke("CreateBopChat",MyUserData.getInstance().getId());
-                        ChatHubManager.getInstance().getHubProxy().on("onBopChatCreated", new SubscriptionHandler1<String>() {
-                            @Override
-                            public void run(final String s) {
-                                Log.d("Tag","밥파티 성공 : " + s);
-                            }
-                        },String.class);
+                        if(jsonObject.getString("reason").equals("DUPLICATE REQUEST")){
+                            setBabParyError();
+                        }
+                        else {
+                            Log.d("Tag", "밥파티 생성");
+                            ChatHubManager.getInstance().getHubProxy_bab().invoke("CreateBopChat", MyUserData.getInstance().getId());
+
+                            ChatHubManager.getInstance().getHubProxy_bab().on("onBopChatCreated", new SubscriptionHandler1<String>() {
+                                @Override
+                                public void run(final String s) {
+                                    Log.d("Tag", "밥파티 성공 : " + s);
+                                    MyUserData.getInstance().setBop("s");
+                                    MyUserData.getInstance().setBabPartyPosting(true);
+                                    ChatHubManager.getInstance().getHubProxy_bab().invoke("GetMyBopPartyID", MyUserData.getInstance().getId());
+                                    ChatHubManager.getInstance().getHubProxy_bab().on("onMyBopParty", new SubscriptionHandler1<String>() {
+                                        @Override
+                                        public void run(final String s) {
+                                            Log.d("Tag","지금 밥파티 ID : " +s );
+                                            MyUserData.getInstance().setBop(s);
+                                            ChatHubManager.getInstance().getHubProxy_bab().removeSubscription("onMyBopParty".toLowerCase());
+                                        }
+                                    }, String.class);
+                                    ChatHubManager.getInstance().getHubProxy_bab().removeSubscription("onbopchatcreated");
+
+                                }
+                            }, String.class);
+                        }
                     }
 
                     onBack();

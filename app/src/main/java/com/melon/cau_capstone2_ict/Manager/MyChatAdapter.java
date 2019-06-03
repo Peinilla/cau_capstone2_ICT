@@ -167,11 +167,9 @@ public class MyChatAdapter extends BaseAdapter {
         m.setText(text);
         m.setDate(date.substring(0,date.length()-3));
 
-        Log.d("Tag","text : " + text);
         int size = listViewItemList.size();
         if(size == 0){
             listViewItemList.add(m);
-            Log.d("Tag","input text : " + m.getText());
 
             return;
         }
@@ -185,7 +183,6 @@ public class MyChatAdapter extends BaseAdapter {
                 }
             }
         }
-        Log.d("Tag","input text : " + m.getText());
 
         listViewItemList.add(m);
     }

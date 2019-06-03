@@ -1,15 +1,19 @@
 package com.melon.cau_capstone2_ict;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -17,6 +21,7 @@ import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.melon.cau_capstone2_ict.Manager.ChatHubManager;
+import com.melon.cau_capstone2_ict.Manager.MyChat;
 import com.melon.cau_capstone2_ict.Manager.MyChatAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 import com.melon.cau_capstone2_ict.Manager.OnBackManager;
@@ -59,7 +64,7 @@ public class TabFragment_chatBab extends Fragment implements MainActivity.OnBack
         chatList = (ListView) rootView.findViewById(R.id.chat_list);
 
 
-        chatTitle.setText(group + " (그룹)");
+        chatTitle.setText(group + "의 밥파티");
 
         adapter = new MyChatAdapter();
 
@@ -87,7 +92,59 @@ public class TabFragment_chatBab extends Fragment implements MainActivity.OnBack
             }
         });
 
-        ChatHubManager.getInstance().getHubProxygroup().on("onBopPartyMsgReceived", new SubscriptionHandler1<String>() {
+        chatList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MyChat m = (MyChat) parent.getItemAtPosition(position);
+                if(m.getType()!=0 && m.getType()!=1) {
+                    Intent intent = new Intent(getActivity(), profileViewActivity.class);
+                    intent.putExtra("id", m.getWriter());
+                    startActivity(intent);
+                }
+            }
+        });
+
+        if(!MyUserData.getInstance().getNickname().equals(group)) {
+            ChatHubManager.getInstance().getHubProxy_bab().invoke("JoinBopParty", MyUserData.getInstance().getId(), group);
+            ChatHubManager.getInstance().getHubProxy_bab().on("onJoinBopPartyFail", new SubscriptionHandler1<String>() {
+                @Override
+                public void run(final String s) {
+                    AlertDialog alert = new AlertDialog.Builder(getActivity())
+                            .setMessage("오류 :: 다시 시도해주세요")
+                            .setCancelable(false)
+                            .setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    onBack();
+                                }
+                            })
+                            .create();
+                    alert.show();
+                    Log.d("Tag","onJoinBopPartyFail check");
+
+                    ChatHubManager.getInstance().getHubProxy_bab().removeSubscription("onjoinboppartyfail");
+                }
+            }, String.class);
+            ChatHubManager.getInstance().getHubProxy_bab().on("onJoinBopParty", new SubscriptionHandler1<String>() {
+                @Override
+                public void run(final String s) {
+                    Log.d("Tag","check 밥파티 ID : " +s );
+                    MyUserData.getInstance().setBop(s);
+                    action();
+                    ChatHubManager.getInstance().getHubProxy_bab().removeSubscription("onJoinBopParty".toLowerCase());
+                }
+            }, String.class);
+        }
+        else{
+            action();
+        }
+
+        return  rootView;
+
+    }
+
+    void action(){
+        ChatHubManager.getInstance().getHubProxy_bab().on("onBopPartyMsgReceived", new SubscriptionHandler1<String>() {
             @Override
             public void run(final String s) {
                 try {
@@ -108,13 +165,12 @@ public class TabFragment_chatBab extends Fragment implements MainActivity.OnBack
             }
         },String.class);
 
-        ChatHubManager.getInstance().getHubProxy_bab().invoke("GetMsgByIndex", MyUserData.getInstance().getId(), group, 0);
-        ChatHubManager.getInstance().getHubProxy_bab().on("updateGroupChatByIndex", new SubscriptionHandler2<String, String>() {
+        ChatHubManager.getInstance().getHubProxy_bab().invoke("GetMsgByIndex", MyUserData.getInstance().getId(), 0);
+        ChatHubManager.getInstance().getHubProxy_bab().on("updateGroupChatByIndex", new SubscriptionHandler1<String>() {
             @Override
-            public void run(String s1, String s2) {
+            public void run(String s1) {
                 try {
-                    Log.d("Tag", "getChatLog : " + s2);
-                    JSONArray array = new JSONArray(s2);
+                    JSONArray array = new JSONArray(s1);
 
                     for(int inx = 0; inx < array.length(); inx++) {
                         JSONObject jsonResponse = array.getJSONObject(inx);
@@ -135,12 +191,8 @@ public class TabFragment_chatBab extends Fragment implements MainActivity.OnBack
                     e.printStackTrace();
                 }
             }
-        },String.class, String.class);
-
-        return  rootView;
-
+        },String.class);
     }
-
     void getMessage(String s, String s2){
         if(!MyUserData.getInstance().getNickname().equals(s2)) {
             adapter.addItem(2, s, s2);

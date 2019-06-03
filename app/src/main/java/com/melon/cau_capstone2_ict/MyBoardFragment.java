@@ -103,7 +103,6 @@ public class MyBoardFragment extends Fragment implements MainActivity.OnBackPres
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Tag","클릭 : " + position);
                 MyBoard m = new MyBoard();
                 m = (MyBoard) parent.getItemAtPosition(position);
                 Fragment childFragment = new TabFragment_boardView();

@@ -59,14 +59,6 @@
         app:fab_expandDirection="up">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_remove"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_colorNormal="@color/white"
-            app:fab_colorPressed="@color/white_pressed"
-            app:fab_title="Click to remove" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_write"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
