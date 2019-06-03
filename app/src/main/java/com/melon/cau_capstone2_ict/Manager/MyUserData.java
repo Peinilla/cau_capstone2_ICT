@@ -2,6 +2,8 @@ package com.melon.cau_capstone2_ict.Manager;
 
 import android.location.Location;
 
+import java.util.ArrayList;
+
 public class MyUserData {
     private String nickname = "테스트용";
     private String id = "debugUser";
@@ -15,7 +17,32 @@ public class MyUserData {
     private String major = "";
     private String hobby = "";
     private String Bop = "0";
+    private ArrayList<String> friendList;
     private static MyUserData instance = null;
+
+    private MyUserData(){
+        friendList = new ArrayList<>();
+    }
+
+    public void clear(){
+        currentBuilding = "";
+        prevBuilding = "";
+        nowimTag = "";
+        email = "";
+        birth = "";
+        major = "";
+        hobby = "";
+        Bop = "0";
+    }
+    public void clearFriendList(){
+        friendList.clear();
+    }
+    public void addFriend(String f){
+        friendList.add(f);
+    }
+    public ArrayList getFriendList(){
+        return friendList;
+    }
 
     public void setNowimTag(String nowimTag) {
         this.nowimTag = nowimTag;

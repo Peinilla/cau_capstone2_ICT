@@ -23,6 +23,7 @@ import com.melon.cau_capstone2_ict.Manager.ChatHubManager;
 import com.melon.cau_capstone2_ict.Manager.MyChat;
 import com.melon.cau_capstone2_ict.Manager.MyChatAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
+import com.melon.cau_capstone2_ict.Manager.OnBackManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,6 +33,7 @@ import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
 
 
 public class TabFragment_chat extends Fragment implements MainActivity.OnBackPressedListener {
+    Context mContext;
     MyChatAdapter adapter;
 
     FloatingActionsMenu fam;
@@ -132,6 +134,7 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            adapter.updateDate();
                             adapter.notifyDataSetChanged();
                             chatList.setAdapter(adapter);
                             chatList.setSelection(adapter.getCount() - 1);
@@ -155,6 +158,7 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
         }else{
             adapter.addItem(2, s, to);
         }
+        adapter.updateDate();
         adapter.notifyDataSetChanged();
         chatList.setAdapter(adapter);
         chatList.setSelection(adapter.getCount() - 1);
@@ -176,13 +180,24 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
     @Override
     public void onBack() {
         MainActivity activity = (MainActivity)getActivity();
-        activity.setOnBackPressedListener(null);
+        OnBackManager.getInstance().removeOnBackList();
+        Object o = OnBackManager.getInstance().getOnBackList();
+        activity.setOnBackPressedListener((MainActivity.OnBackPressedListener) o);
         goBack();
     }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        Object o = this;
+        OnBackManager.getInstance().setOnBackList(o);
+
         ((MainActivity)context).setOnBackPressedListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override

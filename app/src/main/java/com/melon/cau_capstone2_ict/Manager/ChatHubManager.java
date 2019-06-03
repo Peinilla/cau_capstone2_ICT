@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import microsoft.aspnet.signalr.client.Credentials;
+import microsoft.aspnet.signalr.client.NullLogger;
 import microsoft.aspnet.signalr.client.Platform;
 import microsoft.aspnet.signalr.client.SignalRFuture;
 import microsoft.aspnet.signalr.client.http.Request;
@@ -18,6 +19,7 @@ public class ChatHubManager {
 
     private HubProxy hubProxy;
     private HubProxy hubProxy_group;
+    private HubProxy hubProxy_bab;
     private HubConnection hubConnection;
     private boolean isConnect;
 
@@ -29,6 +31,9 @@ public class ChatHubManager {
     private ChatHubManager(){
     }
 
+    public HubProxy getHubProxy_bab() {
+        return hubProxy_bab;
+    }
     public HubProxy getHubProxy(){
         return hubProxy;
     }
@@ -72,7 +77,8 @@ public class ChatHubManager {
 
         String serverUrl="https://capston2webapp.azurewebsites.net/signalr"; // connect to signalr server
         try {
-            hubConnection = new HubConnection(serverUrl);
+            String _usernick = "userNick="+MyUserData.getInstance().getNickname();
+            hubConnection = new HubConnection(serverUrl,_usernick,true,new NullLogger());
         }catch (Exception e){
             Log.e("Tag", "Chathub connection error : " + e.getMessage());
 
@@ -87,8 +93,10 @@ public class ChatHubManager {
             }
         });
 
-        hubProxy = hubConnection.createHubProxy("ChatHub"); // web api  necessary method name
+        hubProxy = hubConnection.createHubProxy("ChatHub");
         hubProxy_group = hubConnection.createHubProxy("GroupChatHub");
+        hubProxy_bab = hubConnection.createHubProxy("BopPartyHub");
+
         ClientTransport clientTransport = new ServerSentEventsTransport((hubConnection.getLogger()));
         SignalRFuture<Void> signalRFuture = hubConnection.start(clientTransport);
 

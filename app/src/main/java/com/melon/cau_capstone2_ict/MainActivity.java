@@ -23,7 +23,8 @@ import com.melon.cau_capstone2_ict.Manager.*;
 public class MainActivity extends AppCompatActivity {
     private long pressedTime;
     private OnBackPressedListener mBackListener;
-
+    MyPagerAdapter adapter;
+    ViewPager viewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final MyPagerAdapter adapter = new MyPagerAdapter
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        adapter = new MyPagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(5);
@@ -76,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int i) {
+                OnBackManager.getInstance().setPosition(i);
+                Object o = OnBackManager.getInstance().getOnBackList();
+                setOnBackPressedListener((MainActivity.OnBackPressedListener)o);
             }
 
             @Override
@@ -99,31 +103,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
 
-    public void onClickProfile(View v) {
-        Intent intent = new Intent(this, ProfileActvity.class);
-        startActivity(intent);
-    }
+        GpsManager.getInstance().setmContext(this);
+        GpsManager.getInstance().Update();
+        BuildingManager.getInstance().setData(this);
 
-    public void replaceFragment(int fragmentId) {
-        //화면에 보여지는 fragment를 추가하거나 바꿀 수 있는 객체를 만든다.
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        MyBoardFragment f = new MyBoardFragment();
-        Bundle bundle = new Bundle(1);
-        bundle.putString("boardID", "프래그먼트 변경");
-        f.setArguments(bundle);
-
-        if (fragmentId == 1) {
-            transaction.replace(R.id.container, f);
-        }
-        //Back 버튼 클릭 시 이전 프래그먼트로 이동시키도록 한다.
-
-        transaction.addToBackStack(null);
-        //fragment의 변경사항을 반영시킨다.
-
-        transaction.commit();
     }
 
     public interface OnBackPressedListener {
@@ -164,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
+        ChatHubManager.getInstance().disconnect();
         super.finish();
     }
 

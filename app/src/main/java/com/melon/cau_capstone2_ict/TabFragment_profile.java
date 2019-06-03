@@ -22,6 +22,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -31,6 +32,7 @@ import com.melon.cau_capstone2_ict.Manager.MyFriendinfo;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -121,8 +123,6 @@ public class TabFragment_profile extends Fragment {
                 bundle.putString("ToUser",m.getId());
                 bundle.putString("ToUserNick",m.getNickname());
 
-
-
                 childFragment.setArguments(bundle);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.profile_container, childFragment).commit();
@@ -174,6 +174,7 @@ public class TabFragment_profile extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 ChatHubManager.getInstance().disconnect();
+                MyUserData.getInstance().clear();
                 startActivity(intent);
                 getActivity().finish();
             }
@@ -218,10 +219,12 @@ public class TabFragment_profile extends Fragment {
             public void onResponse(String response) {
                 try {
                     myFriendAdapter.clear();
+                    MyUserData.getInstance().clearFriendList();
                     JSONArray array = new JSONArray(response);
                     for(int inx = 0; inx < array.length(); inx++) {
                         JSONObject jsonResponse = array.getJSONObject(inx);
                         myFriendAdapter.addItem(jsonResponse.getString("nick"),jsonResponse.getString("id"),jsonResponse.getInt("type"));
+                        MyUserData.getInstance().addFriend(jsonResponse.getString("nick"));
                     }
                     myFriendAdapter.notifyDataSetChanged();
                     friendListView.setAdapter(myFriendAdapter);
@@ -276,44 +279,48 @@ public class TabFragment_profile extends Fragment {
     }
 
     void friendUpdate(String receiverNick,String type){
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(JSONObject response) {
                 try {
-                    Log.d("Tag", "done  : " + response);
-                    JSONObject jsonResponse = new JSONObject(response);
-                    boolean result = jsonResponse.getBoolean("ret");
+                    Log.d("Tag",response.toString());
+                    boolean result = response.getBoolean("ret");
                     if(result){
                         getFriendList();
                         getFriendRequestList();
                     }else{
                         getFriendRequestList();
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
-        friendUpdateRequest request = new friendUpdateRequest(receiverNick,type,responseListener);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("senderId", MyUserData.getInstance().getId());
+            jsonObject.put("receiverNick", receiverNick);
+            jsonObject.put("type",Integer.valueOf(type));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        friendUpdateRequest request = new friendUpdateRequest(jsonObject,responseListener);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(request);
     }
 
-    class friendUpdateRequest extends StringRequest {
+    class friendUpdateRequest extends JsonObjectRequest {
         private Map<String, String> parameters;
 
-        public friendUpdateRequest(String receiverNick,String type,Response.Listener<String> listener) {
-            super(Method.POST, "https://capston2webapp.azurewebsites.net/api/"+MyUserData.getInstance().getId() + "/friend/update", listener, new Response.ErrorListener() {
+        public friendUpdateRequest(JSONObject jsonObject,Response.Listener<JSONObject> listener) {
+            super(Method.POST, "https://capston2webapp.azurewebsites.net/api/"+MyUserData.getInstance().getId() + "/friend/update", jsonObject,listener, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("Tag", "error " + error);
                 }
             });
             parameters = new HashMap<>();
-            parameters.put("senderId", MyUserData.getInstance().getId());
-            parameters.put("receiverNick", receiverNick);
-            parameters.put("type",type);
+
         }
 
         @Override

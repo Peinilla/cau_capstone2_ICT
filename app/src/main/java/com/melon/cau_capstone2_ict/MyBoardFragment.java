@@ -35,6 +35,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.melon.cau_capstone2_ict.Manager.MyBoard;
 import com.melon.cau_capstone2_ict.Manager.MyBoardAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
+import com.melon.cau_capstone2_ict.Manager.OnBackManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -127,8 +128,9 @@ public class MyBoardFragment extends Fragment implements MainActivity.OnBackPres
             public void onClick(View view) {
                 floatingActionsMenu.collapse();
                 Fragment childFragment = new TabFragment_boardWrite();
-                Bundle bundle = new Bundle(1);
+                Bundle bundle = new Bundle(2);
                 bundle.putString("boardID",boardID);
+                bundle.putBoolean("isGPS",isGPS);
                 childFragment.setArguments(bundle);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.board_container, childFragment).commit();
@@ -173,6 +175,13 @@ public class MyBoardFragment extends Fragment implements MainActivity.OnBackPres
         final ArrayAdapter<String> s_adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
         s_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_field.setAdapter(s_adapter);
+
+        if(isGPS){
+            MainActivity activity = (MainActivity) getActivity();
+            Object o = this;
+            OnBackManager.getInstance().setOnBackList(o);
+            activity.setOnBackPressedListener(this);
+        }
 
         return rootView;
     }
@@ -219,6 +228,11 @@ public class MyBoardFragment extends Fragment implements MainActivity.OnBackPres
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(getBoardRequest);
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        getBoardContext();
+    }
 
     void goBack(){
         FragmentManager fm = getFragmentManager();
@@ -227,25 +241,15 @@ public class MyBoardFragment extends Fragment implements MainActivity.OnBackPres
         tr.remove(fragment);
         tr.commit();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getBoardContext();
-    }
     @Override
     public void onBack() {
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setOnBackPressedListener(null);
-
         if(isGPS) {
+            MainActivity activity = (MainActivity)getActivity();
+            OnBackManager.getInstance().removeOnBackList();
+            Object o = OnBackManager.getInstance().getOnBackList();
+            activity.setOnBackPressedListener((MainActivity.OnBackPressedListener) o);
             goBack();
         }
-    }
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        ((MainActivity)context).setOnBackPressedListener(this);
     }
 
     @Override

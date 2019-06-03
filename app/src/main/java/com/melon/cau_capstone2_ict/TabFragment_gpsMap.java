@@ -32,6 +32,7 @@ public class TabFragment_gpsMap extends Fragment {
     FrameLayout frameLayout;
     ImageButton marker;
     ImageButton marker2;
+    ImageView notice;
     RelativeLayout c;
     View v;
     int width;
@@ -41,13 +42,9 @@ public class TabFragment_gpsMap extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_fragment_gpsmap, container, false);
-
-        GpsManager.getInstance().setmContext(getActivity());
-        GpsManager.getInstance().Update();
-        BuildingManager.getInstance().setData(getActivity());
-
         TextView titleView = (TextView)rootView.findViewById(R.id.gps_title);
         ImageButton btn_currentGps = (ImageButton)rootView.findViewById(R.id.imageButton);
+        notice = rootView.findViewById(R.id.gps_notice);
         frameLayout = rootView.findViewById(R.id.gps_board_container);
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -74,6 +71,7 @@ public class TabFragment_gpsMap extends Fragment {
             public void onClick(View view) {
                 if(!currentBuilding.equals("권외")) {
                     //현재 접속 게시판 변경
+                    notice.setVisibility(View.GONE);
                     MyUserData.getInstance().setPrevBuilding(currentBuilding);
                     Fragment childFragment = new MyBoardFragment();
                     Bundle bundle = new Bundle(2);
@@ -93,6 +91,7 @@ public class TabFragment_gpsMap extends Fragment {
             @Override
             public void onClick(View view) {
                 if(!prevBuilding.equals("")) {
+                    notice.setVisibility(View.GONE);
                     Fragment childFragment = new MyBoardFragment();
                     Bundle bundle = new Bundle(2);
                     bundle.putString("boardID", prevBuilding);
@@ -104,12 +103,14 @@ public class TabFragment_gpsMap extends Fragment {
                 }
             }
         });
+
         btn_currentGps.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
                 setMarker();
             }
         });
+
         return rootView;
     }
 
@@ -124,6 +125,8 @@ public class TabFragment_gpsMap extends Fragment {
         marker2.setVisibility(View.GONE);
 
         if(!currentBuilding.equals("권외") && !currentBuilding.equals("")){
+            notice.setVisibility(View.GONE);
+
             float m = width / 516;
 
             if(currentBuilding.equals(prevBuilding)) {
@@ -151,7 +154,7 @@ public class TabFragment_gpsMap extends Fragment {
                 }
             }
         }else{
-
+            notice.setVisibility(View.VISIBLE);
         }
     }
 

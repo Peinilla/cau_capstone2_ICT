@@ -1,6 +1,7 @@
 package com.melon.cau_capstone2_ict;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,10 +9,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -23,14 +26,18 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonObject;
 import com.melon.cau_capstone2_ict.Manager.MyBoard;
 import com.melon.cau_capstone2_ict.Manager.MyReply;
 import com.melon.cau_capstone2_ict.Manager.MyReplyAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
+import com.melon.cau_capstone2_ict.Manager.OnBackManager;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -59,6 +66,7 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
     MyBoard m;
     Handler mHandler = new Handler();
     boolean isPosting = false;
+    String index;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -140,8 +148,36 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
             }
         });
 
+        replyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MyReply reply = new MyReply();
+                reply = (MyReply) parent.getItemAtPosition(position);
+                if(reply.getType() == 0){
+                    index = reply.getIndex();
+                    AlertDialog alert = new AlertDialog.Builder(getActivity())
+                            .setMessage("댓글을 삭제하시겠습니까?")
+                            .setCancelable(true)
+                            .setPositiveButton("확인",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            deleteReply();
+                                        }
+                                    })
+                            .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .create();
+                    alert.show();
+                }
+            }
+        });
 
         getReply();
+        replyList.setSelection(0);
 
         return rootView;
     }
@@ -214,13 +250,14 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
                         m.setName(jsonResponse.getString("nickname"));
                         m.setId(jsonResponse.getString("userid"));
                         m.setPostid(jsonResponse.getString("postid"));
+                        m.setIndex(jsonResponse.getString("replyindex"));
 
                         adapter.addItem(m);
                     }
                     adapter.updateDate();
                     adapter.notifyDataSetChanged();
                     replyList.setAdapter(adapter);
-                    replyList.setSelection(0);
+                    replyList.setSelection(adapter.getCount()-1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -232,24 +269,74 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         queue.add(getBoardRequest);
 
     }
-    void goBack() {
+
+    void deleteReply(){
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("replyId", Integer.valueOf(index));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String URL = "https://capston2webapp.azurewebsites.net/api/posts/replies/delete/"+ m.getPostId();
+        deleteReplyRequest req = new deleteReplyRequest(URL,jsonObject,responseListener);
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        queue.add(req);
+    }
+
+    class deleteReplyRequest extends JsonObjectRequest {
+        private Map<String, String> parameters;
+
+        public deleteReplyRequest(String URL, JSONObject jsonObject,Response.Listener<JSONObject> listener) {
+            super(Method.POST, URL,jsonObject,listener, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if(error.getMessage().equals("org.json.JSONException: End of input at character 0 of ")){
+                        getReply();
+                    }else {
+                        Log.d("Tag", "deleteReplyRequest error " + error);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public Map<String, String> getParams() {
+            return parameters;
+        }
+    }
+
+    void goBack(){
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.board_container);
         FragmentTransaction tr = fm.beginTransaction();
         tr.remove(fragment);
         tr.commit();
     }
-
     @Override
     public void onBack() {
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setOnBackPressedListener(null);
+        MainActivity activity = (MainActivity)getActivity();
+        OnBackManager.getInstance().removeOnBackList();
+        Object o = OnBackManager.getInstance().getOnBackList();
+        activity.setOnBackPressedListener((MainActivity.OnBackPressedListener) o);
         goBack();
     }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((MainActivity) context).setOnBackPressedListener(this);
+
+        Object o = this;
+        OnBackManager.getInstance().setOnBackList(o);
+
+        ((MainActivity)context).setOnBackPressedListener(this);
     }
 }

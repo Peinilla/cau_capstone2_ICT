@@ -1,19 +1,15 @@
 package com.melon.cau_capstone2_ict;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -32,7 +28,7 @@ import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
 
 
-public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBackPressedListener {
+public class TabFragment_chatBab extends Fragment implements MainActivity.OnBackPressedListener {
     MyChatAdapter adapter;
 
     FloatingActionsMenu fam;
@@ -83,16 +79,19 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
         sendBtn.setOnClickListener(new ImageButton.OnClickListener(){
             @Override
             public void onClick(View v) {
-                ChatHubManager.getInstance().group_send(myMessage.getText().toString());
+                String msg = myMessage.getText().toString();
+                if(!msg.equals("")){
+                    ChatHubManager.getInstance().getHubProxy_bab().invoke("SendGroupMsg", MyUserData.getInstance().getId(),msg);
+                }
                 myMessage.setText("");
             }
         });
 
-        ChatHubManager.getInstance().getHubProxygroup().on("onGroupChat", new SubscriptionHandler2<String, String>() {
+        ChatHubManager.getInstance().getHubProxygroup().on("onBopPartyMsgReceived", new SubscriptionHandler1<String>() {
             @Override
-            public void run(final String s, final String s2) {
+            public void run(final String s) {
                 try {
-                    JSONObject jsonResponse = new JSONObject(s2);
+                    JSONObject jsonResponse = new JSONObject(s);
                     str1 = jsonResponse.getString("text");
                     str2 = jsonResponse.getString("userNick");
 
@@ -107,10 +106,10 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
                     e.printStackTrace();
                 }
             }
-        },String.class,String.class);
+        },String.class);
 
-        ChatHubManager.getInstance().getHubProxygroup().invoke("GetRightnowMessageByIndex", MyUserData.getInstance().getId(), group, 0);
-        ChatHubManager.getInstance().getHubProxygroup().on("updateGroupChatByIndex", new SubscriptionHandler2<String, String>() {
+        ChatHubManager.getInstance().getHubProxy_bab().invoke("GetMsgByIndex", MyUserData.getInstance().getId(), group, 0);
+        ChatHubManager.getInstance().getHubProxy_bab().on("updateGroupChatByIndex", new SubscriptionHandler2<String, String>() {
             @Override
             public void run(String s1, String s2) {
                 try {
@@ -138,35 +137,8 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
             }
         },String.class, String.class);
 
-        ChatHubManager.getInstance().getHubProxygroup().on("onBopPartyGroupMsgFailed", new SubscriptionHandler1<String>() {
-            @Override
-            public void run(String s) {
-                try {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            AlertDialog alert = new AlertDialog.Builder(getActivity())
-                                    .setMessage("인원이 부족하여 채팅방이 해체되었습니다.")
-                                    .setCancelable(false)
-                                    .setNegativeButton("확인", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            onBack();
-                                        }
-                                    })
-                                    .create();
-                            alert.show();
-                        }
-                    });
-
-
-                }catch (Exception e){
-                    Log.e("Tag", "receive Message Error" + e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        },String.class);
         return  rootView;
+
     }
 
     void getMessage(String s, String s2){

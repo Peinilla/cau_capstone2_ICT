@@ -1,6 +1,5 @@
 package com.melon.cau_capstone2_ict.Manager;
 
-import android.util.Log;
 import android.view.ViewParent;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -66,16 +65,12 @@ public class RSSHandler {
                             hour = Integer.parseInt(text);
                         } else if (name.equals("temp")) {
                             temp = text;
-                            Log.d("Tag", temp);
                         } else if (name.equals("wfKor")) {
                             wfKor = text;
-                            Log.d("Tag", wfKor);
                         } else if (name.equals("pty")) {
                             pty = text;
-                            Log.d("Tag", pty);
                         } else if (name.equals("pop")) {
                             pop = text;
-                            Log.d("Tag", pop);
                             parsingComplete = false;
                         }
                         break;

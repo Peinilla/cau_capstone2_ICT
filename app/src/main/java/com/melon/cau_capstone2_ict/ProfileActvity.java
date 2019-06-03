@@ -131,8 +131,6 @@ public class ProfileActvity extends AppCompatActivity {
     }
 
     class setProfileRequest extends JsonObjectRequest {
-        //TODO sns 아이디 확인 주소
-
         public setProfileRequest(Response.Listener<JSONObject> listener,JSONObject jsonObject) {
             super(Method.POST, "https://capston2webapp.azurewebsites.net/api/UserInfo/" + MyUserData.getInstance().getId(),jsonObject,listener, new Response.ErrorListener() {
                 @Override

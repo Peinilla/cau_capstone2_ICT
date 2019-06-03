@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -43,6 +44,7 @@ public class profileViewActivity extends AppCompatActivity {
         idView = findViewById(R.id.profileview_ID);
         btn_addFriend = findViewById(R.id.profileview_addFriend);
         idView.setText(receiverNick);
+
         if(isNFC){
             btn_addFriend.setText("NFC 친구 신청");
         }
@@ -65,7 +67,7 @@ public class profileViewActivity extends AppCompatActivity {
                     if(result){
                         Toast.makeText(getApplicationContext(),"친구 신청을 보냈습니다.",Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(getApplicationContext(),"친구 신청 실패",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"친구 신청 실패 " + jsonResponse.getBoolean("resson"),Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
@@ -122,5 +124,22 @@ public class profileViewActivity extends AppCompatActivity {
         public Map<String, String> getParams() {
             return parameters;
         }
+    }
+    public void getMyProfile(){
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        String URL = "https://capston2webapp.azurewebsites.net/api/UserInfo/"+ receiverNick;
+        StringRequest getBoardRequest = new StringRequest(Request.Method.GET,URL,responseListener,null);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(getBoardRequest);
     }
 }

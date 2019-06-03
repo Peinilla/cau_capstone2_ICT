@@ -9,7 +9,7 @@
         android:id="@+id/profile_swipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/textView4"
+        android:layout_above="@+id/profile_textview4"
         android:layout_below="@+id/textView_friend">
 
         <ListView
@@ -57,11 +57,13 @@
         android:text="친구추가 수락 대기 중"
         android:textAppearance="?android:attr/textAppearanceLarge"
         />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/profile_swipe2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/textView4">
+        android:layout_below="@+id/profile_textview4">
+
         <ListView
             android:id="@+id/friendrequest_list"
             android:layout_width="match_parent"

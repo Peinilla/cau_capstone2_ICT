@@ -10,11 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -86,8 +84,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("Tag", "calendar start");
-
         final View rootView = inflater.inflate(R.layout.tab_fragment_calendar, container, false);
 
         mSwitch = (Switch) rootView.findViewById(R.id.calendar_switch);
@@ -206,7 +202,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
         }
 
         String date = toString().valueOf(textDate.getText());
-        Log.d("getChild", Integer.toString(pager.getChildCount()));
         if (!arrayList.isEmpty() && pager.getChildCount() != 0) {
             for (int i = 0; i < pager.getChildCount(); i++) {
                 if (((CalendarView) pager.getChildAt(i)).getChildCount() != 0) {
@@ -297,10 +292,8 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
 
     public void refreshFragment() {
         date = toString().valueOf(textDate.getText());
-        Log.d("date", date);
 
         if (!mMap.containsKey(date)) {
-            Log.d("CreateArray: ", date);
             mMap.put(date, new ArrayList<MyCalendar>());
         }
         myCalendarAdapter.setRecyclerAdapter(mMap.get(date));
@@ -367,7 +360,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.d("Tag", "response check : " + response);
                     JSONArray array = new JSONArray(response);
                     for (int i = 0; i < array.length(); i++) {
                         MyCalendar myCalendar = new MyCalendar();
@@ -396,7 +388,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
     public void weatherParse() {
 
 //
-        Log.d("Tag", "12");
         hour = handler.getHour();
         wfKor = handler.getWfKor();
         temp = handler.getTemp();
@@ -456,8 +447,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                     weatherImage.setImageResource(R.drawable.db08_n_b);
                 break;
         }
-
-        Log.d("Tag", "2");
     }
 
     @Override

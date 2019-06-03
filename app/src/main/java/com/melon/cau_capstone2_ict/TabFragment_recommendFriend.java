@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +21,7 @@ import android.widget.ListView;
 
 import com.melon.cau_capstone2_ict.Manager.ChatHubManager;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
+import com.melon.cau_capstone2_ict.Manager.OnBackManager;
 
 import net.alhazmy13.wordcloud.WordCloud;
 
@@ -35,11 +37,12 @@ public class TabFragment_recommendFriend extends Fragment implements MainActivit
     ListView recolistview;
 
     static ArrayList<String> array_nickname = new ArrayList<>();
-    static ArrayList<String> array_id = new ArrayList<>();
 
     ArrayAdapter reco_adapter;
 
     int containerID;
+    Handler mHandler = new Handler();
+    ArrayList<String> friendList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,22 +53,32 @@ public class TabFragment_recommendFriend extends Fragment implements MainActivit
         reco_adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, array_nickname);
         recolistview.setAdapter(reco_adapter);
 
+        friendList = new ArrayList<>();
+        friendList.addAll(MyUserData.getInstance().getFriendList());
+
         ChatHubManager.getInstance().getHubProxygroup().on("getRightNowTagUserInfo", new SubscriptionHandler1<String>() {
             @Override
             public void run(final String s) {
-                array_id.clear();
                 array_nickname.clear();
                 try {
                     JSONArray jsonArray = new JSONArray(s);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String name = jsonObject.getString("nickname");
-                        String id = jsonObject.getString("id");
-                        array_nickname.add(name);
-                        array_id.add(id);
+                        if(!name.equals(MyUserData.getInstance().getNickname())) {
+                            if(!friendList.contains(name)) {
+                                array_nickname.add(name);
+                            }
+                        }
                     }
-                    reco_adapter.notifyDataSetChanged();
-                    recolistview.setAdapter(reco_adapter);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            getRecommend();
+                            reco_adapter.notifyDataSetChanged();
+                            recolistview.setAdapter(reco_adapter);
+                        }
+                    });
                 }catch (Exception e) {
                     Log.e("Tag", "error " + e.getMessage());
                     e.printStackTrace();
@@ -86,6 +99,12 @@ public class TabFragment_recommendFriend extends Fragment implements MainActivit
 
         return rootView;
     }
+    void getRecommend(){
+        if(array_nickname.size() > 6){
+
+        }
+    }
+
     void goBack(){
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(containerID);
@@ -96,12 +115,18 @@ public class TabFragment_recommendFriend extends Fragment implements MainActivit
     @Override
     public void onBack() {
         MainActivity activity = (MainActivity)getActivity();
-        activity.setOnBackPressedListener(null);
+        OnBackManager.getInstance().removeOnBackList();
+        Object o = OnBackManager.getInstance().getOnBackList();
+        activity.setOnBackPressedListener((MainActivity.OnBackPressedListener) o);
         goBack();
     }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        Object o = this;
+        OnBackManager.getInstance().setOnBackList(o);
+
         ((MainActivity)context).setOnBackPressedListener(this);
     }
 }

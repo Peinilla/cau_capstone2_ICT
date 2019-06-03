@@ -114,6 +114,25 @@ public class MyChatAdapter extends BaseAdapter {
         return listViewItemList.get(position) ;
     }
 
+    public void updateDate(){
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        String nowTime = sdf.format(date);
+
+        String[] nowDate = nowTime.split("T");
+
+        for(int inx = 0; inx<listViewItemList.size(); inx++){
+            String d = listViewItemList.get(inx).getDate();
+            String[] str = d.split("T");
+            if(str[0].equals(nowDate[0])){
+                listViewItemList.get(inx).setDate(str[1].substring(0,5));
+            }else{
+                listViewItemList.get(inx).setDate(str[0]);
+            }
+        }
+    }
+
     public void addItem(int t,String text, String w) {
         MyChat m = new MyChat(t);
         m.setWriter(w);

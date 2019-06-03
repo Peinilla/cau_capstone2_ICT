@@ -10,7 +10,7 @@ public class MyReply {
     private String name;
     private String id;
     private String text;
-    private int index;
+    private String index;
     private String time;
     private String postid;
     private int type;
@@ -28,6 +28,14 @@ public class MyReply {
         if(id.equals(MyUserData.getInstance().getId())){
             type = VIEW_MY;
         }
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
     }
 
     public void setText(String text) {
