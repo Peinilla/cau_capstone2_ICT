@@ -35,19 +35,14 @@ public class MainActivity extends AppCompatActivity {
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
         final View view1 = getLayoutInflater().inflate(R.layout.customtab, null);
-//        view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.profile);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view1));
         final View view2 = getLayoutInflater().inflate(R.layout.customtab, null);
-//        view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.home_no);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view2));
         final View view3 = getLayoutInflater().inflate(R.layout.customtab, null);
-//        view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.univ_no);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view3));
         final  View view4 = getLayoutInflater().inflate(R.layout.customtab, null);
-//        view4.findViewById(R.id.icon).setBackgroundResource(R.drawable.iam_no);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view4));
         final View view5 = getLayoutInflater().inflate(R.layout.customtab, null);
-//        view5.findViewById(R.id.icon).setBackgroundResource(R.drawable.calendar_no);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view5));
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -68,23 +63,19 @@ public class MainActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
-                Log.d("check1", Integer.toString(i));
             }
 
             @Override
             public void onPageSelected(int i) {
-                Log.d("check2", Integer.toString(i));
             }
 
             @Override
             public void onPageScrollStateChanged(int i) {
-                Log.d("check3", Integer.toString(i));
             }
         });
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.d("check4", Integer.toString(tab.getPosition()));
                 viewPager.setCurrentItem(tab.getPosition());
                 switch (tab.getPosition()){
                     case 0:
@@ -107,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                Log.d("check5", Integer.toString(tab.getPosition()));
                 switch (tab.getPosition()){
                     case 0:
                         tabLayout.getTabAt(0).getCustomView().setBackgroundResource(R.drawable.profile_no);
@@ -130,8 +120,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                Log.d("check6", Integer.toString(tab.getPosition()));
-
             }
         });
 
@@ -173,13 +161,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // 다른 Fragment 에서 리스너를 설정했을 때 처리됩니다.
         if (mBackListener != null) {
             mBackListener.onBack();
-            // 리스너가 설정되지 않은 상태(예를들어 메인Fragment)라면
-            // 뒤로가기 버튼을 연속적으로 두번 눌렀을 때 앱이 종료됩니다.
         } else {
-            Log.e("!!!", "Listener is null");
             if (pressedTime == 0) {
                 pressedTime = System.currentTimeMillis();
             } else {
@@ -198,17 +182,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
+        //ChatHubManager.getInstance().disconnect();
         super.onPause();
     }
 
     @Override
     public void finish() {
-        ChatHubManager.getInstance().disconnect();
         super.finish();
     }
 
     @Override
     protected void onResume() {
+        ChatHubManager.getInstance().connect();
         super.onResume();
     }
 }

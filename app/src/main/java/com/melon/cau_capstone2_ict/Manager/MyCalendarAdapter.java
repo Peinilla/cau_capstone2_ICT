@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -299,7 +300,6 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
                         String title = myCalendar.getColor() + "|" + myCalendar.getTime() + "|" + myCalendar.getTitle();
                         myCalendar.setTitle(title);
                         deleteRequest(myCalendar);
-                        String date = list.get(position).getDate();
                         list.remove(position);
                         notifyItemRemoved(position);
                     }
@@ -318,19 +318,14 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
             @Override
             public void onClick(View v) {
                 if (selectedItems.get(position)) {
-                    // 펼쳐진 Item을 클릭 시
                     selectedItems.delete(position);
                 } else {
-                    // 직전의 클릭됐던 Item의 클릭상태를 지움
                     selectedItems.delete(prePosition);
-                    // 클릭한 Item의 position을 저장
                     selectedItems.put(position, true);
                 }
-                // 해당 포지션의 변화를 알림
                 if (prePosition != -1)
                     notifyItemChanged(prePosition);
                 notifyItemChanged(position);
-                // 클릭된 position 저장
                 prePosition = position;
             }
         });
@@ -384,8 +379,8 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
         TextView time;
         LinearLayout linear_spread;
         LinearLayout linear_modify;
-        Button modify;
-        Button remove;
+        ImageButton modify;
+        ImageButton remove;
 
         public RecyclerViewHolder(View view) {
             super(view);
@@ -397,33 +392,26 @@ public class MyCalendarAdapter extends RecyclerView.Adapter<MyCalendarAdapter.Re
             time = (TextView) view.findViewById(R.id.calendar_time);
             linear_spread = (LinearLayout) view.findViewById(R.id.calendar_linear_spread);
             linear_modify = (LinearLayout) view.findViewById(R.id.calendar_option);
-            modify = (Button) view.findViewById(R.id.button_calendar_modify);
-            remove = (Button) view.findViewById(R.id.button_calendar_remove);
+            modify = (ImageButton) view.findViewById(R.id.button_calendar_modify);
+            remove = (ImageButton) view.findViewById(R.id.button_calendar_remove);
         }
 
         private void changeVisibility(final boolean isExpanded) {
-            // height 값을 dp로 지정해서 넣고싶으면 아래 소스를 이용
             int dpValue = 150;
             float d = context.getResources().getDisplayMetrics().density;
             int height = (int) (dpValue * d);
 
-            // ValueAnimator.ofInt(int... values)는 View가 변할 값을 지정, 인자는 int 배열
             ValueAnimator va = isExpanded ? ValueAnimator.ofInt(0, height) : ValueAnimator.ofInt(height, 0);
-            // Animation이 실행되는 시간, n/1000초
             va.setDuration(300);
             va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    // value는 height 값
                     int value = (int) animation.getAnimatedValue();
-                    // imageView의 높이 변경
                     linear_spread.getLayoutParams().height = value;
                     linear_spread.requestLayout();
-                    // imageView가 실제로 사라지게하는 부분
                     linear_spread.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
                 }
             });
-            // Animation start
             va.start();
         }
     }

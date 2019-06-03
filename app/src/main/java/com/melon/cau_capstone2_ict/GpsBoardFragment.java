@@ -180,7 +180,7 @@ public class GpsBoardFragment extends Fragment {
                         StringTokenizer tokens = new StringTokenizer(jsonResponse.getString("title"), "|");
                         String token = tokens.nextToken();
                         if(token.equals("밥파티")) {
-                            m.setType(token);
+//                            m.setType(token);
                             if(tokens.hasMoreElements()) {
 //                                token = "[밥파티] ";
                                 token = tokens.nextToken();
@@ -190,7 +190,7 @@ public class GpsBoardFragment extends Fragment {
                             m.setTitle(token);
                         }
                         else if(token.equals("게시글")){
-                            m.setType(token);
+//                            m.setType(token);
                             if(tokens.hasMoreElements()) {
                                 token = tokens.nextToken();
                                 for (; tokens.hasMoreElements(); )

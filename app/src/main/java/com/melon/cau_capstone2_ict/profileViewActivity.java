@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class profileViewActivity extends AppCompatActivity {
 
-    String id;
+    String receiverNick;
     boolean isNFC;
     TextView idView;
     Button btn_addFriend;
@@ -36,12 +36,12 @@ public class profileViewActivity extends AppCompatActivity {
         Intent intent;
         intent = getIntent();
 
-        id = intent.getStringExtra("id");
+        receiverNick = intent.getStringExtra("id");
         isNFC = intent.getBooleanExtra("isNFC",false);
 
         idView = findViewById(R.id.profileview_ID);
         btn_addFriend = findViewById(R.id.profileview_addFriend);
-        idView.setText(id);
+        idView.setText(receiverNick);
         if(isNFC){
             btn_addFriend.setText("NFC 친구 신청");
         }
@@ -72,15 +72,40 @@ public class profileViewActivity extends AppCompatActivity {
                 }
             }
         };
-        addFriendRequest request = new addFriendRequest(responseListener);
-        RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(request);
+        if(isNFC){
+            addNFCRequest request = new addNFCRequest(responseListener);
+            RequestQueue queue = Volley.newRequestQueue(this);
+            queue.add(request);
+        }else{
+            addFriendRequest request = new addFriendRequest(responseListener);
+            RequestQueue queue = Volley.newRequestQueue(this);
+            queue.add(request);
+        }
+
     }
     class addFriendRequest extends StringRequest {
         private Map<String, String> parameters;
-
         public addFriendRequest(Response.Listener<String> listener) {
             super(Method.POST, "https://capston2webapp.azurewebsites.net/api/"+ MyUserData.getInstance().getId() + "/friend/add", listener, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("Tag", "addFriendRequest " + error);
+                }
+            });
+            parameters = new HashMap<>();
+            parameters.put("senderId", MyUserData.getInstance().getId());
+            parameters.put("receiverNick", receiverNick);
+        }
+
+        @Override
+        public Map<String, String> getParams() {
+            return parameters;
+        }
+    }
+    class addNFCRequest extends StringRequest {
+        private Map<String, String> parameters;
+        public addNFCRequest(Response.Listener<String> listener) {
+            super(Method.POST, "https://capston2webapp.azurewebsites.net/api/"+ MyUserData.getInstance().getId() + "/friend/update", listener, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("Tag", "error " + error);
@@ -88,15 +113,8 @@ public class profileViewActivity extends AppCompatActivity {
             });
             parameters = new HashMap<>();
             parameters.put("senderId", MyUserData.getInstance().getId());
-            parameters.put("receiverNick", id);
-            Log.d("Tag", "https://capston2webapp.azurewebsites.net/api/"+ MyUserData.getInstance().getId() + "/friend/add");
-
-            Log.d("Tag", "sender : " + MyUserData.getInstance().getId() + "/ recv : " + id);
-
-            if(isNFC){
-                parameters.put("friendType","NFC");
-            }
-
+            parameters.put("receiverNick", receiverNick);
+            parameters.put("type","2");
         }
 
         @Override

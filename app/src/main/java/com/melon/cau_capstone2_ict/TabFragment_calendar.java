@@ -481,7 +481,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.d("Tag", "response check : " + response);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -544,7 +543,6 @@ public class TabFragment_calendar extends Fragment implements CalendarFragment.O
                     ArrayList<TimeLine> timeLines = new ArrayList<>();
                     String res = response.substring(1, response.length() - 1);
                     res = res.replace("\\", "");
-                    Log.d("Tag", "response check : " + res);
                     JSONArray array = new JSONArray(res);
                     for (int inx = 0; inx < array.length(); inx++) {
                         TimeLine timeLine = new TimeLine();

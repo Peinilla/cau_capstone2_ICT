@@ -4,7 +4,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,9 +69,10 @@ public class TabFragment_gpsMap extends Fragment {
                 if(!currentBuilding.equals("권외")) {
                     //현재 접속 게시판 변경
                     MyUserData.getInstance().setPrevBuilding(currentBuilding);
-                    Fragment childFragment = new GpsBoardFragment();
-                    Bundle bundle = new Bundle(1);
+                    Fragment childFragment = new MyBoardFragment();
+                    Bundle bundle = new Bundle(2);
                     bundle.putString("boardID", currentBuilding);
+                    bundle.putBoolean("isGPS",true);
                     childFragment.setArguments(bundle);
                     FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                     transaction.replace(R.id.gps_board_container, childFragment).commit();
@@ -87,9 +87,10 @@ public class TabFragment_gpsMap extends Fragment {
             @Override
             public void onClick(View view) {
                 if(!prevBuilding.equals("")) {
-                    Fragment childFragment = new GpsBoardFragment();
-                    Bundle bundle = new Bundle(1);
+                    Fragment childFragment = new MyBoardFragment();
+                    Bundle bundle = new Bundle(2);
                     bundle.putString("boardID", prevBuilding);
+                    bundle.putBoolean("isGPS",true);
                     childFragment.setArguments(bundle);
                     FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                     transaction.replace(R.id.gps_board_container, childFragment).commit();
@@ -146,11 +147,6 @@ public class TabFragment_gpsMap extends Fragment {
         }else{
 
         }
-
-
-        Log.d("Tag", "현재위치 : " + currentBuilding + "  접속 게시판 : " + prevBuilding);
-
-
     }
 
     @Override

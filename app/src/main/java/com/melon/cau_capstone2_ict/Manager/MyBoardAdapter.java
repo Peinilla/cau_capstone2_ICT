@@ -54,7 +54,7 @@ public class MyBoardAdapter extends BaseAdapter {
             convertView.setBackgroundResource(R.color.color_board_even);
         }
 
-        if(myBoard_item.getType().equals("밥파티")){
+        if(myBoard_item.isBabtype()){
             riceView.setVisibility(View.VISIBLE);
         }else{
             riceView.setVisibility(View.GONE);

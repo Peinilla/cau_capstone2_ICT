@@ -4,26 +4,43 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageButton;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MyBoard implements Serializable {
     private Drawable icon;
-    private ImageButton rice;
     private String title;
     private String writer;
     private String date;
     private String text;
-    private String type;
     private int numComment;
     private int numRecommend;
+    private String postId;
+    private boolean isBabtype = false;
 
     public MyBoard(){
         title = "Test Title";
         writer = "test12345";
         date = "19.04.07";
         text = "text";
-        type = "게시글";
         numComment = 0;
         numRecommend = 0;
+    }
+
+    public void setBabtype(boolean babtype) {
+        isBabtype = babtype;
+    }
+
+    public boolean isBabtype() {
+        return isBabtype;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 
     public String getText() {
@@ -54,10 +71,6 @@ public class MyBoard implements Serializable {
         this.numRecommend = numRecommend;
     }
 
-    public void setType(String type){
-        this.type = type;
-    }
-
     public int getNumComment() {
         return numComment;
     }
@@ -76,9 +89,5 @@ public class MyBoard implements Serializable {
 
     public String getWriter() {
         return writer;
-    }
-
-    public String getType(){
-        return type;
     }
 }

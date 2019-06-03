@@ -1,7 +1,6 @@
 package com.melon.cau_capstone2_ict;
 
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
@@ -10,7 +9,6 @@ import android.nfc.NfcAdapter;
 import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
@@ -164,7 +162,7 @@ public class NfcActivity extends AppCompatActivity {
 
     public void setNdefMessage(){
         ndefMessage = new NdefMessage( new NdefRecord[]{
-                createNewTextRecord(MyUserData.getInstance().getId(),Locale.KOREAN,true)
+                createNewTextRecord(MyUserData.getInstance().getNickname(),Locale.KOREAN,true)
         });
     }
 
@@ -191,18 +189,5 @@ public class NfcActivity extends AppCompatActivity {
         if(nfcAdapter.isEnabled()){
             nfcAdapter.setNdefPushMessage(ndefMessage,this); // nfc 송신
         }
-    }
-    public void setPopup(String str) {
-        final AlertDialog alert = new AlertDialog.Builder(this)
-                .setTitle("NFC 태그가 수신되었습니다")
-                .setMessage("수신된 내용 : " + str)
-                .setCancelable(true)
-                .setPositiveButton("계속",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                            }
-                        })
-                .create();
-        alert.show();
     }
 }

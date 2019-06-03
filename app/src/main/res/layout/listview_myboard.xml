@@ -40,6 +40,8 @@
 
     </LinearLayout>
 
+
+
     <TextView
         android:id="@+id/chat_writer"
         android:layout_width="wrap_content"

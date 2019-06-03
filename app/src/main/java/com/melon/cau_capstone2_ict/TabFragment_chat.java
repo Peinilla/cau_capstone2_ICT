@@ -23,9 +23,11 @@ import com.melon.cau_capstone2_ict.Manager.MyChat;
 import com.melon.cau_capstone2_ict.Manager.MyChatAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
 
 
 public class TabFragment_chat extends Fragment implements MainActivity.OnBackPressedListener {
@@ -41,6 +43,7 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
     Handler mHandler = new Handler();
     ////
     String to;
+    String toNick;
     ////
 
 
@@ -49,6 +52,7 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
         final View rootView = inflater.inflate(R.layout.tab_fragment_chat, container, false);
 
         to = getArguments().getString("ToUser");
+        toNick = getArguments().getString("ToUserNick");
         chatTitle = rootView.findViewById(R.id.chat_title);
         myMessage = rootView.findViewById(R.id.textView_chat);
         sendBtn = rootView.findViewById(R.id.image_upload);
@@ -56,7 +60,7 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
         fam = (FloatingActionsMenu)rootView.findViewById(R.id.chat_floatingButton);
         chatList = (ListView) rootView.findViewById(R.id.chat_list);
 
-        chatTitle.setText(to);
+        chatTitle.setText(toNick);
 
         adapter = new MyChatAdapter();
 
@@ -76,23 +80,21 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
         sendBtn.setOnClickListener(new ImageButton.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Log.d("Tag", "send message :  " + to + " : ");
                 ChatHubManager.getInstance().send(to,myMessage.getText().toString());
                 myMessage.setText("");
             }
         });
 
-        ChatHubManager.getInstance().getHubProxy().on("sendMessage", new SubscriptionHandler1<String>() {
+        ChatHubManager.getInstance().getHubProxy().on("sendMessage", new SubscriptionHandler2<String, String>() {
             @Override
-            public void run(final String s) {
+            public void run(final String s1, final String s2) {
                 try {
-                    Log.d("Tag", "chat : " + s);
+                    Log.d("Tag", "chat : " + s1 + "/" + s2);
 
-                    JSONObject jsonObject = new JSONObject(s);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            //todo
+                            getMessage(s1,s2);
                         }
                     });
                 }catch (Exception e){
@@ -100,7 +102,7 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
                     e.printStackTrace();
                 }
             }
-        },String.class);
+        },String.class,String.class);
         chatList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -112,19 +114,56 @@ public class TabFragment_chat extends Fragment implements MainActivity.OnBackPre
                 }
             }
         });
+
+        ChatHubManager.getInstance().getHubProxy().invoke("GetMessageByIndex", MyUserData.getInstance().getId(), to, 0);
+        ChatHubManager.getInstance().getHubProxy().on("updateChatByIndex", new SubscriptionHandler1<String>() {
+            @Override
+            public void run(final String s) {
+                try {
+                    Log.d("Tag", "updateChatByIndex : " + s);
+                    JSONArray array = new JSONArray(s);
+                    Log.d("Tag", "lenhth :  : " +  array.length());
+
+                    for(int inx = 0; inx < array.length(); inx++) {
+                        JSONObject jsonResponse = array.getJSONObject(inx);
+                        getMessage(jsonResponse.getString("text"),jsonResponse.getString("userId"),jsonResponse.getString("time"));
+                    }
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            chatList.setAdapter(adapter);
+                            chatList.setSelection(adapter.getCount() - 1);
+                        }
+                    });
+
+                }catch (Exception e){
+                    Log.e("Tag", "receive Message Error" + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        },String.class);
+
         return  rootView;
     }
 
 
     void getMessage(String s, String s2){
-        if(s2.equals(to)) {
-            adapter.addItem(2, s, s2);
-        }else{
+        if(s2.equals(MyUserData.getInstance().getId())) {
             adapter.addItem(0,s, MyUserData.getInstance().getNickname());
+        }else{
+            adapter.addItem(2, s, to);
         }
         adapter.notifyDataSetChanged();
         chatList.setAdapter(adapter);
         chatList.setSelection(adapter.getCount() - 1);
+    }
+    void getMessage(String s, String s2,String date){
+        if(s2.equals(MyUserData.getInstance().getId())) {
+            adapter.addItem(0,s, MyUserData.getInstance().getNickname(),date);
+        }else{
+            adapter.addItem(2, s, to,date);
+        }
     }
     void goBack(){
         FragmentManager fm = getFragmentManager();

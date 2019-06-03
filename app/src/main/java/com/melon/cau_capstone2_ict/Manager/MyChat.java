@@ -15,7 +15,7 @@ public class MyChat {
         type = t;
         text = "Test text";
         writer = "test12345";
-        date = "19.04.07";
+        date = "19.00.00";
     }
 
 

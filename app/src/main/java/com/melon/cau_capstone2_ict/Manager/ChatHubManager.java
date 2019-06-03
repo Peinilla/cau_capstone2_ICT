@@ -40,6 +40,7 @@ public class ChatHubManager {
     public void send(String to, String message){
         if(!to.equals("") && !message.equals("")) {
             hubProxy.invoke("sendMessage", MyUserData.getInstance().getId(), to, message);
+            Log.d("Tag","sendMessage " + MyUserData.getInstance().getId() +" / " + to);
         }
     }
     public void setTag(String tag){
@@ -57,7 +58,6 @@ public class ChatHubManager {
         if(isConnect){
             return;
         }
-        Log.d("Tag", "connect");
         isConnect = true;
 
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
@@ -67,6 +67,7 @@ public class ChatHubManager {
             public void prepareRequest(Request request) {
                 request.addHeader("userId", MyUserData.getInstance().getId());
                 request.addHeader("userNick", MyUserData.getInstance().getNickname());
+                request.addHeader("bopParty", MyUserData.getInstance().getBop());
             }
         };
 
@@ -74,6 +75,7 @@ public class ChatHubManager {
         try {
             hubConnection = new HubConnection(serverUrl);
         }catch (Exception e){
+            Log.e("Tag", "Chathub connection error : " + e.getMessage());
 
         }
 
@@ -82,6 +84,7 @@ public class ChatHubManager {
         hubConnection.connected(new Runnable() {
             @Override
             public void run() {
+                Log.d("Tag", "connect");
             }
         });
 
@@ -106,10 +109,6 @@ public class ChatHubManager {
 
     public ArrayList<String> getCurrentUser(){
         return currentUser;
-    }
-
-    public int getNumOfUser(){
-        return currentUser.size();
     }
 
     public ArrayList<MyChat> getChatArrayList(String to){

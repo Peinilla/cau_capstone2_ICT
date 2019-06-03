@@ -26,6 +26,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.melon.cau_capstone2_ict.Manager.ChatHubManager;
+import com.melon.cau_capstone2_ict.Manager.MyFriendAdapter;
+import com.melon.cau_capstone2_ict.Manager.MyFriendinfo;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 
 import org.json.JSONArray;
@@ -46,14 +48,16 @@ public class TabFragment_profile extends Fragment {
 
     FloatingActionButton btn_nfc_Add;
     FloatingActionButton btn_recoFriend;
+    FloatingActionButton btn_set;
+    FloatingActionButton btn_logout;
+
 
     SwipeRefreshLayout srl1;
     SwipeRefreshLayout srl2;
 
-    static ArrayList<String> friendArray = new ArrayList<>();
     static ArrayList<String> friendRequestArray = new ArrayList<>();
 
-    ArrayAdapter friend_adapter;
+    MyFriendAdapter myFriendAdapter;
     ArrayAdapter friendRequest_adapter;
 
     FrameLayout chatContainer;
@@ -70,38 +74,35 @@ public class TabFragment_profile extends Fragment {
         chatContainer = rootView.findViewById(R.id.profile_container);
         btn_nfc_Add = rootView.findViewById(R.id.button_nfc);
         btn_recoFriend = rootView.findViewById(R.id.button_reco);
+        btn_set = rootView.findViewById(R.id.button_set);
+        btn_logout = rootView.findViewById(R.id.button_logout);
+
         idView.setText(MyUserData.getInstance().getNickname());
 
         srl1 = rootView.findViewById(R.id.profile_swipe);
         srl2 = rootView.findViewById(R.id.profile_swipe2);
 
-        friend_adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, friendArray);
-        friendListView.setAdapter(friend_adapter);
+        myFriendAdapter = new MyFriendAdapter();
+        friendListView.setAdapter(myFriendAdapter);
 
         friendRequest_adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, friendRequestArray);
         friendListView.setAdapter(friendRequest_adapter);
 
-
-        ChatHubManager.getInstance().connect();
         ChatHubManager.getInstance().getHubProxy().removeSubscription("getuserlist");
         ChatHubManager.getInstance().getHubProxy().on("getUserList", new SubscriptionHandler1<String>() {
             @Override
             public void run(String s) {
                 try { // we added the list of connected users
-                    JSONArray jsonArray = new JSONArray(s);
-                    //friendArray.clear();
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        String username = jsonObject.getString("userId");
-                        //현재 접속유저 확인
-                        //friendArray.add(username);
-                    }
-
+//                    Log.d("Tag", "현재접속유저 : " + s);
+//
+//                    JSONArray jsonArray = new JSONArray(s);
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+//                    }
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            friend_adapter.notifyDataSetChanged();
-                            friendListView.setAdapter(friend_adapter);
+//                            myFriendAdapter.notifyDataSetChanged();
+//                            friendListView.setAdapter(myFriendAdapter);
                         }
                     });
                 } catch (Exception e) {
@@ -115,9 +116,12 @@ public class TabFragment_profile extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Fragment childFragment = new TabFragment_chat();
-
                 Bundle bundle = new Bundle(1);
-                bundle.putString("ToUser",(String)parent.getItemAtPosition(position));
+                MyFriendinfo m = (MyFriendinfo)parent.getItemAtPosition(position);
+                bundle.putString("ToUser",m.getId());
+                bundle.putString("ToUserNick",m.getNickname());
+
+
 
                 childFragment.setArguments(bundle);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -158,6 +162,22 @@ public class TabFragment_profile extends Fragment {
                 startActivity(intent);
             }
         });
+        btn_set.setOnClickListener(new FloatingActionButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ProfileActvity.class);
+                startActivity(intent);
+            }
+        });
+        btn_logout.setOnClickListener(new FloatingActionButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                ChatHubManager.getInstance().disconnect();
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
         btn_recoFriend.setOnClickListener(new FloatingActionButton.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -191,26 +211,22 @@ public class TabFragment_profile extends Fragment {
 
         return rootView;
     }
+
     public void getFriendList(){
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.d("Tag", "친구목록  : " + response);
-
-                    friendArray.clear();
-                    String res = response.substring(2,response.length()-2);
-                    res = res.replace("\"","");
-                    res = res.replace("\\","");
-                    String[] tmp = res.split(",");
-                    for(int inx = 0; inx < tmp.length; inx++) {
-                        if(!tmp[inx].equals("")) {
-                            friendArray.add(tmp[inx]);
-                        }
+                    myFriendAdapter.clear();
+                    JSONArray array = new JSONArray(response);
+                    for(int inx = 0; inx < array.length(); inx++) {
+                        JSONObject jsonResponse = array.getJSONObject(inx);
+                        myFriendAdapter.addItem(jsonResponse.getString("nick"),jsonResponse.getString("id"),jsonResponse.getInt("type"));
                     }
-                    friend_adapter.notifyDataSetChanged();
-                    friendListView.setAdapter(friend_adapter);
+                    myFriendAdapter.notifyDataSetChanged();
+                    friendListView.setAdapter(myFriendAdapter);
                 } catch (Exception e) {
+                    Log.e("Tag", "error " + e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -220,6 +236,7 @@ public class TabFragment_profile extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(getBoardRequest);
     }
+
     public void getFriendRequestList(){
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -282,6 +299,7 @@ public class TabFragment_profile extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(request);
     }
+
     class friendUpdateRequest extends StringRequest {
         private Map<String, String> parameters;
 
@@ -296,7 +314,6 @@ public class TabFragment_profile extends Fragment {
             parameters.put("senderId", MyUserData.getInstance().getId());
             parameters.put("receiverNick", receiverNick);
             parameters.put("type",type);
-
         }
 
         @Override

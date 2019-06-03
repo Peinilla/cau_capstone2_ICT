@@ -86,10 +86,10 @@ public class CalendarItemView extends View {
         mPaintWhite.setColor(ContextCompat.getColor(getContext(), R.color.white));
         mPaintBlue.setColor(ContextCompat.getColor(getContext(), R.color.blue));
         mPaintLBlue.setColor(ContextCompat.getColor(getContext(), R.color.l_blue));
-        mPaintGreen.setColor(ContextCompat.getColor(getContext(), R.color.green));
+        mPaintGreen.setColor(ContextCompat.getColor(getContext(), R.color.green_c));
         mPaintLGreen.setColor(ContextCompat.getColor(getContext(), R.color.l_green));
         mPaintRed.setColor(ContextCompat.getColor(getContext(), R.color.red));
-        mPaintPink.setColor(ContextCompat.getColor(getContext(), R.color.pink));
+        mPaintPink.setColor(ContextCompat.getColor(getContext(), R.color.pink_c));
         mPaintOrange.setColor(ContextCompat.getColor(getContext(), R.color.orange));
         mPaintYellow.setColor(ContextCompat.getColor(getContext(), R.color.yellow));
         mPaintPurple.setColor(ContextCompat.getColor(getContext(), R.color.purple));

@@ -28,12 +28,11 @@ public class DBHelper extends SQLiteOpenHelper {
         sb.append(" CREATE TABLE CALENDAR_TABLE ( ");
         sb.append(" _ID INTEGER PRIMARY KEY AUTOINCREMENT, ");
         sb.append(" TITLE TEXT, ");
-        sb.append(" CONTENT TEXT, "); // SQLite Database로 쿼리 실행
+        sb.append(" CONTENT TEXT, ");
         sb.append(" DATE TEXT, ");
         sb.append(" TIME TEXT, ");
         sb.append(" COLOR TEXT )");
         db.execSQL(sb.toString());
-        Toast.makeText(context, "Table 생성완료", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -58,7 +57,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 myCalendar.getTime(),
                 myCalendar.getColor()
         });
-        Toast.makeText(context, "Insert 완료", Toast.LENGTH_SHORT).show();
     }
 
     // myCaledars: 서버, list: DB
@@ -92,7 +90,6 @@ public class DBHelper extends SQLiteOpenHelper {
         sb.append(", COLOR = " + myCalendar.getColor());
         sb.append(" WHERE _ID = " + Integer.toString(_id));
         db.execSQL(sb.toString());
-        Toast.makeText(context, "update 완료", Toast.LENGTH_SHORT).show();
     }
 
     public void delete(int _id){
@@ -100,7 +97,6 @@ public class DBHelper extends SQLiteOpenHelper {
         sb.append(" DELETE FROM CALENDAR_TABLE WHERE _ID = " + Integer.toString(_id));
         SQLiteDatabase db = getReadableDatabase();
         db.execSQL(sb.toString());
-        Toast.makeText(context, "delete 완료", Toast.LENGTH_SHORT).show();
     }
 
     public ArrayList<MyCalendar> getAllMyCalendars() {

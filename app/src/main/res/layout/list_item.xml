@@ -12,6 +12,7 @@
         <LinearLayout
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:paddingBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -88,17 +89,19 @@
             android:layout_gravity="right"
             android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/button_calendar_modify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="수정"/>
+                android:src="@drawable/modify"
+                android:background="@color/transparent"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/button_calendar_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="삭제"/>
+                android:src="@drawable/delete"
+                android:background="@color/transparent"/>
 
         </LinearLayout>
 

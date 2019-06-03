@@ -48,7 +48,7 @@
             android:id="@+id/board_writer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_title_board"
+            android:layout_below="@+id/layout_bab_title"
             android:layout_alignParentBottom="false"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/board_icon"
@@ -65,13 +65,16 @@
             app:srcCompat="@drawable/account" />
 
         <LinearLayout
+            android:id="@+id/layout_bab_title"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="false"
             android:layout_toRightOf="@+id/board_icon"
-            android:id="@+id/layout_title_board"
-            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:orientation="horizontal"
             android:layout_height="wrap_content">
 
             <ImageButton
+                android:visibility="gone"
                 android:clickable="false"
                 android:id="@+id/image_rice"
                 android:layout_width="wrap_content"
@@ -83,8 +86,6 @@
                 android:id="@+id/board_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="false"
-                android:layout_weight="1"
                 android:text="TextView"
                 android:textSize="24sp" />
 
@@ -114,7 +115,7 @@
     <ImageButton
         android:background="@color/white"
         android:id="@+id/button_join"
-        android:src="@drawable/go"
+        android:src="@drawable/join"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/board_text"
@@ -161,6 +162,59 @@
             app:fab_title="Set bottom menu enabled/disabled" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    <LinearLayout
+        android:id="@+id/reply_edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toLeftOf="@+id/chat_floatingButton"
+        android:background="@drawable/mychat"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
+
+        <EditText
+            android:id="@+id/board_reply_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="댓글을 입력하세요."
+            android:inputType="text"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/board_reply_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/write_40x40" />
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/board_reply_swipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/reply_edit_layout"
+        android:layout_below="@+id/button_join"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp">
+        <ListView
+            android:id="@+id/board_replyList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/transparent"
+            />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <FrameLayout
         android:id="@+id/withbab_container"
