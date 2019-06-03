@@ -217,4 +217,3 @@ public class TabFragment_chatGroup extends Fragment implements MainActivity.OnBa
         super.onDetach();
     }
 }
-

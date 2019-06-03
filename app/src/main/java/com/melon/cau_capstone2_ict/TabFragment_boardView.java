@@ -29,13 +29,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonObject;
 import com.melon.cau_capstone2_ict.Manager.MyBoard;
 import com.melon.cau_capstone2_ict.Manager.MyReply;
 import com.melon.cau_capstone2_ict.Manager.MyReplyAdapter;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 import com.melon.cau_capstone2_ict.Manager.OnBackManager;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +58,7 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
     ImageButton btn_join;
     ImageButton btn_postReply;
     ImageButton btn_back;
+    ImageButton riceImage;
 
     SwipeRefreshLayout mSWL;
 
@@ -85,6 +84,7 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
         btn_join = rootView.findViewById(R.id.button_join);
         btn_back = rootView.findViewById(R.id.board_back);
         btn_postReply = rootView.findViewById(R.id.board_reply_post);
+        riceImage = rootView.findViewById(R.id.boardview_babimage);
 
         frameLayout = rootView.findViewById(R.id.board_container);
         replyList = rootView.findViewById(R.id.board_replyList);
@@ -96,6 +96,9 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
 
         if (!m.isBabtype()) {
             btn_join.setVisibility(View.INVISIBLE);
+            riceImage.setVisibility(View.GONE);
+        }else{
+            riceImage.setVisibility(View.VISIBLE);
         }
 
         btn_join.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +133,21 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
                 Intent intent = new Intent(getActivity(), profileViewActivity.class);
                 intent.putExtra("id", writer);
                 startActivity(intent);
+            }
+        });
+        btn_postReply.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!isPosting) {
+                    postReply(replyText.getText().toString());
+                }
+            }
+        });
+        mSWL.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSWL.setRefreshing(false);
+                getReply();
             }
         });
         btn_postReply.setOnClickListener(new Button.OnClickListener() {
@@ -225,7 +243,6 @@ public class TabFragment_boardView extends Fragment implements MainActivity.OnBa
             parameters.put("userId", MyUserData.getInstance().getId());
             parameters.put("text", text);
         }
-
         @Override
         public Map<String, String> getParams() {
             return parameters;

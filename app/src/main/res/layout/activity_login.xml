@@ -38,7 +38,7 @@
             android:inputType="textPassword"
             android:text="pass" />
 
-        <Button
+        <ImageButton
             android:id="@+id/login_signin"
             android:layout_width="wrap_content"
             android:layout_height="90dp"
@@ -47,7 +47,20 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:onClick="onClickLogin"
+            android:src="@drawable/login"
+            android:background="@color/transparent"
             android:text="로그인" />
+
+        <!--<Button-->
+            <!--android:id="@+id/login_signin"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="90dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:onClick="onClickLogin"-->
+            <!--android:text="로그인" />-->
 
         <LinearLayout
             android:id="@+id/singup"
@@ -59,15 +72,27 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/login_signup"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_signin"
+                android:src="@drawable/signup"
+                android:background="@color/transparent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:onClick="onClickSignUp"
                 android:text="회원가입" />
+
+            <!--<Button-->
+                <!--android:id="@+id/login_signup"-->
+                <!--android:layout_width="130dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/login_signin"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginRight="20dp"-->
+                <!--android:onClick="onClickSignUp"-->
+                <!--android:text="회원가입" />-->
 
         </LinearLayout>
 
@@ -107,14 +132,21 @@
 
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/imageView_splash"
+
+    <FrameLayout
+        android:id="@+id/image_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/splash"
         android:background="@color/white"
-        android:clickable="true"
-        android:visibility="gone"
-        />
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView_splash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:src="@drawable/splash" />
+    </FrameLayout>
 
 </RelativeLayout>

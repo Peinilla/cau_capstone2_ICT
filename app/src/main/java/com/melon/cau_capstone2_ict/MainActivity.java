@@ -4,21 +4,20 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.melon.cau_capstone2_ict.Manager.*;
+import com.melon.cau_capstone2_ict.Manager.BuildingManager;
+import com.melon.cau_capstone2_ict.Manager.ChatHubManager;
+import com.melon.cau_capstone2_ict.Manager.GpsManager;
+import com.melon.cau_capstone2_ict.Manager.MyPagerAdapter;
+import com.melon.cau_capstone2_ict.Manager.OnBackManager;
 
 public class MainActivity extends AppCompatActivity {
     private long pressedTime;
@@ -37,35 +36,30 @@ public class MainActivity extends AppCompatActivity {
         }
         ChatHubManager.getInstance();
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
-        View view1 = getLayoutInflater().inflate(R.layout.customtab, null);
-        view1.findViewById(R.id.icon).setBackgroundResource(R.drawable.profile);
+        final View view1 = getLayoutInflater().inflate(R.layout.customtab, null);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view1));
-        View view2 = getLayoutInflater().inflate(R.layout.customtab, null);
-        view2.findViewById(R.id.icon).setBackgroundResource(R.drawable.home);
+        final View view2 = getLayoutInflater().inflate(R.layout.customtab, null);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view2));
-        View view3 = getLayoutInflater().inflate(R.layout.customtab, null);
-        view3.findViewById(R.id.icon).setBackgroundResource(R.drawable.univ);
+        final View view3 = getLayoutInflater().inflate(R.layout.customtab, null);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view3));
-        View view4 = getLayoutInflater().inflate(R.layout.customtab, null);
-        view4.findViewById(R.id.icon).setBackgroundResource(R.drawable.iam);
+        final  View view4 = getLayoutInflater().inflate(R.layout.customtab, null);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view4));
-        View view5 = getLayoutInflater().inflate(R.layout.customtab, null);
-        view5.findViewById(R.id.icon).setBackgroundResource(R.drawable.calendar);
+        final View view5 = getLayoutInflater().inflate(R.layout.customtab, null);
         tabLayout.addTab(tabLayout.newTab().setCustomView(view5));
-
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.pro));
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.home));
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.univ));
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.im));
-//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.cal));
-//        tabLayout.height
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        adapter = new MyPagerAdapter
+        tabLayout.getTabAt(0).getCustomView().setBackgroundResource(R.drawable.profile);
+        tabLayout.getTabAt(1).getCustomView().setBackgroundResource(R.drawable.home_no);
+        tabLayout.getTabAt(2).getCustomView().setBackgroundResource(R.drawable.univ_no);
+        tabLayout.getTabAt(3).getCustomView().setBackgroundResource(R.drawable.iam_no);
+        tabLayout.getTabAt(4).getCustomView().setBackgroundResource(R.drawable.calendar_no);
+
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final MyPagerAdapter adapter = new MyPagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(5);
@@ -90,19 +84,51 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                switch (tab.getPosition()){
+                    case 0:
+                        tabLayout.getTabAt(0).getCustomView().setBackgroundResource(R.drawable.profile);
+                        break;
+                    case 1:
+                        tabLayout.getTabAt(1).getCustomView().setBackgroundResource(R.drawable.home);
+                        break;
+                    case 2:
+                        tabLayout.getTabAt(2).getCustomView().setBackgroundResource(R.drawable.univ);
+                        break;
+                    case 3:
+                        tabLayout.getTabAt(3).getCustomView().setBackgroundResource(R.drawable.iam);
+                        break;
+                    case 4:
+                        tabLayout.getTabAt(4).getCustomView().setBackgroundResource(R.drawable.calendar);
+                        break;
+                }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
+                    case 0:
+                        tabLayout.getTabAt(0).getCustomView().setBackgroundResource(R.drawable.profile_no);
+                        break;
+                    case 1:
+                        tabLayout.getTabAt(1).getCustomView().setBackgroundResource(R.drawable.home_no);
+                        break;
+                    case 2:
+                        tabLayout.getTabAt(2).getCustomView().setBackgroundResource(R.drawable.univ_no);
+                        break;
+                    case 3:
+                        tabLayout.getTabAt(3).getCustomView().setBackgroundResource(R.drawable.iam_no);
+                        break;
+                    case 4:
+                        tabLayout.getTabAt(4).getCustomView().setBackgroundResource(R.drawable.calendar_no);
+                        break;
+                }
 
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
-
 
         GpsManager.getInstance().setmContext(this);
         GpsManager.getInstance().Update();
@@ -148,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        ChatHubManager.getInstance().disconnect();
         super.finish();
     }
 

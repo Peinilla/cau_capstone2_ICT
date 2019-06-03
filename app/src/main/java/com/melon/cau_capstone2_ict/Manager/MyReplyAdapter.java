@@ -1,7 +1,6 @@
 package com.melon.cau_capstone2_ict.Manager;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

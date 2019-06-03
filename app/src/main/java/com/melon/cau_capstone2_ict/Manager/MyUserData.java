@@ -1,7 +1,6 @@
 package com.melon.cau_capstone2_ict.Manager;
 
 import android.location.Location;
-
 import java.util.ArrayList;
 
 public class MyUserData {

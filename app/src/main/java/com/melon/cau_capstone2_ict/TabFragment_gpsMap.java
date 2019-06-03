@@ -85,7 +85,7 @@ public class TabFragment_gpsMap extends Fragment {
                     setMarker();
                 }
             }
-            });
+        });
 
         marker2.setOnClickListener(new Button.OnClickListener(){
             @Override

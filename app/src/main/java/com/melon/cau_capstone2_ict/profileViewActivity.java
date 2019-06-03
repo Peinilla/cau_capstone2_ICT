@@ -15,7 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.melon.cau_capstone2_ict.Manager.MyChat;
+
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 
 import org.json.JSONObject;
@@ -68,6 +68,7 @@ public class profileViewActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"친구 신청을 보냈습니다.",Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(getApplicationContext(),"친구 신청 실패 " + jsonResponse.getBoolean("resson"),Toast.LENGTH_SHORT).show();
+
                     }
 
                 } catch (Exception e) {
@@ -90,6 +91,7 @@ public class profileViewActivity extends AppCompatActivity {
         private Map<String, String> parameters;
         public addFriendRequest(Response.Listener<String> listener) {
             super(Method.POST, "https://capston2webapp.azurewebsites.net/api/"+MyUserData.getInstance().getId() + "/friend/add", listener, new Response.ErrorListener() {
+
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("Tag", "addFriendRequest " + error);
@@ -109,6 +111,7 @@ public class profileViewActivity extends AppCompatActivity {
         private Map<String, String> parameters;
         public addNFCRequest(Response.Listener<String> listener) {
             super(Method.POST, "https://capston2webapp.azurewebsites.net/api/"+MyUserData.getInstance().getId() + "/friend/update", listener, new Response.ErrorListener() {
+
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("Tag", "error " + error);

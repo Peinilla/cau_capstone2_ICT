@@ -3,9 +3,9 @@ package com.melon.cau_capstone2_ict;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -76,6 +76,7 @@ public class Signup2Activity extends AppCompatActivity {
         });
         String[] str_home = getResources().getStringArray(R.array.select_home_item);
         ArrayAdapter<String> home_adapter= new ArrayAdapter<String>(this,R.layout.spinner_home,str_home);
+
         home_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_home.setAdapter(home_adapter);
 
@@ -93,6 +94,7 @@ public class Signup2Activity extends AppCompatActivity {
         });
         String[] str_dept = getResources().getStringArray(R.array.select_dept_item);
         ArrayAdapter<String> dept_adapter= new ArrayAdapter<String>(this,R.layout.spinner_home,str_dept);
+
         dept_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_dept.setAdapter(dept_adapter);
 
@@ -111,6 +113,7 @@ public class Signup2Activity extends AppCompatActivity {
         });
         String[] str_hobby = getResources().getStringArray(R.array.select_habby_item);
         ArrayAdapter<String> hobby_adapter= new ArrayAdapter<String>(this,R.layout.spinner_home,str_hobby);
+
         hobby_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_habby.setAdapter(hobby_adapter);
     }

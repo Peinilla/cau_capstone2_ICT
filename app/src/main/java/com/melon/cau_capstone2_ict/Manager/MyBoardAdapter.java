@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import com.melon.cau_capstone2_ict.*;
 
@@ -33,7 +34,6 @@ public class MyBoardAdapter extends BaseAdapter {
         final int pos = position;
         final Context context = parent.getContext();
 
-        // "listview_item" Layout을 inflate하여 convertView 참조 획득.
         if (convertView == null) {
             convertView = LayoutInflater.from(context).
                     inflate(R.layout.listview_myboard, parent, false);
@@ -44,11 +44,17 @@ public class MyBoardAdapter extends BaseAdapter {
         TextView commentView = (TextView) convertView.findViewById(R.id.comment) ;
         TextView recommendView = (TextView) convertView.findViewById(R.id.recommend) ;
         TextView dateView = (TextView) convertView.findViewById(R.id.date) ;
+        ImageButton riceView = (ImageButton) convertView.findViewById(R.id.board_babImage);
 
         MyBoard myBoard_item = listViewItemList.get(position);
 
         if(pos%2 == 0){
             convertView.setBackgroundResource(R.color.color_board_even);
+        }
+
+        if(myBoard_item.isBabtype()){
+            riceView.setVisibility(View.VISIBLE);
+            riceView.setFocusable(false);
         }
 
         titleView.setText(myBoard_item.getTitle());
@@ -74,7 +80,6 @@ public class MyBoardAdapter extends BaseAdapter {
     public void addItem(MyBoard m) {
         listViewItemList.add(m);
     }
-
     public void updateDate(){
         long now = System.currentTimeMillis();
         Date date = new Date(now);
@@ -97,7 +102,6 @@ public class MyBoardAdapter extends BaseAdapter {
         cloneList.clear();
         listViewItemList.clear();
     }
-
     public void reverse() {
         cloneList.addAll(listViewItemList);
         Collections.reverse(listViewItemList);

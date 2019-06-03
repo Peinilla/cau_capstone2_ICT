@@ -3,8 +3,8 @@ package com.melon.cau_capstone2_ict;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.os.Handler;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
@@ -23,7 +22,6 @@ import com.melon.cau_capstone2_ict.Manager.ChatHubManager;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 import com.melon.cau_capstone2_ict.Manager.OnBackManager;
 
-import net.alhazmy13.wordcloud.WordCloud;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -59,6 +57,7 @@ public class TabFragment_recommendFriend extends Fragment implements MainActivit
         ChatHubManager.getInstance().getHubProxygroup().on("getRightNowTagUserInfo", new SubscriptionHandler1<String>() {
             @Override
             public void run(final String s) {
+
                 array_nickname.clear();
                 try {
                     JSONArray jsonArray = new JSONArray(s);
@@ -79,6 +78,7 @@ public class TabFragment_recommendFriend extends Fragment implements MainActivit
                             recolistview.setAdapter(reco_adapter);
                         }
                     });
+
                 }catch (Exception e) {
                     Log.e("Tag", "error " + e.getMessage());
                     e.printStackTrace();
@@ -118,6 +118,7 @@ public class TabFragment_recommendFriend extends Fragment implements MainActivit
         OnBackManager.getInstance().removeOnBackList();
         Object o = OnBackManager.getInstance().getOnBackList();
         activity.setOnBackPressedListener((MainActivity.OnBackPressedListener) o);
+
         goBack();
     }
     @Override

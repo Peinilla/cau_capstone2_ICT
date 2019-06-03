@@ -1,7 +1,5 @@
 package com.melon.cau_capstone2_ict.Manager;
 
-import android.os.VibrationEffect;
-import android.view.View;
 
 public class MyReply {
     private static final int VIEW_MY = 0 ;

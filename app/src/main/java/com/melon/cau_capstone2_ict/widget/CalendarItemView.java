@@ -1,38 +1,46 @@
 package com.melon.cau_capstone2_ict.widget;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.DrawableContainer;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.zxing.common.BitArray;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.melon.cau_capstone2_ict.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Observable;
 
 public class CalendarItemView extends View {
 
     Paint mPaintTextDate = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mPaintTextToday = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mPaintBackgroundToday = new Paint(Paint.ANTI_ALIAS_FLAG);
-    Paint mPaintBackgroundTodaySelected = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mPaintBackgroundSelected = new Paint(Paint.ANTI_ALIAS_FLAG);
-    Paint mPaintBackgroundEvent = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintBlack = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintGray = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintWhite = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintBlue = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintLBlue = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintGreen = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintLGreen = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintRed = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintPink = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintOrange = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintYellow = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintPurple = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private int dayOfWeek = -1;
     private long todayMillis;
@@ -40,8 +48,10 @@ public class CalendarItemView extends View {
     private int dp11;
     private int dp16;
     private int dp1;
-    private final float RADIUS = 50f;
-    private boolean isEvent = false;
+    private final float RADIUS = 100f;
+    private ArrayList<String> color = new ArrayList<String>();
+
+    //test
     private static CalendarItemView instance = null;
 
     CalendarView calendarView;
@@ -69,10 +79,20 @@ public class CalendarItemView extends View {
         mPaintTextToday.setColor(Color.RED);
         mPaintTextToday.setTextSize(dp11);
         mPaintTextToday.setTextAlign(Paint.Align.CENTER);
-        mPaintBackgroundToday.setColor(ContextCompat.getColor(getContext(), R.color.today));
-        mPaintBackgroundTodaySelected.setColor(ContextCompat.getColor(getContext(), R.color.todaySelected));
-        mPaintBackgroundSelected.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        mPaintBackgroundEvent.setColor(ContextCompat.getColor(getContext(), R.color.pink));
+        mPaintBackgroundToday.setColor(ContextCompat.getColor(getContext(), R.color.select_today));
+        mPaintBackgroundSelected.setColor(ContextCompat.getColor(getContext(), R.color.select_color));
+        mPaintBlack.setColor(ContextCompat.getColor(getContext(), R.color.black));
+        mPaintGray.setColor(ContextCompat.getColor(getContext(), R.color.gray));
+        mPaintWhite.setColor(ContextCompat.getColor(getContext(), R.color.white));
+        mPaintBlue.setColor(ContextCompat.getColor(getContext(), R.color.blue));
+        mPaintLBlue.setColor(ContextCompat.getColor(getContext(), R.color.l_blue));
+        mPaintGreen.setColor(ContextCompat.getColor(getContext(), R.color.green_c));
+        mPaintLGreen.setColor(ContextCompat.getColor(getContext(), R.color.l_green));
+        mPaintRed.setColor(ContextCompat.getColor(getContext(), R.color.red));
+        mPaintPink.setColor(ContextCompat.getColor(getContext(), R.color.pink_c));
+        mPaintOrange.setColor(ContextCompat.getColor(getContext(), R.color.orange));
+        mPaintYellow.setColor(ContextCompat.getColor(getContext(), R.color.yellow));
+        mPaintPurple.setColor(ContextCompat.getColor(getContext(), R.color.purple));
 
         setClickable(true);
 
@@ -83,13 +103,11 @@ public class CalendarItemView extends View {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (!getIsStaticText()) {
                         ((CalendarView) getParent()).setSelectedView(view);
-
                         TextView textView = getRootView().findViewById(R.id.text_calendar_date);
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         Date date = new Date();
                         date.setTime(todayMillis);
                         textView.setText(dateFormat.format(date));
-
                         return true;
                     }
                 }
@@ -119,8 +137,7 @@ public class CalendarItemView extends View {
         super.onDraw(canvas);
         int xPos = (int) (canvas.getWidth() * 0.5);
         int yPos = (int) ((canvas.getHeight() / 2) - ((mPaintTextDate.descent() + mPaintTextDate.ascent()) * 0.5));
-        RectF rectF = new RectF(xPos - dp16, getHeight() / 2 - dp16, xPos + dp16, getHeight() / 2 + dp16);
-        RectF rectO = new RectF(xPos - (dp1 * 3), getHeight() / 2 - (dp1 * 10), xPos + dp1 * 3, getHeight() / 2 - (dp1 * 16));
+        RectF rectF = new RectF(xPos - dp16 - 10, getHeight() / 2 - dp16 - 10, xPos + dp16 + 10, getHeight() / 2 + dp16 + 10);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(todayMillis);
 
@@ -132,25 +149,113 @@ public class CalendarItemView extends View {
             canvas.drawText(CalendarView.DAY_OF_WEEK[dayOfWeek], xPos, yPos, mPaintTextDate);
         } else {
             if (getIsToday()) {
-                canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos, mPaintTextToday);
+                canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos - 30, mPaintTextToday);
 
                 if (getIsSelected()) {
                     if (getIsSameDay(todayMillis, (long) tagView.getTag())) {
-                        canvas.drawRoundRect(rectF, RADIUS, RADIUS, mPaintBackgroundToday);
-                        canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos, mPaintTextDate);
+                        canvas.drawRect(rectF,mPaintBackgroundToday);
+                        canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos - 30, mPaintTextDate);
                     }
                 }
-                if(getIsEvent())
-                    canvas.drawRoundRect(rectO, RADIUS, RADIUS, mPaintBackgroundEvent);
+                for(int i = 0; i < color.size(); i++) {
+                    if(i == 3)
+                        break;
+                    RectF rect = new RectF((float) (xPos - (canvas.getWidth() / 2) * 0.5),
+                            (float) (yPos - (canvas.getHeight() / 2) * 0.1 + (i * canvas.getHeight() / 2 * 0.3)),
+                            (float) (xPos + (canvas.getWidth() / 2) * 0.5),
+                            (float) (yPos - (canvas.getHeight() / 2) * 0.3 + (i * canvas.getHeight() / 2 * 0.3)));
+                    switch (color.get(i)) {
+                        case "black":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintBlack);
+                            break;
+                        case "gray":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintGray);
+                            break;
+                        case "white":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintWhite);
+                            break;
+                        case "red":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintRed);
+                            break;
+                        case "pink":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintPink);
+                            break;
+                        case "blue":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintBlue);
+                            break;
+                        case "l_blue":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintLBlue);
+                            break;
+                        case "green":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintGreen);
+                            break;
+                        case "l_green":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintLGreen);
+                            break;
+                        case "yellow":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintYellow);
+                            break;
+                        case "orange":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintOrange);
+                            break;
+                        case "purple":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintPurple);
+                            break;
+                    }
+                }
             } else {
                 if (getIsSelected()) {
                     if (getIsSameDay(todayMillis, (long) tagView.getTag())) {
-                        canvas.drawRoundRect(rectF, RADIUS, RADIUS, mPaintBackgroundSelected);
+                        canvas.drawRect(rectF, mPaintBackgroundSelected);
                     }
                 }
-                canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos, mPaintTextDate);
-                if(getIsEvent())
-                    canvas.drawRoundRect(rectO, RADIUS, RADIUS, mPaintBackgroundEvent);
+                canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos - 30, mPaintTextDate);
+                for(int i = 0; i < color.size(); i++) {
+                    if(i == 3)
+                        break;
+                    RectF rect = new RectF((float) (xPos - (canvas.getWidth() / 2) * 0.5),
+                            (float) (yPos - (canvas.getHeight() / 2) * 0.1 + (i * canvas.getHeight() / 2 * 0.3)),
+                            (float) (xPos + (canvas.getWidth() / 2) * 0.5),
+                            (float) (yPos - (canvas.getHeight() / 2) * 0.3 + (i * canvas.getHeight() / 2 * 0.3)));
+                    switch (color.get(i)) {
+                        case "black":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintBlack);
+                            break;
+                        case "gray":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintGray);
+                            break;
+                        case "white":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintWhite);
+                            break;
+                        case "red":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintRed);
+                            break;
+                        case "pink":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintPink);
+                            break;
+                        case "blue":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintBlue);
+                            break;
+                        case "l_blue":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintLBlue);
+                            break;
+                        case "green":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintGreen);
+                            break;
+                        case "l_green":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintLGreen);
+                            break;
+                        case "yellow":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintYellow);
+                            break;
+                        case "orange":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintOrange);
+                            break;
+                        case "purple":
+                            canvas.drawRoundRect(rect, RADIUS, RADIUS, mPaintPurple);
+                            break;
+                    }
+                }
             }
         }
     }
@@ -165,12 +270,12 @@ public class CalendarItemView extends View {
         isStaticText = true;
     }
 
-    public void setIsEvent(boolean event) {
-        isEvent = event;
+    public void setColor(ArrayList<String> color) {
+        this.color = color;
     }
 
-    public boolean getIsEvent() {
-        return isEvent;
+    public ArrayList<String> getColor() {
+        return color;
     }
 
     public boolean getIsSelected(){

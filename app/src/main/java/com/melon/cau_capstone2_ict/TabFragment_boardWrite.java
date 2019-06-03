@@ -69,7 +69,7 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
             public void onClick(View view) {
                 onBack();
             }
-            });
+        });
         write.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -139,7 +139,7 @@ public class TabFragment_boardWrite extends Fragment implements MainActivity.OnB
                         ChatHubManager.getInstance().getHubProxy().on("onBopChatCreated", new SubscriptionHandler1<String>() {
                             @Override
                             public void run(final String s) {
-                               Log.d("Tag","밥파티 성공 : " + s);
+                                Log.d("Tag","밥파티 성공 : " + s);
                             }
                         },String.class);
                     }

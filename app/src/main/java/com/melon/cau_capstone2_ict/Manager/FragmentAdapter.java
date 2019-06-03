@@ -71,6 +71,7 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
         this.numOfMonth = numOfMonth;
 
         Calendar calendar = Calendar.getInstance();
+        //Todo: -
         calendar.add(Calendar.MONTH, -numOfMonth);
         calendar.set(Calendar.DATE, 1);
 
@@ -113,16 +114,40 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
         return POSITION_NONE;
     }
 
-    public String getMonthDisplayed(int position) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM");
+    public String getStrYear(int position){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
         Date date = new Date();
         date.setTime(listMonthByMillis.get(position));
 
         return dateFormat.format(date);
     }
 
-    public String getDateDisplayed(long millis) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+    public String getStrMonth(int position) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM");
+        Date date = new Date();
+        date.setTime(listMonthByMillis.get(position));
+
+        return dateFormat.format(date);
+    }
+
+    public String getStrDay(int position) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
+        Date date = new Date();
+        date.setTime(listMonthByMillis.get(position));
+
+        return dateFormat.format(date);
+    }
+
+    public String getStrMonthOfYear(int position){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+        Date date = new Date();
+        date.setTime(listMonthByMillis.get(position));
+
+        return dateFormat.format(date);
+    }
+
+    public String getStrDate(long millis) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         date.setTime(millis);
 

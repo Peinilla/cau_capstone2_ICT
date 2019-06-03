@@ -5,38 +5,28 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONObject;
-
-import java.security.MessageDigest;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -48,12 +38,20 @@ import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 import com.melon.cau_capstone2_ict.Manager.MyUserData;
 
+import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 public class LoginActivity extends AppCompatActivity {
     private static final String AUTH_TYPE = "rerequest";
 
     private EditText login_id;
     private EditText login_pass;
     private ImageView imageView;
+    private FrameLayout frameLayout;
     private AnimationDrawable animationDrawable;
 
     private AlertDialog dialog;
@@ -74,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         login_id = (EditText) findViewById(R.id.signup_id);
         login_pass = (EditText) findViewById(R.id.login_password);
 
+        frameLayout = findViewById(R.id.image_frame);
         imageView = findViewById(R.id.imageView_splash);
         animationDrawable = (AnimationDrawable) imageView.getDrawable();
 
@@ -115,6 +114,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onClickSignUp(View v){
         Intent intent = new Intent(this,SignupActivity.class);
+
         startActivity(intent);
     }
 
@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loginAction(String id, String password){
 
-        imageView.setVisibility(View.VISIBLE);
+        frameLayout.setVisibility(View.VISIBLE);
         animationDrawable.start();
 
         Response.Listener<String> responseListener = new Response.Listener<String> () {
@@ -170,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     isProceeding = false;
-                    imageView.setVisibility(View.GONE);
+                    frameLayout.setVisibility(View.GONE);
                     animationDrawable.stop();
                     Log.d("Tag", "error " + error);
                 }

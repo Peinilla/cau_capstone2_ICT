@@ -9,15 +9,10 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/calendar_image_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/kakao_editable_profile" />
-
         <LinearLayout
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -40,25 +35,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:paddingRight="20dp"
                     android:text="name"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/calendar_comment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:paddingLeft="10dp"
-                    android:text="(0)"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/calendar_recommend"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:paddingLeft="10dp"
-                    android:text="(0)"
                     android:textSize="15sp" />
 
                 <TextView
@@ -66,14 +44,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:paddingLeft="10dp"
-                    android:text="yy.mm.dd"
+                    android:paddingRight="10dp"
+                    android:text="yyyy-mm-dd"
                     android:textSize="15sp" />
 
-
+                <TextView
+                    android:id="@+id/calendar_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="하루 종일"
+                    android:textSize="15sp"/>
 
             </LinearLayout>
-
 
         </LinearLayout>
 
@@ -106,21 +89,22 @@
             android:layout_gravity="right"
             android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/button_calendar_modify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="수정"/>
+                android:src="@drawable/modify"
+                android:background="@color/transparent"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/button_calendar_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="삭제"/>
+                android:src="@drawable/delete"
+                android:background="@color/transparent"/>
 
         </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>

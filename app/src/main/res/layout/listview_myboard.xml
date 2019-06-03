@@ -7,24 +7,46 @@
     android:orientation="horizontal"
     android:background="@color/color_board_odd">
 
-    <TextView
-        android:id="@+id/title"
+    <LinearLayout
+        android:id="@+id/layout_title"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_weight="1"
-        android:gravity="left|center"
-        android:text="제목 테스트 가나다라마바사아 12345667878999999999999999999999999"
-        android:textSize="20sp" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/board_babImage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="-10dp"
+            android:background="@color/transparent"
+            android:clickable="false"
+            android:src="@drawable/rice"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:gravity="left|center"
+            android:text="제목 테스트 가나다라마바사아 12345667878999999999999999999999999"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+
 
     <TextView
         android:id="@+id/chat_writer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/layout_title"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="10dp"
@@ -37,7 +59,7 @@
         android:id="@+id/comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/layout_title"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
@@ -51,7 +73,7 @@
         android:id="@+id/recommend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/layout_title"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
@@ -65,7 +87,7 @@
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/layout_title"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
