@@ -28,6 +28,7 @@
                 <LinearLayout
                     xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
+                    android:background="@color/my_calendar"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
