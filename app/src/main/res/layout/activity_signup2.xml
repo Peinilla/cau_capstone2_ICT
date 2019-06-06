@@ -22,10 +22,11 @@
                 android:id="@+id/layout_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/signup_email"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="false"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp">
 
                 <EditText
@@ -51,6 +52,19 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/signup_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="100dp"
+                android:layout_marginRight="10dp"
+                android:ems="11"
+                android:hint="Email"
+                android:inputType="textEmailAddress" />
+
+            <Spinner
                 android:id="@+id/signup_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,11 +74,10 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
-                android:ems="10"
-                android:hint="거주지"
-                android:inputType="textPassword" />
+                android:spinnerMode="dropdown"
+                android:textColor="@color/black" />
 
-            <EditText
+            <Spinner
                 android:id="@+id/signup_dept"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,9 +87,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
-                android:ems="10"
-                android:hint="학과"
-                android:inputType="textPassword" />
+                android:spinnerMode="dropdown"
+                android:textColor="@color/black" />
 
             <EditText
                 android:id="@+id/signup_birth"
@@ -88,12 +100,12 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
-                android:ems="10"
+                android:ems="11"
                 android:hint="생년월일 ex)19990101"
                 android:inputType="numberSigned"
                 android:maxLength="8" />
 
-            <EditText
+            <Spinner
                 android:id="@+id/signup_hobby"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -103,9 +115,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
-                android:ems="10"
-                android:hint="취미"
-                android:inputType="textEmailAddress" />
+                android:spinnerMode="dropdown"
+                android:textColor="@color/black" />
 
             <LinearLayout
                 android:layout_width="match_parent"

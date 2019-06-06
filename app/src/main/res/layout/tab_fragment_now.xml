@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/now_Chatroom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
+        android:text="채팅방 이동"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+    <net.alhazmy13.wordcloud.WordCloudView
+        android:id="@+id/now_wordcloud"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/now_taglayout"
+        android:background="@android:color/transparent" />
+
+    <ListView
+        android:id="@+id/now_taglist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/now_Chatroom"
+        android:layout_below="@+id/now_taglayout"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp" />
+
+    <LinearLayout
+        android:id="@+id/now_taglayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/now_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="지금 나는 태그를 입력해주세요."
+            android:inputType="text"
+            android:maxLength="8"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/now_tagupload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/write_40x40" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/now_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+</RelativeLayout>

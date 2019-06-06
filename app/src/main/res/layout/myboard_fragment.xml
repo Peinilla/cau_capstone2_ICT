@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/board_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/com_facebook_tooltip_blue_background"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="중문거주 게시판"
+        android:textSize="30sp" />
+
+    <ImageButton
+        android:id="@+id/board_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/board_swipe"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/transparent"
+        android:visibility="gone"
+        app:srcCompat="@drawable/arrow_left_40x40" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/board_swipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/SearchBar"
+        android:layout_below="@+id/board_title">
+        <ListView
+            android:id="@+id/listview1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/board_float"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="60dp"
+        app:fab_addButtonColorNormal="@color/white"
+        app:fab_addButtonColorPressed="@color/white_pressed"
+        app:fab_addButtonPlusIconColor="@color/half_black"
+        app:fab_addButtonSize="mini"
+        app:fab_expandDirection="up">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_write"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
+            app:fab_icon="@drawable/write_40x40" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
+            app:fab_icon="@drawable/search"
+            app:fab_title="Search" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/SearchBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/blue_semi_transparent"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinner_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:spinnerMode="dropdown"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/board_searchword"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"
+                android:layout_toRightOf="@+id/image_search"
+                android:hint="검색"
+                android:singleLine="true"
+                android:textSize="20dp" />
+
+            <ImageButton
+                android:id="@+id/image_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="false"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@+id/spinner_search"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/search_40x40" />
+
+            <ImageButton
+                android:id="@+id/image_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/arrow_40x40" />
+        </RelativeLayout>
+
+    </android.support.design.widget.BottomNavigationView>
+
+    <FrameLayout
+        android:id="@+id/board_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+</RelativeLayout>

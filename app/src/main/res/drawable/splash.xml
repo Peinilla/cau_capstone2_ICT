@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+    android:oneshot="false"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/ict_1" android:duration="30"/>
+    <item android:drawable="@drawable/ict_2" android:duration="30"/>
+    <item android:drawable="@drawable/ict_3" android:duration="30" />
+    <item android:drawable="@drawable/ict_4" android:duration="30"/>
+    <item android:drawable="@drawable/ict_5" android:duration="30"/>
+    <item android:drawable="@drawable/ict_6" android:duration="30"/>
+    <item android:drawable="@drawable/ict_7" android:duration="30"/>
+    <item android:drawable="@drawable/ict_8" android:duration="30"/>
+    <item android:drawable="@drawable/ict_9" android:duration="30"/>
+    <item android:drawable="@drawable/ict_10" android:duration="30"/>
+    <item android:drawable="@drawable/ict_11" android:duration="30"/>
+    <item android:drawable="@drawable/ict_12" android:duration="30"/>
+    <item android:drawable="@drawable/ict_13" android:duration="30"/>
+    <item android:drawable="@drawable/ict_14" android:duration="30"/>
+    <item android:drawable="@drawable/ict_15" android:duration="30"/>
+    <item android:drawable="@drawable/ict_16" android:duration="30"/>
+    <item android:drawable="@drawable/ict_17" android:duration="30"/>
+    <item android:drawable="@drawable/ict_18" android:duration="30"/>
+    <item android:drawable="@drawable/ict_19" android:duration="30"/>
+    <item android:drawable="@drawable/ict_20" android:duration="30"/>
+    <item android:drawable="@drawable/ict_21" android:duration="30"/>
+    <item android:drawable="@drawable/ict_22" android:duration="30"/>
+    <item android:drawable="@drawable/ict_23" android:duration="30"/>
+    <item android:drawable="@drawable/ict_24" android:duration="30"/>
+    <item android:drawable="@drawable/ict_25" android:duration="30"/>
+    <item android:drawable="@drawable/ict_26" android:duration="30"/>
+    <item android:drawable="@drawable/ict_27" android:duration="30"/>
+    <item android:drawable="@drawable/ict_28" android:duration="30"/>
+    <item android:drawable="@drawable/ict_29" android:duration="30"/>
+    <item android:drawable="@drawable/ict_30" android:duration="30"/>
+    <item android:drawable="@drawable/ict_31" android:duration="30"/>
+    <item android:drawable="@drawable/ict_32" android:duration="30"/>
+    <item android:drawable="@drawable/ict_33" android:duration="30"/>
+    <item android:drawable="@drawable/ict_34" android:duration="30"/>
+    <item android:drawable="@drawable/ict_35" android:duration="30"/>
+    <item android:drawable="@drawable/ict_36" android:duration="30"/>
+
+</animation-list>

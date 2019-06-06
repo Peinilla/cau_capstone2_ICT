@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/profile_swipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/profile_textview4"
+        android:layout_below="@+id/textView_friend">
+
+        <ListView
+            android:id="@+id/friend_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/profile_ID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:background="@drawable/com_facebook_tooltip_blue_background"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="15dp"
+        android:text="채팅용2"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/textView_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_ID"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="친구목록"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/profile_textview4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:text="친구추가 수락 대기 중"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/profile_swipe2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/profile_textview4">
+
+        <ListView
+            android:id="@+id/friendrequest_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/chat_floatingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="0dp"
+        app:fab_addButtonColorNormal="@color/white"
+        app:fab_addButtonColorPressed="@color/white_pressed"
+        app:fab_addButtonPlusIconColor="@color/half_black"
+        app:fab_addButtonSize="mini"
+        app:fab_expandDirection="up">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_icon="@drawable/setting_40x40"
+            app:fab_colorPressed="@color/white_pressed"
+            app:fab_title="Click to set Profile" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_reco"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_icon="@drawable/userplus_40x40"
+            app:fab_colorPressed="@color/white_pressed" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_nfc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
+            app:fab_icon="@drawable/nfc_40x40"
+            app:fab_title="Set bottom menu enabled/disabled" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    <FrameLayout
+        android:id="@+id/profile_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+</RelativeLayout>

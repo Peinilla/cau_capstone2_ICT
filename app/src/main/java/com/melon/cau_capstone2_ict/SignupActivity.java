@@ -2,9 +2,9 @@ package com.melon.cau_capstone2_ict;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private EditText signup_id, signup_pass, signup_passConf,signup_email;
+    private EditText signup_id, signup_pass, signup_passConf;
     private Button signup_validate;
     private AlertDialog dialog;
     boolean isValidate = false;
@@ -38,7 +38,6 @@ public class SignupActivity extends AppCompatActivity {
         signup_validate = (Button) findViewById(R.id.button_validateID);
         signup_pass = (EditText)findViewById(R.id.signup_pass);
         signup_passConf = (EditText)findViewById(R.id.signup_passConfirm);
-        signup_email = (EditText)findViewById(R.id.signup_email);
     }
 
     public void onClickValidate(View v) {
@@ -53,6 +52,16 @@ public class SignupActivity extends AppCompatActivity {
             dialog = builder.setMessage("아이디는 5자 이상이어야 합니다.").setNegativeButton("Retry", null).create();
             dialog.show();
         }
+        else if(memberID.contains("kakao")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
+            dialog = builder.setMessage("사용할 수 없는 단어가 포함되어 있습니다. kakao").setNegativeButton("Retry", null).create();
+            dialog.show();
+        }
+        else if(memberID.contains("facebook")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
+            dialog = builder.setMessage("사용할 수 없는 단어가 포함되어 있습니다. facebook").setNegativeButton("Retry", null).create();
+            dialog.show();
+        }
         else{
             validationCheck(memberID);
         }
@@ -62,7 +71,6 @@ public class SignupActivity extends AppCompatActivity {
         String id = signup_id.getText().toString();
         String pass = signup_pass.getText().toString();
         String passConf = signup_passConf.getText().toString();
-        String email = signup_email.getText().toString();
         AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
 
         if (!isValidate) {
@@ -92,9 +100,9 @@ public class SignupActivity extends AppCompatActivity {
             Intent intent = new Intent(SignupActivity.this, Signup2Activity.class);
             intent.putExtra("Member_ID",id);
             intent.putExtra("Member_pass",pass);
-            intent.putExtra("Member_email",email);
 
             startActivity(intent);
+            finish();
         }
     }
 
@@ -117,6 +125,8 @@ public class SignupActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "사용할 수 있는 아이디입니다.", Toast.LENGTH_SHORT).show();
                         isValidate = true;
                         signup_validate.setBackgroundColor(Color.GRAY);
+                        signup_id.setFocusable(false);
+                        signup_id.setClickable(false);
                     } else {
                         dialog = builder.setMessage("이미 사용 중인 아이디입니다.").setNegativeButton("Retry", null).create();
                         dialog.show();

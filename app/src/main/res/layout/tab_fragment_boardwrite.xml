@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:clickable="true">
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageButton
+        android:id="@+id/board_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/listview1"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/arrow_left_40x40" />
+
+    <ImageButton
+        android:id="@+id/board_write"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/write_40x40" />
+
+    <RelativeLayout
+        android:id="@+id/board_title_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/board_write_bab"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/board_wtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/board_date"
+            android:layout_centerVertical="false"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/board_icon"
+            android:layout_weight="1"
+            android:hint="제목"
+            android:textSize="24sp" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/board_wtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/board_title_container"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="top"
+        android:hint="내용을 입력해주세요\nICT는 우리 모두의 소통의 공간입니다."
+        android:textSize="18sp" />
+
+    <CheckBox
+        android:id="@+id/board_write_bab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/board_back"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="밥파티 모집중" />
+
+</RelativeLayout>

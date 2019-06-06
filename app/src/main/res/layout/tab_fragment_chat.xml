@@ -1,15 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:clickable="true">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/chat_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textSize="30sp"
+        android:background="@color/color_board_title"/>
+
+    <ListView
+        android:id="@+id/chat_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ChatBar"
+        android:layout_below="@+id/chat_title"
+        android:divider="@android:drawable/screen_background_light_transparent" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/ChatBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/textView_chat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="false"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:textSize="18dp" />
+
+            <ImageButton
+                android:id="@+id/image_upload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@+id/textView_chat"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/arrowup_40x40" />
+
+            <com.getbase.floatingactionbutton.FloatingActionsMenu
+                android:id="@+id/chat_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="0dp"
+                app:fab_addButtonColorNormal="@color/white"
+                app:fab_addButtonColorPressed="@color/white_pressed"
+                app:fab_addButtonPlusIconColor="@color/half_black"
+                app:fab_addButtonSize="mini"
+                app:fab_expandDirection="up" />
+        </LinearLayout>
+
+    </android.support.design.widget.BottomNavigationView>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/chat_floatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="채팅방"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="0dp"
+        app:fab_addButtonColorNormal="@color/white"
+        app:fab_addButtonColorPressed="@color/white_pressed"
+        app:fab_addButtonPlusIconColor="@color/half_black"
+        app:fab_addButtonSize="mini"
+        app:fab_expandDirection="up">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
+            app:fab_title="Click to remove" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="@color/white_pressed"
+            app:fab_title="Set bottom menu enabled/disabled" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </RelativeLayout>

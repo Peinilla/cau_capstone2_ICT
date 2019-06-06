@@ -3,13 +3,16 @@ package com.melon.cau_capstone2_ict;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -28,10 +31,17 @@ public class Signup2Activity extends AppCompatActivity {
     private String id;
     private String pass;
     private String email;
-    private EditText signup_name, signup_home, signup_birth,signup_dept, signup_hobby;
+    private String name,home,birth,hobby,dept;
+    private EditText signup_name, signup_birth, signup_email;
     private Button signup_validate;
     private AlertDialog dialog;
     boolean validateName = false;
+
+    Spinner spinner_home;
+    Spinner spinner_dept;
+    Spinner spinner_habby;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,17 +49,73 @@ public class Signup2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_signup2);
         signup_name = (EditText)findViewById(R.id.signup_name);
         signup_validate = (Button) findViewById(R.id.button_validateName);
-        signup_home = (EditText)findViewById(R.id.signup_home);
-        signup_dept = (EditText)findViewById(R.id.signup_dept);
-        signup_hobby = (EditText)findViewById(R.id.signup_hobby);
         signup_birth = (EditText)findViewById(R.id.signup_birth);
+        signup_email = (EditText)findViewById(R.id.signup_email);
+
+        home = "";
+        dept = "";
+        hobby = "";
 
         Intent intent;
         intent = getIntent();
 
         id = intent.getStringExtra("Member_ID");
         pass = intent.getStringExtra("Member_pass");
-        email = intent.getStringExtra("Member_email");
+
+        spinner_home = (Spinner)findViewById(R.id.signup_home);
+        spinner_home.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i != 0) {
+                    home = (String)adapterView.getItemAtPosition(i);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        String[] str_home = getResources().getStringArray(R.array.select_home_item);
+        ArrayAdapter<String> home_adapter= new ArrayAdapter<String>(this,R.layout.spinner_home,str_home);
+
+        home_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner_home.setAdapter(home_adapter);
+
+        spinner_dept = (Spinner)findViewById(R.id.signup_dept);
+        spinner_dept.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i != 0) {
+                    dept = (String)adapterView.getItemAtPosition(i);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        String[] str_dept = getResources().getStringArray(R.array.select_dept_item);
+        ArrayAdapter<String> dept_adapter= new ArrayAdapter<String>(this,R.layout.spinner_home,str_dept);
+
+        dept_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner_dept.setAdapter(dept_adapter);
+
+
+        spinner_habby = findViewById(R.id.signup_hobby);
+        spinner_habby.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i != 0) {
+                    hobby = (String)adapterView.getItemAtPosition(i);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        String[] str_hobby = getResources().getStringArray(R.array.select_habby_item);
+        ArrayAdapter<String> hobby_adapter= new ArrayAdapter<String>(this,R.layout.spinner_home,str_hobby);
+
+        hobby_adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner_habby.setAdapter(hobby_adapter);
     }
 
     public void onClickValidate(View v) {
@@ -70,11 +136,9 @@ public class Signup2Activity extends AppCompatActivity {
     }
 
     public void onClickNext(View v) {
-        String name = signup_name.getText().toString();
-        String home = signup_home.getText().toString();
-        String dept = signup_dept.getText().toString();
-        String birth = signup_birth.getText().toString();
-        String hobby = signup_hobby.getText().toString();
+        email = signup_email.getText().toString();
+        name = signup_name.getText().toString();
+        birth = signup_birth.getText().toString();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Signup2Activity.this);
 
@@ -88,13 +152,26 @@ public class Signup2Activity extends AppCompatActivity {
             dialog.show();
             return;
         }
-        /* todo
-        else if(birth.length() != 10){
+        else if(home.equals("")){
+            dialog = builder.setMessage("거주지를 선택해주세요.").setNegativeButton("OK", null).create();
+            dialog.show();
+            return;
+        }
+        else if(dept.equals("")){
+            dialog = builder.setMessage("학과를 선택해주세요.").setNegativeButton("OK", null).create();
+            dialog.show();
+            return;
+        }
+        else if(birth.length() != 8){
             dialog = builder.setMessage("생년월일을 입력해주세요.").setNegativeButton("OK", null).create();
             dialog.show();
             return;
         }
-        */
+        else if(hobby.equals("")){
+            dialog = builder.setMessage("취미를 선택해주세요..").setNegativeButton("OK", null).create();
+            dialog.show();
+            return;
+        }
         else{
 
             Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -134,7 +211,7 @@ public class Signup2Activity extends AppCompatActivity {
         finish();
     }
 
-    public void validationCheck(String nickname){
+    public void validationCheck(final String nickname){
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -148,6 +225,8 @@ public class Signup2Activity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "사용할 수 있는 아이디입니다.", Toast.LENGTH_SHORT).show();
                         validateName = true;
                         signup_validate.setBackgroundColor(Color.GRAY);
+                        signup_name.setFocusable(false);
+                        signup_name.setClickable(false);
                     } else {
                         dialog = builder.setMessage("이미 사용 중인 아이디입니다.").setNegativeButton("Retry", null).create();
                         dialog.show();
@@ -164,7 +243,7 @@ public class Signup2Activity extends AppCompatActivity {
     }
 
     class RegisterRequest extends StringRequest {
-        final static private String URL = "https://capston2webapp.azurewebsites.net/api/Register";
+        final static private String URL = "https://capston2webapp.azurewebsites.net/api/AddProfile";
         private Map<String, String> parameters;
 
         public RegisterRequest(String id, String pw, Response.Listener<String> listener) {
@@ -178,12 +257,16 @@ public class Signup2Activity extends AppCompatActivity {
                 }
             });
             parameters = new HashMap<>();
+
+            parameters.put("email", email);
+            parameters.put("nickname", name);
+            parameters.put("dateofbirth", birth);
+            parameters.put("residence", home);
+            parameters.put("major", dept);
+            parameters.put("hobby", hobby);
             parameters.put("id", id);
             parameters.put("password", pw);
-            //TODO: 2019-04-01
-//            parameters.put("name", name);
-//            parameters.put("birth", birth);
-//            parameters.put("email", email);
+
         }
         @Override
         public Map<String, String> getParams() {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -36,7 +37,7 @@
             android:hint="Password"
             android:inputType="textPassword" />
 
-        <Button
+        <ImageButton
             android:id="@+id/login_signin"
             android:layout_width="wrap_content"
             android:layout_height="90dp"
@@ -45,7 +46,20 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:onClick="onClickLogin"
+            android:src="@drawable/login"
+            android:background="@color/transparent"
             android:text="로그인" />
+
+        <!--<Button-->
+            <!--android:id="@+id/login_signin"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="90dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:onClick="onClickLogin"-->
+            <!--android:text="로그인" />-->
 
         <LinearLayout
             android:id="@+id/singup"
@@ -57,15 +71,27 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/login_signup"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_signin"
+                android:src="@drawable/signup"
+                android:background="@color/transparent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:onClick="onClickSignUp"
                 android:text="회원가입" />
+
+            <!--<Button-->
+                <!--android:id="@+id/login_signup"-->
+                <!--android:layout_width="130dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/login_signin"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginRight="20dp"-->
+                <!--android:onClick="onClickSignUp"-->
+                <!--android:text="회원가입" />-->
 
         </LinearLayout>
 
@@ -76,10 +102,29 @@
             android:layout_below="@+id/singup"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="40dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="40dp"
             android:gravity="center"
             android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/kakaotalk_icon" />
+
+            <Button
+                android:id="@+id/snslogin_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0"
+                android:background="@drawable/kakao_login_button_background"
+                android:onClick="onClickSNS_kakao"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="카카오톡 로그인" />
 
             <Button
                 android:id="@+id/snslogin_1"
@@ -88,21 +133,28 @@
                 android:layout_weight="1"
                 android:background="@android:color/holo_blue_dark"
                 android:onClick="onClickSNS_facebook"
-                android:text="페이스북" />
-
-            <Button
-                android:id="@+id/snslogin_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:background="@android:color/holo_orange_light"
-                android:onClick="onClickSNS_kakao"
-                android:text="카카오톡" />
+                android:text="페이스북"
+                android:visibility="gone" />
 
         </LinearLayout>
 
     </RelativeLayout>
+
+
+    <FrameLayout
+        android:id="@+id/image_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView_splash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:src="@drawable/splash" />
+    </FrameLayout>
 
 </RelativeLayout>
